@@ -8,6 +8,9 @@ export class UpdateRuleDto {
   ruleName: string;
 
   @IsString()
+  mercyRuleLimit: string;
+
+  @IsString()
   ruleId: string;
 
   @IsString()

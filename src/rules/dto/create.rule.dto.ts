@@ -9,6 +9,9 @@ export class CreateRuleDto {
   ruleId: string;
 
   @IsString()
+  mercyRuleLimit: string;
+
+  @IsString()
   gender: string;
 
   // Periods per game

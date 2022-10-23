@@ -3,6 +3,7 @@ import * as mongoose from 'mongoose';
 export const RuleSchema = new mongoose.Schema({
   ruleName: { type: String, required: true, default: '' },
   ruleId: { type: String, required: true },
+  mercyRuleLimit: { type: String, required: true, default: null },
   gender: { type: String, required: true },
   gamePeriods: { type: Number, required: true },
   periodDuration: { type: Number, required: true },
