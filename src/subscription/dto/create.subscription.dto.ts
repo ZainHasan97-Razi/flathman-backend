@@ -16,6 +16,10 @@ export class CreateSubscriptionDto {
   @IsNotEmpty()
   userId;
 
+  @IsMongoId()
+  // @IsNotEmpty()
+  teamId;
+
   @IsBoolean()
   isExpired: boolean;
 
@@ -30,6 +34,10 @@ export class CreateSubscriptionDto {
   @IsNumber()
   @IsNotEmpty()
   endTime: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  timesAllowed: number; // Agr subs type number of times use ha tw times allowed define honge min=1 tak wrna 0 hoga ye
 
   @IsNumber()
   @IsNotEmpty()

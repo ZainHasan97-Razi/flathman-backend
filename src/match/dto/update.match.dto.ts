@@ -1,5 +1,12 @@
 // import { BaseProjectDto } from './base-project.dto';
-import { IsArray, IsObject, IsBoolean, IsMongoId } from 'class-validator';
+import {
+  IsArray,
+  IsObject,
+  IsBoolean,
+  IsMongoId,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator';
 
 export class UpdateMatchDto {
   @IsMongoId()
@@ -22,4 +29,8 @@ export class UpdateMatchDto {
   // @IsNotEmpty()
   @IsArray()
   activityLog;
+
+  @IsNotEmpty()
+  @IsString()
+  status: string;
 }

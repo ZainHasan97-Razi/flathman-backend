@@ -17,3 +17,9 @@ export const RuleSchema = new mongoose.Schema({
   maxPersonalFouls: { type: Number, required: true },
   maxFOViolationPerHalf: { type: Number, required: true },
 });
+
+// export interface TEAM_SCHEMA_TYPE {
+//   teamName: string;
+//   teamColor: string;
+//   players: Array<any>;
+// }

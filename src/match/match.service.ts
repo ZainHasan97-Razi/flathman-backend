@@ -5,8 +5,10 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import mongoose from 'mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from 'src/user/dto/create.user.dto';
+import { CompleteSuspendedMatchDto } from './dto/completeSuspendedMatch.match.dto';
 import { CreateMatchDto } from './dto/create.match.dto';
 import { SuspendMatchDto } from './dto/suspend.match.dto';
 import { UpdateMatchDto } from './dto/update.match.dto';
@@ -40,18 +42,6 @@ export class MatchService {
       throw e;
     }
   }
-
-  // async findOneSuspended(id: string) {
-  //   try {
-  //     const response = await this.matchModel.findById(id);
-  //     if (!response) {
-  //       throw new NotFoundException(`Couldn't found match log`);
-  //     }
-  //     return response;
-  //   } catch (e) {
-  //     throw e;
-  //   }
-  // }
 
   async findUserSuspendedLogs(id: string) {
     try {
@@ -123,6 +113,32 @@ export class MatchService {
       if (savedMatch) {
         return {
           message: `Match has been suspended successfully!`,
+        };
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async endSuspendedGame(data: CompleteSuspendedMatchDto) {
+    console.log('data ==>>>>', data);
+
+    try {
+      const suspendedGame = await this.matchModel.findById(
+        // new mongoose.Types.ObjectId(data.matchId),
+        data.matchId,
+      );
+      if (!suspendedGame) {
+        throw new NotFoundException(`Couldn't found suspended game`);
+      }
+      const completedGame = await this.matchModel.findByIdAndUpdate(
+        // new mongoose.Types.ObjectId(data.matchId),
+        data.matchId,
+        { ...data, isSuspended: false },
+      );
+      if (completedGame) {
+        return {
+          message: `Suspended match has been marked completed successfully!`,
         };
       }
     } catch (e) {

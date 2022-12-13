@@ -7,33 +7,30 @@ import {
   IsNumber,
   IsArray,
   IsObject,
-  IsBoolean,
   IsMongoId,
+  IsBoolean,
 } from 'class-validator';
 
-export class CreateMatchDto {
+export class CreateOpponentPlayerDto {
+  // @IsMongoId()
+  // _id;
+
   @IsMongoId()
-  userId;
-
-  @IsObject()
-  winnerTeam;
-
-  @IsObject()
-  otherTeam;
-
   @IsNotEmpty()
-  @IsObject()
-  general;
+  teamId;
 
-  @IsNotEmpty()
-  @IsObject()
-  rules;
-
-  @IsNotEmpty()
-  @IsArray()
-  activityLog;
-
-  @IsNotEmpty()
   @IsString()
-  status: string;
+  @IsNotEmpty()
+  playerName: string;
+
+  @IsBoolean()
+  isCaptain: boolean;
+
+  @IsString()
+  @IsNotEmpty()
+  position: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  playerNumber: string;
 }

@@ -6,6 +6,7 @@ import {
   IsObject,
   IsBoolean,
   IsMongoId,
+  IsString,
 } from 'class-validator';
 
 export class SuspendMatchDto {
@@ -29,4 +30,8 @@ export class SuspendMatchDto {
   @IsNotEmpty()
   @IsArray()
   activityLog;
+
+  @IsNotEmpty()
+  @IsString()
+  status: string;
 }

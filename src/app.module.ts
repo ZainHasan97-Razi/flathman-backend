@@ -18,6 +18,9 @@ import { TeamModulebb } from './team/teams.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthorizationMiddleware } from './middleware';
 import { AuthModule } from './auth/auth.module';
+import { OpponentPlayerModule } from './opponentPlayer/oppPlayer.module';
+import { OpponentTeamModulebb } from './opponentTeam/oppTeam.module';
+import { ColorModule } from './color/color.module';
 
 @Module({
   imports: [
@@ -35,6 +38,9 @@ import { AuthModule } from './auth/auth.module';
     RuleModule,
     SubscriptionModule,
     SubscriptionTypeModule,
+    OpponentPlayerModule,
+    OpponentTeamModulebb,
+    ColorModule,
   ],
   // controllers: [AppController],
   // providers: [AppService],
@@ -69,6 +75,9 @@ export class AppModule implements NestModule {
         // { path: 'subscription/:id', method: RequestMethod.ALL },
         // { path: 'subscription-type', method: RequestMethod.ALL },
         // { path: 'subscription-type/:id', method: RequestMethod.ALL },
+        { path: 'admin/create-subscription-type', method: RequestMethod.ALL },
+        { path: 'color/create', method: RequestMethod.ALL },
+        { path: 'color', method: RequestMethod.ALL },
       )
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }

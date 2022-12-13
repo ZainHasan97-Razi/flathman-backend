@@ -7,7 +7,6 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateSubscriptionDto } from '../dto/create.subscription.dto';
-import { CreateSubscriptionTypeDto } from '../dto/create.subscriptiontype.dto';
 import {
   UpdateSubscriptionDto,
   UpdateSubscriptionOnEndGameDto,
@@ -24,34 +23,46 @@ export class SubscriptionService {
     private readonly subscriptionTypeService: SubscriptionTypeService,
   ) {}
 
-  async getMySubscriptions(body: { userId: string }) {
-    console.log('Coming hereeee');
-    // console.log('Coming here to getMySubscriptions id => ', body);
+  async getMyAllSubscription(body: { userId: string }) {
     try {
       const response = await this.subscriptionModel
         .find({ userId: body.userId })
         .populate('subscriptionType');
 
       response.map(async (v, i) => {
-        // CONDITION FOR NON-FREE TRIAL SUBSCRIPTION
+        // CONDITION FOR NON-FREE TRIAL & TIMES ALLOWED SUBSCRIPTION
+        // console.log('data', v);
+
         if (
           Date.now() > Number(v.endTime) &&
           v.isExpired === false &&
-          v.subscriptionType.subscriptionName !== 'Free trial(Clock only)' &&
-          v.subscriptionType.subscriptionName !== 'Free trial(Clock stats)'
+          v.subscriptionType?.subscriptionName !== 'Free trial(Clock only)' &&
+          v.subscriptionType?.subscriptionName !== 'Free trial(Clock stats)' &&
+          v.subscriptionType?.subscriptionName !== 'times allowed(only)' &&
+          v.subscriptionType?.subscriptionName !== 'times allowed(stats)'
         ) {
           const result = await this.updateWhileGet({
             subscriptionId: v._id,
             expired: 'yes',
           });
-          // console.log(result, 'Subscription has been updated to expired!');
         }
         // CONDITION FOR FREE TRIAL SUBSCRIPTION
         if (
-          (v.subscriptionType.subscriptionName === 'Free trial(Clock only)' ||
-            v.subscriptionType.subscriptionName ===
+          (v.subscriptionType?.subscriptionName === 'Free trial(Clock only)' ||
+            v.subscriptionType?.subscriptionName ===
               'Free trial(Clock stats)') &&
           v.timesUsed > 0
+        ) {
+          const result = await this.updateWhileGet({
+            subscriptionId: v._id,
+            expired: 'yes',
+          });
+        }
+        // CONDITION NUMBER OF TIMES USAGE ALLOWED
+        if (
+          (v.subscriptionType?.subscriptionName === 'times allowed(clock)' ||
+            v.subscriptionType?.subscriptionName === 'times allowed(stats)') &&
+          v.timesUsed >= v.timesAllowed
         ) {
           const result = await this.updateWhileGet({
             subscriptionId: v._id,
@@ -62,39 +73,40 @@ export class SubscriptionService {
 
       const data = await this.subscriptionModel
         .find({ userId: body.userId })
-        .populate('subscriptionType');
+        .populate('subscriptionType teamId');
       return data;
     } catch (e) {
-      throw new BadRequestException(
-        e?.message || 'Failed to fetch my subscriptions',
-      );
+      throw e;
     }
   }
 
-  async findAll() {
+  async getMySubscriptions(body: { userId: string }) {
     try {
-      let response = await this.subscriptionModel
-        .find()
+      const response = await this.subscriptionModel
+        .find({ userId: body.userId })
         .populate('subscriptionType');
 
       response.map(async (v, i) => {
+        // CONDITION FOR NON-FREE TRIAL & TIMES ALLOWED SUBSCRIPTION
+        // console.log('data', v);
+
         if (
           Date.now() > Number(v.endTime) &&
           v.isExpired === false &&
-          v.subscriptionType.subscriptionName !== 'Free trial(Clock only)' &&
-          v.subscriptionType.subscriptionName !== 'Free trial(Clock stats)'
+          v.subscriptionType?.subscriptionName !== 'Free trial(Clock only)' &&
+          v.subscriptionType?.subscriptionName !== 'Free trial(Clock stats)' &&
+          v.subscriptionType?.subscriptionName !== 'times allowed(only)' &&
+          v.subscriptionType?.subscriptionName !== 'times allowed(stats)'
         ) {
           const result = await this.updateWhileGet({
             subscriptionId: v._id,
             expired: 'yes',
           });
-          // console.log(result, 'Subscription has been updated to expired!');
         }
-
-        // Updating Free trial subscription
+        // CONDITION FOR FREE TRIAL SUBSCRIPTION
         if (
-          (v.subscriptionType.subscriptionName === 'Free trial(Clock only)' ||
-            v.subscriptionType.subscriptionName ===
+          (v.subscriptionType?.subscriptionName === 'Free trial(Clock only)' ||
+            v.subscriptionType?.subscriptionName ===
               'Free trial(Clock stats)') &&
           v.timesUsed > 0
         ) {
@@ -103,58 +115,123 @@ export class SubscriptionService {
             expired: 'yes',
           });
         }
+        // CONDITION NUMBER OF TIMES USAGE ALLOWED
+        if (
+          (v.subscriptionType?.subscriptionName === 'times allowed(clock)' ||
+            v.subscriptionType?.subscriptionName === 'times allowed(stats)') &&
+          v.timesUsed >= v.timesAllowed
+        ) {
+          const result = await this.updateWhileGet({
+            subscriptionId: v._id,
+            expired: 'yes',
+          });
+        }
       });
-      response = await this.subscriptionModel
-        .find()
-        .populate('subscriptionType');
-      return response;
+
+      const data = await this.subscriptionModel
+        .find({ userId: body.userId, isExpired: false, teamId: null })
+        .populate('subscriptionType teamId');
+      return data;
     } catch (e) {
       throw e;
     }
   }
 
+  // async findAll() {
+  //   try {
+  //     let response = await this.subscriptionModel
+  //       .find()
+  //       .populate('subscriptionType');
+
+  //     response.map(async (v, i) => {
+  //       if (
+  //         Date.now() > Number(v.endTime) &&
+  //         v.isExpired === false &&
+  //         v.subscriptionType.subscriptionName !== 'Free trial(Clock only)' &&
+  //         v.subscriptionType.subscriptionName !== 'Free trial(Clock stats)'
+  //       ) {
+  //         const result = await this.updateWhileGet({
+  //           subscriptionId: v._id,
+  //           expired: 'yes',
+  //         });
+  //         // console.log(result, 'Subscription has been updated to expired!');
+  //       }
+
+  //       // Updating Free trial subscription
+  //       if (
+  //         (v.subscriptionType.subscriptionName === 'Free trial(Clock only)' ||
+  //           v.subscriptionType.subscriptionName ===
+  //             'Free trial(Clock stats)') &&
+  //         v.timesUsed > 0
+  //       ) {
+  //         const result = await this.updateWhileGet({
+  //           subscriptionId: v._id,
+  //           expired: 'yes',
+  //         });
+  //       }
+  //     });
+  //     response = await this.subscriptionModel
+  //       .find()
+  //       .populate('subscriptionType');
+  //     return response;
+  //   } catch (e) {
+  //     throw e;
+  //   }
+  // }
+
   async findOne(id: string) {
     try {
-      let result = await this.subscriptionModel
+      let d = await this.subscriptionModel
         .findById(id)
-        .populate('subscriptionType');
+        .populate('teamId subscriptionType');
+
       // This condition checks while getting Data that if endTime is exceed from currentTime then it updates
       let isUpdated = false;
       if (
-        Date.now() > Number(result.endTime) &&
-        result.isExpired === false &&
-        result.subscriptionType.subscriptionName !== 'Free trial(Clock only)' &&
-        result.subscriptionType.subscriptionName !== 'Free trial(Clock stats)'
+        Date.now() > Number(d.endTime) &&
+        d.isExpired === false &&
+        d.subscriptionType.subscriptionName !== 'Free trial(Clock only)' &&
+        d.subscriptionType.subscriptionName !== 'Free trial(Clock stats)' &&
+        d.subscriptionType.subscriptionName !== 'times allowed(only)' &&
+        d.subscriptionType.subscriptionName !== 'times allowed(stats)'
       ) {
+        // console.log('ordinary subscriptn');
         await this.updateWhileGet({
           subscriptionId: id,
           expired: 'yes',
         });
-        // console.log(result, 'Subscription has been updated to expired!');
         isUpdated = true;
       }
       if (
-        (result.subscriptionType.subscriptionName ===
-          'Free trial(Clock only)' ||
-          result.subscriptionType.subscriptionName ===
-            'Free trial(Clock stats)') &&
-        result.timesUsed > 0
+        (d.subscriptionType.subscriptionName === 'Free trial(Clock only)' ||
+          d.subscriptionType.subscriptionName === 'Free trial(Clock stats)') &&
+        d.timesUsed > 0
       ) {
+        // console.log('free trial subscriptn');
         await this.updateWhileGet({
           subscriptionId: id,
           expired: 'yes',
         });
         isUpdated = true;
       }
-      if (!result) {
-        throw new NotFoundException(`Couldn't found any subscription`);
+      //usage times allowed
+      if (
+        (d.subscriptionType.subscriptionName === 'times allowed(clock)' ||
+          d.subscriptionType.subscriptionName === 'times allowed(stats)') &&
+        d.timesUsed >= d.timesAllowed
+      ) {
+        const result = await this.updateWhileGet({
+          subscriptionId: d._id,
+          expired: 'yes',
+        });
       }
+
       if (isUpdated) {
-        result = await (
+        d = await (
           await this.subscriptionModel.findById(id)
-        ).populate('subscriptionType');
+        ).populate('teamId subscriptionType');
       }
-      return result;
+      return d;
     } catch (e) {
       // console.log(e);
       throw e;
@@ -163,17 +240,39 @@ export class SubscriptionService {
 
   async create(data: CreateSubscriptionDto) {
     try {
-      let newData = data;
-      const endTime =
-        await this.subscriptionTypeService.provideEndTimeOfSubscription(
-          data.subscriptionType,
-          data.startTime,
-        );
-      newData.endTime = endTime;
-      const subscription = await this.subscriptionModel.create(newData);
-      return {
-        message: `Subscription has been added successfully!`,
-      };
+      const subsType = await this.subscriptionTypeService.findOne(
+        data.subscriptionType,
+      );
+      if (!subsType) {
+        throw new NotFoundException(`Subscription type doesn't exist`);
+      }
+      if (
+        subsType.subscriptionName === 'times allowed(only)' ||
+        subsType.subscriptionName === 'times allowed(stats)'
+      ) {
+        if (data.timesAllowed < 1) {
+          throw new BadRequestException(
+            `timesAllowed should be greater than zero in this subscription!`,
+          );
+        } else {
+          const subscription = await this.subscriptionModel.create(data);
+          return {
+            message: `Subscription has been added successfully!`,
+          };
+        }
+      } else {
+        let newData = data;
+        const endTime =
+          await this.subscriptionTypeService.provideEndTimeOfSubscription(
+            data.subscriptionType,
+            data.startTime,
+          );
+        newData.endTime = endTime;
+        const subscription = await this.subscriptionModel.create(newData);
+        return {
+          message: `Subscription has been added successfully!`,
+        };
+      }
     } catch (e) {
       // console.log('Err createTeam => ', e);
       throw new BadRequestException(e?.message || e);
@@ -204,7 +303,7 @@ export class SubscriptionService {
   }
 
   async updateWhileGet(data: UpdateSubscriptionWhileGetDto) {
-    console.log('updateWhileGet');
+    // console.log('updateWhileGet');
     try {
       const subscription = await this.subscriptionModel
         .findById(data.subscriptionId)
@@ -263,15 +362,40 @@ export class SubscriptionService {
     }
   }
 
-  // async provideEndTimeOfSubscription(
-  //   subscriptionTypeId: string,
-  //   startTime: number,
-  // ) {
-  //   const result = await this.subscriptionTypeModel.findById(
-  //     subscriptionTypeId,
-  //   );
-  //   const endTime = startTime + Number(result.durationDays) * 86400000; // 86400000 miliseconds in one day
-  //   // console.log(endTime);
-  //   return endTime;
-  // }
+  async assignTeamASubscription(data: {
+    teamId: string;
+    subscriptionId: string;
+  }) {
+    if (!data.teamId || data.teamId.length < 1) {
+      throw new NotFoundException(`Team id is invalid`);
+    }
+    const subscription = await this.subscriptionModel.findById(
+      data.subscriptionId,
+    );
+    if (!subscription) {
+      throw new NotFoundException(`Failed to find subsciption`);
+    }
+    if (subscription && subscription.isExpired) {
+      throw new BadRequestException(
+        'Subscription is expired, please get subsctiption first',
+      );
+    }
+    const prevTeamSubscription = await this.subscriptionModel.findOne({
+      teamId: data.teamId,
+    });
+    if (prevTeamSubscription) {
+      await this.subscriptionModel.findByIdAndUpdate(prevTeamSubscription._id, {
+        teamId: null,
+      });
+    }
+    // ASSIGN A TEAM_ID TO A SUSBSCIPTION
+    await this.subscriptionModel.findByIdAndUpdate(data.subscriptionId, {
+      teamId: data.teamId,
+    });
+    try {
+    } catch (e) {
+      console.log('Err at assignTeamASubscription', e);
+      throw e;
+    }
+  }
 }

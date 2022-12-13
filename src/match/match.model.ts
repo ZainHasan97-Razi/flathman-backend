@@ -9,6 +9,11 @@ export const MatchSchema = new mongoose.Schema(
     rules: { type: Object, required: true },
     activityLog: { type: Array, required: true },
     isSuspended: { type: Boolean, default: false },
+    status: {
+      type: String,
+      default: 'completed',
+      enum: ['forfit', 'cancelled', 'completed'],
+    },
   },
   {
     // WILL CREATE TIME STAMPS (CREATED AT & MODIFIED AT)

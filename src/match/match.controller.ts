@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
 import { MatchService } from './match.service';
 import { CreateMatchDto } from './dto/create.match.dto';
 import { UpdateMatchDto } from './dto/update.match.dto';
 import { SuspendMatchDto } from './dto/suspend.match.dto';
+import { CompleteSuspendedMatchDto } from './dto/completeSuspendedMatch.match.dto';
 
 @Controller('match')
 export class MatchController {
@@ -21,6 +22,11 @@ export class MatchController {
   @Post('suspend')
   suspend(@Body() body: SuspendMatchDto) {
     return this.matchService.suspend(body);
+  }
+
+  @Patch('complete-suspended-match')
+  endSuspendedGame(@Body() body: CompleteSuspendedMatchDto) {
+    return this.matchService.endSuspendedGame(body);
   }
 
   @Get()

@@ -7,7 +7,7 @@ export const SubscriptionTypeSchema = new mongoose.Schema({
     unique: true,
   },
   cost: {
-    type: Number,
+    type: String,
     required: true,
   },
   type: {
@@ -17,5 +17,6 @@ export const SubscriptionTypeSchema = new mongoose.Schema({
   durationDays: {
     type: Number,
     required: true,
+    default: 0,
   },
 });

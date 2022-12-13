@@ -26,6 +26,12 @@ export class CreateTeamDto {
   teamColor: string;
 
   @IsString()
+  coachName: string;
+
+  @IsEmail()
+  coachEmail: string;
+
+  @IsString()
   coachCell: string;
 
   @IsMongoId()

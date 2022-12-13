@@ -8,7 +8,6 @@ import {
   Query,
   Patch,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
 import { UpdateSubscriptionOnEndGameDto } from '../dto/update.subscription.dto';
 import { SubscriptionService } from './subscription.service';
 
@@ -16,14 +15,19 @@ import { SubscriptionService } from './subscription.service';
 export class SubscriptionController {
   constructor(private readonly subscriptionService: SubscriptionService) {}
 
-  @Get()
-  findAll() {
-    return this.subscriptionService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.subscriptionService.findAll();
+  // }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.subscriptionService.findOne(id);
+  }
+
+  @Post('myall')
+  findMyAllSubscription(@Body() body) {
+    return this.subscriptionService.getMyAllSubscription(body);
   }
 
   @Post('my')
@@ -36,6 +40,14 @@ export class SubscriptionController {
   @Patch('update-usage-count')
   updateCount(@Body() body: UpdateSubscriptionOnEndGameDto) {
     return this.subscriptionService.updateTimesUsedOnGameEnd(body);
+  }
+
+  @Patch('update-subscription-team')
+  updateSUbscriptionTeam(
+    @Body() body: { teamId: string; subscriptionId: string },
+  ) {
+    // console.log('bodyyy', body);
+    return this.subscriptionService.assignTeamASubscription(body);
   }
 
   // @Get('my')

@@ -91,11 +91,7 @@ export class TeamService {
       await this.teamOwnerExist(data.teamOwner);
 
       const createdTeam = await this.teamModel.create(data);
-      if (createdTeam) {
-        return {
-          message: `Team ${data.teamName} has been created successfully!`,
-        };
-      }
+
       return createdTeam;
     } catch (e) {
       // console.log('Err createTeam => ', e);
@@ -105,7 +101,6 @@ export class TeamService {
 
   async updateTeam(data: UpdateTeamDto) {
     try {
-      // const teamId = new mongoose.Types.ObjectId(data.teamId);
       const teamId = data.teamId;
       let team = await this.teamModel.findById(teamId);
       if (!team) {
@@ -117,9 +112,10 @@ export class TeamService {
         {
           // Data to update
           teamName: data?.teamName ? data.teamName : team.teamName,
-          teamNickName: data.teamNickName,
-          teamColor: data.teamColor,
-          teamOwner: data?.teamOwner ? data.teamOwner : team.teamOwner,
+          teamNickName: data?.teamNickName
+            ? data.teamNickName
+            : team.teamNickName,
+          teamColor: data?.teamColor ? data.teamColor : team.teamColor,
         },
       );
       return { message: 'Team has been updated successfully!' };

@@ -2,18 +2,21 @@
 import {
   MaxLength,
   IsNotEmpty,
-  IsEmail,
-  IsString,
-  IsNumber,
   IsArray,
   IsObject,
   IsBoolean,
   IsMongoId,
+  IsString,
 } from 'class-validator';
 
-export class CreateMatchDto {
-  @IsMongoId()
-  userId;
+export class CompleteSuspendedMatchDto {
+  // @IsMongoId()
+  @IsNotEmpty()
+  matchId;
+
+  // @IsMongoId()
+  // @IsNotEmpty()
+  // userId;
 
   @IsObject()
   winnerTeam;

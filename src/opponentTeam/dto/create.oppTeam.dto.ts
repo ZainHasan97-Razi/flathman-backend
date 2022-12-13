@@ -1,3 +1,4 @@
+// import { BaseProjectDto } from './base-project.dto';
 import {
   MaxLength,
   IsNotEmpty,
@@ -7,15 +8,16 @@ import {
   IsArray,
   ArrayMaxSize,
   ArrayMinSize,
+  IsObject,
   IsMongoId,
+  IsBoolean,
 } from 'class-validator';
 
-export class UpdateTeamDto {
+export class CreateOpponentTeamDto {
   @IsMongoId()
-  @IsNotEmpty()
-  teamId;
+  userId;
 
-  @IsString() // Because Gene said that team name won't be changeable
+  @IsString()
   teamName: string;
 
   @IsString()
@@ -33,12 +35,9 @@ export class UpdateTeamDto {
   @IsString()
   coachCell: string;
 
+  @IsBoolean()
+  isConference: boolean;
+
   @IsMongoId()
   teamOwner;
-
-  // @IsArray()
-  // @ArrayMaxSize(11)
-  // @ArrayMinSize(0)
-  // players: Array<mongoose.Schema.Types.ObjectId>; // Ye pata nhi kia bakwas
-  // players: any;
 }
