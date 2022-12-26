@@ -115,7 +115,6 @@ export class TeamService {
           teamNickName: data?.teamNickName
             ? data.teamNickName
             : team.teamNickName,
-          teamColor: data?.teamColor ? data.teamColor : team.teamColor,
         },
       );
       return { message: 'Team has been updated successfully!' };

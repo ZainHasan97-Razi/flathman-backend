@@ -24,9 +24,6 @@ export class CreateOpponentTeamDto {
   teamNickName: string;
 
   @IsString()
-  teamColor: string;
-
-  @IsString()
   coachName: string;
 
   @IsEmail()

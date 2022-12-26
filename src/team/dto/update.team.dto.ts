@@ -1,14 +1,4 @@
-import {
-  MaxLength,
-  IsNotEmpty,
-  IsEmail,
-  IsString,
-  IsNumber,
-  IsArray,
-  ArrayMaxSize,
-  ArrayMinSize,
-  IsMongoId,
-} from 'class-validator';
+import { IsNotEmpty, IsEmail, IsString, IsMongoId } from 'class-validator';
 
 export class UpdateTeamDto {
   @IsMongoId()
@@ -22,9 +12,6 @@ export class UpdateTeamDto {
   teamNickName: string;
 
   @IsString()
-  teamColor: string;
-
-  @IsString()
   coachName: string;
 
   @IsEmail()
@@ -35,10 +22,4 @@ export class UpdateTeamDto {
 
   @IsMongoId()
   teamOwner;
-
-  // @IsArray()
-  // @ArrayMaxSize(11)
-  // @ArrayMinSize(0)
-  // players: Array<mongoose.Schema.Types.ObjectId>; // Ye pata nhi kia bakwas
-  // players: any;
 }

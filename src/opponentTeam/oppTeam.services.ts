@@ -107,32 +107,6 @@ export class OpponentTeamService {
     }
   }
 
-  // async updateTeam(data: UpdateTeamDto) {
-  //   try {
-  //     // const teamId = new mongoose.Types.ObjectId(data.teamId);
-  //     const teamId = data.teamId;
-  //     let team = await this.teamModel.findById(teamId);
-  //     if (!team) {
-  //       throw new NotFoundException(`Team ${data.teamNickName} doesn't exist`);
-  //     }
-  //     // const updatedTeam = await this.teamModel.findOneAndUpdate(
-  //     await this.teamModel.findOneAndUpdate(
-  //       { _id: teamId }, // filter team with _id
-  //       {
-  //         // Data to update
-  //         teamName: data?.teamName ? data.teamName : team.teamName,
-  //         teamNickName: data.teamNickName,
-  //         teamColor: data.teamColor,
-  //         teamOwner: data?.teamOwner ? data.teamOwner : team.teamOwner,
-  //       },
-  //     );
-  //     return { message: 'Team has been updated successfully!' };
-  //   } catch (e) {
-  //     // console.log('Err at updateTeam => ', e?.message);
-  //     throw new BadRequestException(e?.message);
-  //   }
-  // }
-
   teamnameIsUnique = async (teamname: string) => {
     const result = await this.opponentTeamModel.findOne({ teamName: teamname });
     if (result) {

@@ -18,9 +18,8 @@ import { TeamService } from 'src/team/teams.services';
 export class PlayerService {
   constructor(
     @InjectModel('Player') private playerModel: Model<CreatePlayerDto>,
-    @InjectModel('Team') private teamModel: Model<CreateTeamDto>,
-  ) // private readonly teamService: TeamService,
-  {}
+    @InjectModel('Team') private teamModel: Model<CreateTeamDto>, // private readonly teamService: TeamService,
+  ) {}
 
   async findAll() {
     try {
@@ -68,31 +67,6 @@ export class PlayerService {
       } else {
         throw new ConflictException(`Can't add players anymore to this team`);
       }
-      // if (team.players.length === 11) {
-      //   throw new ConflictException(`Can't add players anymore to this team`);
-      // }
-
-      // if (createdPlayer) {
-      //   const newTeam = {
-      //     teamId: team._id,
-      //     teamName: team.teamName,
-      //     teamNickName: team.teamNickName,
-      //     teamColor: team.teamColor,
-      //     players: [...team.players, { _id: createdPlayer._id }],
-      //   };
-      //   console.log('NewTeam object ==>>> ', newTeam);
-
-      //   const updatedTeam = await this.teamService.updateTeam(newTeam);
-      //   if (!updatedTeam) {
-      //     // Here we have to add delete player api
-      //     throw new InternalServerErrorException(
-      //       `Player was created but wasn't added to team`,
-      //     );
-      //   }
-      //   return {
-      //     message: `Player ${data.playerName} has been created successfully!`,
-      //   };
-      // }
     } catch (e) {
       // console.log('Err createTeam => ', e);
       throw new BadRequestException('Failed to create player:', e);
