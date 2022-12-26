@@ -87,6 +87,11 @@ export class TeamService {
 
   async createTeam(data: CreateTeamDto) {
     try {
+      if (data.coachCell.length !== 10 || isNaN(Number(data.coachCell))) {
+        throw new BadRequestException(
+          'Invalid Coach cell, number should be of 10 characters and numeric',
+        );
+      }
       await this.teamnameIsUnique(data.teamName);
       await this.teamOwnerExist(data.teamOwner);
 
@@ -101,6 +106,14 @@ export class TeamService {
 
   async updateTeam(data: UpdateTeamDto) {
     try {
+      if (
+        (data?.coachCell && data.coachCell.length !== 10) ||
+        isNaN(Number(data.coachCell))
+      ) {
+        throw new BadRequestException(
+          'Invalid Coach cell, number should be of 10 characters and numeric',
+        );
+      }
       const teamId = data.teamId;
       let team = await this.teamModel.findById(teamId);
       if (!team) {
