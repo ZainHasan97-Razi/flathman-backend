@@ -75,9 +75,10 @@ export class AppModule implements NestModule {
         // { path: 'subscription/:id', method: RequestMethod.ALL },
         // { path: 'subscription-type', method: RequestMethod.ALL },
         // { path: 'subscription-type/:id', method: RequestMethod.ALL },
-        { path: 'admin/create-subscription-type', method: RequestMethod.ALL },
-        { path: 'color/create', method: RequestMethod.ALL },
-        { path: 'color', method: RequestMethod.ALL },
+        // { path: 'admin/create-subscription-type', method: RequestMethod.ALL },
+        // { path: 'color/create', method: RequestMethod.ALL },
+        // { path: 'color', method: RequestMethod.ALL },
+        // { path: 'admin/contact-us', method: RequestMethod.ALL },
       )
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }

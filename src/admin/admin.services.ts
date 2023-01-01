@@ -92,4 +92,15 @@ export class AdminService {
 
     return await this.subscriptionType.delete(id);
   }
+
+  ContactUs() {
+    return {
+      contacts: [
+        { number: '17-(48)003-728', type: 'num1' },
+        { number: '17-(48)003-999', type: 'num2' },
+      ],
+      email: 'gene.flathman@laxstat.com',
+      webUrl: 'https://flathman-web.web.app/',
+    };
+  }
 }

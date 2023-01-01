@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreatePlayerDto } from 'src/player/dto/create.player.dto';
 import { UpdatePlayerDto } from 'src/player/dto/update.player.dto';
 import { CreateTeamDto } from 'src/team/dto/create.team.dto';
@@ -73,5 +81,10 @@ export class AdminController {
   @Delete('delete-subscription-type/:id')
   deleteSubscriptionType(@Param('id') id: string) {
     return this.adminService.DeleteSubscriptionType(id);
+  }
+
+  @Get('contact-us')
+  contactUs() {
+    return this.adminService.ContactUs();
   }
 }
