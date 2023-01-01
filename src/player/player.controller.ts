@@ -43,8 +43,8 @@ export class PlayerController {
     return this.playerService.findTeamPlayers(id);
   }
 
-  // @Delete(':id')
-  // delete(@Param('id') id: string) {
-  //   return this.playerService.delete(id);
-  // }
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.playerService.delete(id);
+  }
 }

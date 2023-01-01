@@ -113,7 +113,7 @@ export class PlayerService {
 
   async delete(id: string) {
     try {
-      const response = await this.playerModel.findOneAndDelete({ teamId: id });
+      const response = await this.playerModel.findByIdAndDelete(id);
       console.log('resp at delete player', response);
     } catch (e) {
       throw e;

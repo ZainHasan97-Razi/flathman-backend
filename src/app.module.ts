@@ -8,7 +8,6 @@ import {
 // import { AppService } from './app.service';
 import { AdminModule } from './admin/admin.module';
 import { UserModule } from './user/user.module';
-// import { ClockModule } from './clock/clock.module';
 import { MatchModule } from './match/match.module';
 import { PlayerModule } from './player/player.module';
 import { RuleModule } from './rules/rule.module';
@@ -31,7 +30,6 @@ import { ColorModule } from './color/color.module';
     AdminModule,
     UserModule,
     AuthModule,
-    // ClockModule,
     TeamModulebb,
     PlayerModule,
     MatchModule,
