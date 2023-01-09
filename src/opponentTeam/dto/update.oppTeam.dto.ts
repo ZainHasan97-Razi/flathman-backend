@@ -1,22 +1,17 @@
 import {
-  MaxLength,
   IsNotEmpty,
   IsEmail,
   IsString,
-  IsNumber,
-  IsArray,
-  ArrayMaxSize,
-  ArrayMinSize,
-  IsObject,
   IsMongoId,
   IsBoolean,
 } from 'class-validator';
 
-export class CreateOpponentTeamDto {
+export class UpdateOppTeamDto {
   @IsMongoId()
-  userId;
+  @IsNotEmpty()
+  teamId;
 
-  @IsString()
+  @IsString() // Because Gene said that team name won't be changeable
   teamName: string;
 
   @IsString()

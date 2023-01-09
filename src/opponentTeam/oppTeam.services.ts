@@ -12,6 +12,7 @@ import { RuleService } from 'src/rules/rule.service';
 import { CreateUserDto } from 'src/user/dto/create.user.dto';
 import { OpponentPlayerService } from 'src/opponentPlayer/oppPlayer.service';
 import { CreateOpponentPlayerDto } from 'src/opponentPlayer/dto/create.oppPlayer.dto';
+import { UpdateOppTeamDto } from './dto/update.oppTeam.dto';
 
 @Injectable()
 export class OpponentTeamService {
@@ -108,6 +109,38 @@ export class OpponentTeamService {
       return createdTeam;
     } catch (e) {
       // console.log('Err createTeam => ', e);
+      throw new BadRequestException(e?.message);
+    }
+  }
+
+  async updateTeam(data: UpdateOppTeamDto) {
+    try {
+      if (
+        (data?.coachCell && data.coachCell.length !== 10) ||
+        isNaN(Number(data.coachCell))
+      ) {
+        throw new BadRequestException(
+          'Invalid Coach cell, number should be of 10 characters and numeric',
+        );
+      }
+      const teamId = data.teamId;
+      let team = await this.opponentTeamModel.findById(teamId);
+      if (!team) {
+        throw new NotFoundException(`Team ${data.teamNickName} doesn't exist`);
+      }
+      // const updatedTeam = await this.teamModel.findOneAndUpdate(
+      await this.opponentTeamModel.findOneAndUpdate(
+        { _id: teamId }, // filter team with _id
+        {
+          // Data to update
+          teamName: data?.teamName ? data.teamName : team.teamName,
+          teamNickName: data?.teamNickName
+            ? data.teamNickName
+            : team.teamNickName,
+        },
+      );
+      return { message: 'Team has been updated successfully!' };
+    } catch (e) {
       throw new BadRequestException(e?.message);
     }
   }

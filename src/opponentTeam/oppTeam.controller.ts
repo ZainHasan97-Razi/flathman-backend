@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { OpponentTeamService } from './oppTeam.services';
 import { CreateOpponentTeamDto } from './dto/create.oppTeam.dto';
+import { UpdateOppTeamDto } from './dto/update.oppTeam.dto';
 
 @Controller('opponentTeam')
 export class OpponentTeamController {
@@ -17,16 +18,15 @@ export class OpponentTeamController {
 
   @Post('create')
   async create(@Body() body: CreateOpponentTeamDto) {
-    console.log('create team body oppTeam ==>>', body);
     const response = await this.oppteamService.createTeam(body);
     return response;
   }
 
-  // @Patch('update')
-  // async update(@Body() body: UpdateTeamDto) {
-  //   const team = await this.teamService.updateTeam(body);
-  //   return team;
-  // }
+  @Patch('update')
+  async update(@Body() body: UpdateOppTeamDto) {
+    const team = await this.oppteamService.updateTeam(body);
+    return team;
+  }
 
   @Get()
   findAll() {
