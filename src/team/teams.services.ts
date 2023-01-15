@@ -124,10 +124,11 @@ export class TeamService {
         { _id: teamId }, // filter team with _id
         {
           // Data to update
-          teamName: data?.teamName ? data.teamName : team.teamName,
-          teamNickName: data?.teamNickName
-            ? data.teamNickName
-            : team.teamNickName,
+          // teamName: data?.teamName ? data.teamName : team.teamName,
+          // teamNickName: data?.teamNickName
+          //   ? data.teamNickName
+          //   : team.teamNickName,
+          ...data
         },
       );
       return { message: 'Team has been updated successfully!' };
