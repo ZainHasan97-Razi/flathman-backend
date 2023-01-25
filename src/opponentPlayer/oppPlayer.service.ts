@@ -5,12 +5,9 @@ import {
   InternalServerErrorException,
   ConflictException,
 } from '@nestjs/common';
-// import { TEAM_SCHEMA_TYPE } from './team.model';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateOpponentPlayerDto } from './dto/create.oppPlayer.dto';
-// import { UpdatePlayerDto } from './dto/update.player.dto';
-// import
 import { CreateOpponentTeamDto } from 'src/opponentTeam/dto/create.oppTeam.dto';
 import { OpponentTeamService } from 'src/opponentTeam/oppTeam.services';
 

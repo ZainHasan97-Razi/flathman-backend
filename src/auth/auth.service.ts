@@ -44,7 +44,7 @@ export class AuthService {
       if (!token) {
         throw new InternalServerErrorException(`Couldn't generate token`);
       }
-      await this.updateUserDeviceToken(user, body.deviceTokens);
+      // await this.updateUserDeviceToken(user, body.deviceTokens);
       let newUser;
       if (user.isAdmin) {
         newUser = {
