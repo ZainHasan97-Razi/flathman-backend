@@ -56,7 +56,7 @@ export class AppModule implements NestModule {
         // { path: 'admin/createSubscription', method: RequestMethod.ALL },
         // { path: 'admin/create-subscription-type', method: RequestMethod.ALL },
         // { path: 'admin/updateRule', method: RequestMethod.ALL },
-        // { path: 'admin/updateUser', method: RequestMethod.ALL },
+        { path: 'admin/updateUser', method: RequestMethod.ALL },
         // { path: 'admin/updateTeam', method: RequestMethod.ALL },
         // { path: 'admin/updatePlayer', method: RequestMethod.ALL },
         // { path: 'rule', method: RequestMethod.ALL },
