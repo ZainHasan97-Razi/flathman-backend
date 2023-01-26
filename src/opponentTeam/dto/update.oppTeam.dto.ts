@@ -4,6 +4,8 @@ import {
   IsString,
   IsMongoId,
   IsBoolean,
+  MinLength,
+  MaxLength,
 } from 'class-validator';
 
 export class UpdateOppTeamDto {
@@ -23,7 +25,10 @@ export class UpdateOppTeamDto {
   @IsEmail()
   coachEmail: string;
 
+  @IsNotEmpty()
   @IsString()
+  @MinLength(10)
+  @MaxLength(10)
   coachCell: string;
 
   @IsBoolean()

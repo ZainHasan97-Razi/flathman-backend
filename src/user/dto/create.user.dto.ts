@@ -26,6 +26,7 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(10)
+  @MaxLength(10)
   contactNumber: string;
 
   @IsString()

@@ -63,5 +63,6 @@ export class CreatePlayerDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(10)
+  @MaxLength(10)
   phone: string;
 }

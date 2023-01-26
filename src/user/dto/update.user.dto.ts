@@ -28,6 +28,7 @@ export class UpdateUserDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(10)
+  @MaxLength(10)
   contactNumber: string;
 
   @IsString()

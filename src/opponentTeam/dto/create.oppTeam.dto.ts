@@ -10,6 +10,7 @@ import {
   IsObject,
   IsMongoId,
   IsBoolean,
+  MinLength,
 } from 'class-validator';
 
 export class CreateOpponentTeamDto {
@@ -28,7 +29,10 @@ export class CreateOpponentTeamDto {
   @IsEmail()
   coachEmail: string;
 
+  @IsNotEmpty()
   @IsString()
+  @MinLength(10)
+  @MaxLength(10)
   coachCell: string;
 
   @IsBoolean()
