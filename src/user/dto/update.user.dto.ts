@@ -36,7 +36,7 @@ export class UpdateUserDto {
   password: string;
 
   // @IsArray() // hoga ye array ma hi store mgr value string ma lenga
-  @ArrayMaxSize(3)
-  @ArrayMinSize(1)
-  deviceTokens: Array<string>;
+  // @ArrayMaxSize(3)
+  // @ArrayMinSize(1)
+  // deviceTokens: Array<string>;
 }

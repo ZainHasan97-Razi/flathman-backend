@@ -33,9 +33,9 @@ export class CreateUserDto {
   @IsNotEmpty()
   password: string;
 
-  @IsArray() // hoga ye array ma hi store mgr value string ma lenga
-  @IsNotEmpty()
-  @ArrayMaxSize(3)
-  @ArrayMinSize(1)
-  deviceTokens: Array<string>;
+  // @IsArray() // hoga ye array ma hi store mgr value string ma lenga
+  // @IsNotEmpty()
+  // @ArrayMaxSize(3)
+  // @ArrayMinSize(1)
+  // deviceTokens: Array<string>;
 }

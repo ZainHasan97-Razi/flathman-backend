@@ -18,6 +18,6 @@ export class UserLoginDto {
   password: string;
 
   // @ArrayMaxSize(3)
-  @IsNotEmpty()
-  deviceTokens: string;
+  // @IsNotEmpty()
+  // deviceTokens: string;
 }
