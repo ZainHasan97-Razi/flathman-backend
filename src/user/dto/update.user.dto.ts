@@ -1,4 +1,5 @@
 import {
+  MinLength,
   MaxLength,
   IsNotEmpty,
   IsString,
@@ -24,8 +25,10 @@ export class UpdateUserDto {
   @IsNotEmpty()
   email: string;
 
-  @IsNumber()
-  contactNumber: number;
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(10)
+  contactNumber: string;
 
   @IsString()
   @IsNotEmpty()

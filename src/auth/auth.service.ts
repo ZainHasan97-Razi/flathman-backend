@@ -183,7 +183,7 @@ export class AuthService {
     }
   };
 
-  userContactIsUnique = async (contactNum: number) => {
+  userContactIsUnique = async (contactNum: string) => {
     const result = await this.userModel.findOne({ contactNumber: contactNum });
     if (result) {
       throw new ConflictException('Contact number already exist!');

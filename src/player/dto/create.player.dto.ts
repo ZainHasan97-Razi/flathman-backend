@@ -1,6 +1,7 @@
 // import { BaseProjectDto } from './base-project.dto';
 import {
   MaxLength,
+  MinLength,
   IsNotEmpty,
   IsEmail,
   IsString,
@@ -9,6 +10,7 @@ import {
   IsObject,
   IsMongoId,
   IsBoolean,
+  buildMessage,
 } from 'class-validator';
 
 export class CreatePlayerDto {
@@ -58,7 +60,8 @@ export class CreatePlayerDto {
   @IsNotEmpty()
   grade: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  phone: number;
+  @MinLength(10)
+  phone: string;
 }

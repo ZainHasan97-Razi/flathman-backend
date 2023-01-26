@@ -12,5 +12,5 @@ export const PlayerSchema = new mongoose.Schema({
   height: { type: String, required: true },
   weight: { type: String, required: true },
   grade: { type: String, required: true },
-  phone: { type: Number, required: true },
+  phone: { type: String, required: true },
 });

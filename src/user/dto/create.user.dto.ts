@@ -1,4 +1,5 @@
 import {
+  MinLength,
   MaxLength,
   IsNotEmpty,
   IsString,
@@ -22,8 +23,10 @@ export class CreateUserDto {
   @IsNotEmpty()
   email: string;
 
-  @IsNumber()
-  contactNumber: number;
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(10)
+  contactNumber: string;
 
   @IsString()
   @IsNotEmpty()

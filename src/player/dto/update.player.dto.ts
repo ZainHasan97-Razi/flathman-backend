@@ -1,5 +1,6 @@
 // import { BaseProjectDto } from './base-project.dto';
 import {
+  MinLength,
   MaxLength,
   IsNotEmpty,
   IsEmail,
@@ -58,7 +59,8 @@ export class UpdatePlayerDto {
   @IsNotEmpty()
   grade: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  phone: number;
+  @MinLength(10)
+  phone: string;
 }
