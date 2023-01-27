@@ -9,31 +9,36 @@ import {
 } from 'class-validator';
 
 export class UpdateOppTeamDto {
-  @IsMongoId()
-  @IsNotEmpty()
+  @IsMongoId({ message: 'Invalid team!' })
+  @IsNotEmpty({ message: 'Invalid team!' })
   teamId;
 
-  @IsString() // Because Gene said that team name won't be changeable
+  @IsString({ message: 'Team name is required!' })
+  @IsNotEmpty({ message: 'Team name is required!' }) // Because Gene said that team name won't be changeable
   teamName: string;
 
-  @IsString()
+  @IsString({ message: 'Team nick name is required!' })
+  @IsNotEmpty({ message: 'Team nick name is required!' })
   teamNickName: string;
 
-  @IsString()
+  @IsString({ message: 'Coach name is required!' })
+  @IsNotEmpty({ message: 'Coacg name is required!' })
   coachName: string;
 
-  @IsEmail()
+  @IsNotEmpty({ message: 'Coach email is required!' })
+  @IsEmail({ message: 'Invalid coach email!' })
   coachEmail: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(10)
-  @MaxLength(10)
+  @IsNotEmpty({ message: 'Coach phone is required!' })
+  @IsString({ message: 'Invalid coach phone!' })
+  @MaxLength(10, { message: 'Coach phone should be of 10 digits' })
+  @MinLength(10, { message: 'Coach phone should be of 10 digits' })
   coachCell: string;
 
   @IsBoolean()
   isConference: boolean;
 
-  @IsMongoId()
+  @IsMongoId({ message: 'Invalid team owner!' })
+  @IsNotEmpty({ message: 'Team owner is required!' })
   teamOwner;
 }

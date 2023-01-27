@@ -1,25 +1,41 @@
 // import { BaseProjectDto } from './base-project.dto';
-import { IsEmail, IsString, IsMongoId } from 'class-validator';
+import {
+  IsEmail,
+  IsString,
+  IsMongoId,
+  IsNotEmpty,
+  MinLength,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateTeamDto {
-  @IsMongoId()
+  @IsMongoId({ message: 'Invalid user!' })
+  @IsNotEmpty({ message: 'User is required!' })
   userId;
 
-  @IsString()
+  @IsString({ message: 'Team name is required!' })
+  @IsNotEmpty({ message: 'Team name is required!' })
   teamName: string;
 
-  @IsString()
+  @IsString({ message: 'Team nick name is required!' })
+  @IsNotEmpty({ message: 'Team nick name is required!' })
   teamNickName: string;
 
-  @IsString()
+  @IsString({ message: 'Coach name is required!' })
+  @IsNotEmpty({ message: 'Coacg name is required!' })
   coachName: string;
 
-  @IsEmail()
+  @IsNotEmpty({ message: 'Coach email is required!' })
+  @IsEmail({ message: 'Invalid coach email!' })
   coachEmail: string;
 
-  @IsString()
+  @IsNotEmpty({ message: 'Coach phone is required!' })
+  @IsString({ message: 'Invalid coach phone!' })
+  @MaxLength(10, { message: 'Coach phone should be of 10 digits' })
+  @MinLength(10, { message: 'Coach phone should be of 10 digits' })
   coachCell: string;
 
-  @IsMongoId()
+  @IsMongoId({ message: 'Invalid team owner!' })
+  @IsNotEmpty({ message: 'Team owner is required!' })
   teamOwner;
 }

@@ -8,29 +8,29 @@ import {
   ArrayMaxSize,
   ArrayMinSize,
   IsArray,
+  IsEmail,
 } from 'class-validator';
 
 export class CreateUserDto {
-  // @MaxLength(6)
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'Invalid username!' })
+  @IsNotEmpty({ message: 'Username is required!' })
   userName: string;
 
   @IsBoolean()
   isAdmin: boolean;
 
-  @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Email is required!' })
+  @IsEmail({ message: 'Invalid email!' })
   email: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(10)
-  @MaxLength(10)
+  @IsNotEmpty({ message: 'Contact number is required!' })
+  @IsString({ message: 'Invalid contact number!' })
+  @MaxLength(10, { message: 'Contact number should be of 10 digits' })
+  @MinLength(10, { message: 'Contact number should be of 10 digits' })
   contactNumber: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Password is required!' })
+  @IsString({ message: 'Invalid password!' })
   password: string;
 
   // @IsArray() // hoga ye array ma hi store mgr value string ma lenga

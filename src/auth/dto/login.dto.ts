@@ -9,12 +9,12 @@ import {
 } from 'class-validator';
 
 export class UserLoginDto {
-  @IsNotEmpty()
-  @IsEmail()
+  @IsNotEmpty({ message: 'Email is required!' })
+  @IsEmail({ message: 'Invalid email!' })
   email: string;
 
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: 'Password is required!' })
+  @IsString({ message: 'Invalid password!' })
   password: string;
 
   // @ArrayMaxSize(3)
