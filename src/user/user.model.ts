@@ -23,7 +23,8 @@ export const UserSchema = new mongoose.Schema({
   },
   deviceTokens: {
     type: Array,
-    required: true,
+    default: [],
+    // required: true,
   },
   // subscriptions: [
   //   {

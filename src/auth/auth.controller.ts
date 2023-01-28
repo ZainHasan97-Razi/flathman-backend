@@ -9,7 +9,7 @@ import { CreateUserDto } from 'src/user/dto/create.user.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('/login')
+  @Post('login')
   Signin(@Body() body: UserLoginDto) {
     const response = this.authService.Signin(body);
     return response;
