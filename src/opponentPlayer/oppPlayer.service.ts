@@ -50,13 +50,16 @@ export class OpponentPlayerService {
 
   async createPlayer(data: CreateOpponentPlayerDto) {
     try {
-      // const player = await this.oppPlayerModel.findOne({ phone: data.phone });
-      // if (player) {
-      //   throw new ConflictException('Player phone is already used');
-      // }
       const team = await this.oppTeamModel.findById(data.teamId);
       if (!team) {
         throw new ConflictException(`Team you have selected doesn't exist`);
+      }
+      const playerNumberAlreadyExist = await this.oppPlayerModel.findOne({
+        playerNumber: data.playerNumber,
+        teamId: data.teamId,
+      });
+      if (!playerNumberAlreadyExist) {
+        throw new BadRequestException(`Player number already exist`);
       }
       const teamPlayers = await this.oppPlayerModel.find({
         teamId: data.teamId,
@@ -68,9 +71,6 @@ export class OpponentPlayerService {
       } else {
         throw new ConflictException(`Can't add players anymore to this team`);
       }
-      // if (team.players.length === 11) {
-      //   throw new ConflictException(`Can't add players anymore to this team`);
-      // }
     } catch (e) {
       // console.log('Err createTeam => ', e);
       throw new BadRequestException('Failed to create player:', e);

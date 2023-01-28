@@ -51,18 +51,27 @@ export class PlayerService {
 
   async createPlayer(data: CreatePlayerDto) {
     try {
-      // if (String(data.phone).length !== 10 || isNaN(Number(data.phone))) {
-      //   throw new BadRequestException(
-      //     'Invalid phone number, should be of 10 characters and numeric',
-      //   );
-      // }
+      const team = await this.teamModel.findById(data.teamId);
+      if (!team) {
+        throw new ConflictException(`Team you have selected doesn't exist`);
+      }
       const player = await this.playerModel.findOne({ phone: data.phone });
       if (player) {
         throw new ConflictException('Player phone is already used');
       }
-      const team = await this.teamModel.findById(data.teamId);
-      if (!team) {
-        throw new ConflictException(`Team you have selected doesn't exist`);
+      const homeJerseyAlreadyExist = await this.playerModel.findOne({
+        homeJersey: data.homeJersey,
+        teamId: data.teamId,
+      });
+      if (homeJerseyAlreadyExist) {
+        throw new BadRequestException('Home Jersey already exist!');
+      }
+      const awayJerseyAlreadyExist = await this.playerModel.findOne({
+        awayJersey: data.awayJersey,
+        teamId: data.teamId,
+      });
+      if (awayJerseyAlreadyExist) {
+        throw new BadRequestException('Away Jersey already exist!');
       }
       const teamPlayers = await this.playerModel.find({ teamId: data.teamId });
       if (teamPlayers.length < 10) {
@@ -80,17 +89,23 @@ export class PlayerService {
 
   async updatePlayer(data: UpdatePlayerDto) {
     try {
-      // if (
-      //   (data?.phone && String(data.phone).length !== 10) ||
-      //   isNaN(Number(data.phone))
-      // ) {
-      //   throw new BadRequestException(
-      //     'Invalid phone number, should be of 10 characters and numeric',
-      //   );
-      // }
       const team = await this.teamModel.findById(data.teamId);
       if (!team) {
         throw new ConflictException(`Team you have selected doesn't exist`); // Jabhi tw change krega banda jab new teamId exist krti hogi
+      }
+      const homeJerseyAlreadyExist = await this.playerModel.findOne({
+        homeJersey: data.homeJersey,
+        teamId: data.teamId,
+      });
+      if (homeJerseyAlreadyExist) {
+        throw new BadRequestException('Home Jersey already exist!');
+      }
+      const awayJerseyAlreadyExist = await this.playerModel.findOne({
+        awayJersey: data.awayJersey,
+        teamId: data.teamId,
+      });
+      if (awayJerseyAlreadyExist) {
+        throw new BadRequestException('Away Jersey already exist!');
       }
       const player = await this.playerModel.findOne({
         _id: data.playerId,
