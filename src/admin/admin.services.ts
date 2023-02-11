@@ -17,6 +17,7 @@ import { UpdateRuleDto } from 'src/rules/dto/update.rule.dto';
 import { UpdateUserDto } from 'src/user/dto/update.user.dto';
 import { UpdateTeamDto } from 'src/team/dto/update.team.dto';
 import { UpdatePlayerDto } from 'src/player/dto/update.player.dto';
+import { SubscriptionModelDto } from 'src/subscription/dto/subscription.model.dto';
 
 @Injectable()
 export class AdminService {

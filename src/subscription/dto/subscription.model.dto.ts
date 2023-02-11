@@ -1,3 +1,4 @@
+import { DefaultValuePipe } from '@nestjs/common';
 import {
   IsNotEmpty,
   IsString,
@@ -7,7 +8,7 @@ import {
   IsMongoId,
 } from 'class-validator';
 
-export class CreateSubscriptionDto {
+export class SubscriptionModelDto {
   // @IsNotEmpty()
   // @IsString()
   // subscriptionId: string;
@@ -16,12 +17,12 @@ export class CreateSubscriptionDto {
   @IsNotEmpty()
   userId;
 
-  // @IsMongoId()
-  // @IsNotEmpty()
-  // teamId;
+  @IsMongoId()
+  @IsNotEmpty()
+  teamId;
 
-  // @IsBoolean()
-  // isExpired: boolean;
+  @IsBoolean()
+  isExpired: boolean;
 
   // like one day subscription or summer season etc
   @IsMongoId()
@@ -31,15 +32,15 @@ export class CreateSubscriptionDto {
   @IsNotEmpty()
   startTime: number;
 
-  // @IsNumber()
-  // @IsNotEmpty()
+  @IsNumber()
+  @IsNotEmpty()
   endTime: number;
 
   @IsNumber()
   @IsNotEmpty()
   timesAllowed: number; // Agr subs type number of times use ha tw times allowed define honge min=1 tak wrna 0 hoga ye
 
-  // @IsNumber()
-  // @IsNotEmpty()
-  // timesUsed: number;
+  @IsNumber()
+  @IsNotEmpty()
+  timesUsed: number;
 }

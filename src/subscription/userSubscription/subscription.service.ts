@@ -7,6 +7,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateSubscriptionDto } from '../dto/create.subscription.dto';
+import { SubscriptionModelDto } from '../dto/subscription.model.dto';
 import {
   UpdateSubscriptionDto,
   UpdateSubscriptionOnEndGameDto,
@@ -18,7 +19,7 @@ import { SubscriptionTypeService } from '../subscriptionType/subscriptionType.se
 export class SubscriptionService {
   constructor(
     @InjectModel('Subscription')
-    private subscriptionModel: Model<CreateSubscriptionDto>,
+    private subscriptionModel: Model<SubscriptionModelDto>,
     // private subscriptionTypeModel: Model<CreateSubscriptionTypeDto>,
     private readonly subscriptionTypeService: SubscriptionTypeService,
   ) {}
