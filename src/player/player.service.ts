@@ -10,7 +10,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreatePlayerDto } from './dto/create.player.dto';
 import { UpdatePlayerDto } from './dto/update.player.dto';
-// import
 import { CreateTeamDto } from 'src/team/dto/create.team.dto';
 import { TeamService } from 'src/team/teams.services';
 
@@ -53,11 +52,11 @@ export class PlayerService {
     try {
       const team = await this.teamModel.findById(data.teamId);
       if (!team) {
-        throw new ConflictException(`Team you have selected doesn't exist`);
+        throw new ConflictException(`Invalid team!`);
       }
       const player = await this.playerModel.findOne({ phone: data.phone });
       if (player) {
-        throw new ConflictException('Player phone is already used');
+        throw new ConflictException(`TWO PLAYERS CAN'T HAVE THE SAME PHONE #`);
       }
       const homeJerseyAlreadyExist = await this.playerModel.findOne({
         homeJersey: data.homeJersey,
@@ -101,6 +100,7 @@ export class PlayerService {
         throw new BadRequestException('Home Jersey already exist!');
       }
       const awayJerseyAlreadyExist = await this.playerModel.findOne({
+        _id: { $ne: data.playerId },
         awayJersey: data.awayJersey,
         teamId: data.teamId,
       });

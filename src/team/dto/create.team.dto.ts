@@ -10,22 +10,21 @@ import {
 
 export class CreateTeamDto {
   @IsMongoId({ message: 'Invalid user!' })
-  @IsNotEmpty({ message: 'User is required!' })
   userId;
 
-  @IsString({ message: 'Team name is required!' })
+  // @IsString({ message: 'Team name is required!' })
   @IsNotEmpty({ message: 'Team name is required!' })
   teamName: string;
 
-  @IsString({ message: 'Team nick name is required!' })
+  // @IsString({ message: 'Team nick name is required!' })
   @IsNotEmpty({ message: 'Team nick name is required!' })
   teamNickName: string;
 
-  @IsString({ message: 'Coach name is required!' })
+  // @IsString({ message: 'Coach name is required!' })
   @IsNotEmpty({ message: 'Coacg name is required!' })
   coachName: string;
 
-  @IsNotEmpty({ message: 'Coach email is required!' })
+  // @IsNotEmpty({ message: 'Coach email is required!' })
   @IsEmail({ message: 'Invalid coach email!' })
   coachEmail: string;
 
@@ -36,6 +35,6 @@ export class CreateTeamDto {
   coachCell: string;
 
   @IsMongoId({ message: 'Invalid team owner!' })
-  @IsNotEmpty({ message: 'Team owner is required!' })
+  // @IsNotEmpty({ message: 'Team owner is required!' })
   teamOwner;
 }

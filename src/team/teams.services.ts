@@ -62,9 +62,7 @@ export class TeamService {
   async findOne(id: string) {
     try {
       const response = await this.teamModel.findById(id).populate('gameRules');
-
       //Maximillian
-      // populate('cart.items.productId')
       if (!response) {
         throw new NotFoundException(`Couldn't found any team`);
       } else {
@@ -87,11 +85,6 @@ export class TeamService {
 
   async createTeam(data: CreateTeamDto) {
     try {
-      // if (data.coachCell.length !== 10 || isNaN(Number(data.coachCell))) {
-      //   throw new BadRequestException(
-      //     'Invalid Coach cell, number should be of 10 characters and numeric',
-      //   );
-      // }
       await this.teamnameIsUnique(data.teamName);
       await this.teamOwnerExist(data.teamOwner);
 
