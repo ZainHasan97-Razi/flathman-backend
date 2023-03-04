@@ -34,7 +34,7 @@ export class UpdateTeamDto {
   @MinLength(10, { message: 'Coach phone should be of 10 digits' })
   coachCell: string;
 
-  @IsMongoId({ message: 'Invalid team owner!' })
+  // @IsMongoId({ message: 'Invalid team owner!' })
   // @IsNotEmpty({ message: 'Team owner is required!' })
-  teamOwner;
+  // teamOwner;
 }

@@ -38,7 +38,7 @@ export class UpdateOppTeamDto {
   @IsBoolean()
   isConference: boolean;
 
-  @IsMongoId({ message: 'Invalid team owner!' })
-  // @IsNotEmpty({ message: 'Team owner is required!' })
-  teamOwner;
+  // @IsMongoId({ message: 'Invalid team owner!' })
+  // // @IsNotEmpty({ message: 'Team owner is required!' })
+  // teamOwner;
 }
