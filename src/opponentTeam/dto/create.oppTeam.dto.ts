@@ -14,10 +14,6 @@ import {
 } from 'class-validator';
 
 export class CreateOpponentTeamDto {
-  // @IsMongoId({ message: 'Invalid user!' })
-  // @IsNotEmpty({ message: 'User is required!' })
-  // userId;
-
   // @IsString({ message: 'Team name is required!' })
   @IsNotEmpty({ message: 'Team name is required!' })
   teamName: string;
