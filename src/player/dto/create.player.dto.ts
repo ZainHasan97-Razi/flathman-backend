@@ -21,11 +21,11 @@ export class CreatePlayerDto {
   @IsNotEmpty({ message: 'Player name is required!' })
   playerName: string;
 
-  @IsEmail({ message: 'Invalid email format!' })
-  @IsNotEmpty({ message: 'Email is required!' })
+  // @IsEmail({ message: 'Invalid email format!' })
+  // @IsNotEmpty({ message: 'Email is required!' })
   email: string;
 
-  @IsBoolean()
+  // @IsBoolean()
   isCaptain: boolean;
 
   @IsString({ message: 'Home Jersey is required!' })
@@ -44,21 +44,21 @@ export class CreatePlayerDto {
   @IsNotEmpty({ message: 'Position is required!' })
   position2: string;
 
-  @IsString({ message: 'Height is required!' })
-  @IsNotEmpty({ message: 'Height is required!' })
+  // @IsString({ message: 'Height is required!' })
+  // @IsNotEmpty({ message: 'Height is required!' })
   height: string;
 
-  @IsString({ message: 'Weight is required!' })
-  @IsNotEmpty({ message: 'Weight is required!' })
+  // @IsString({ message: 'Weight is required!' })
+  // @IsNotEmpty({ message: 'Weight is required!' })
   weight: string;
 
-  @IsString({ message: 'Grade is required!' })
-  @IsNotEmpty({ message: 'Grade is required!' })
+  // @IsString({ message: 'Grade is required!' })
+  // @IsNotEmpty({ message: 'Grade is required!' })
   grade: string;
 
-  @IsNotEmpty({ message: 'Phone number is required!' })
-  @IsString({ message: 'Phone number is required!' })
-  @MaxLength(10, { message: 'Phone number should be of 10 digits' })
-  @MinLength(10, { message: 'Phone number should be of 10 digits' })
+  // @IsNotEmpty({ message: 'Phone number is required!' })
+  // @IsString({ message: 'Phone number is required!' })
+  // @MaxLength(10, { message: 'Phone number should be of 10 digits' })
+  // @MinLength(10, { message: 'Phone number should be of 10 digits' })
   phone: string;
 }
