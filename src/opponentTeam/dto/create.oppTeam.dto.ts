@@ -40,6 +40,6 @@ export class CreateOpponentTeamDto {
   isConference: boolean;
 
   @IsMongoId({ message: 'Invalid team owner!' })
-  @IsNotEmpty({ message: 'Team owner is required!' })
+  // @IsNotEmpty({ message: 'Team owner is required!' })
   teamOwner;
 }
