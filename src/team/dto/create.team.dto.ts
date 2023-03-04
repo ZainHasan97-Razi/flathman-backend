@@ -9,8 +9,8 @@ import {
 } from 'class-validator';
 
 export class CreateTeamDto {
-  @IsMongoId({ message: 'Invalid user!' })
-  userId;
+  // @IsMongoId({ message: 'Invalid user!' })
+  // userId;
 
   // @IsString({ message: 'Team name is required!' })
   @IsNotEmpty({ message: 'Team name is required!' })
