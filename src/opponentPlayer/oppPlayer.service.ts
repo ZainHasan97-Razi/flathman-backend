@@ -58,19 +58,18 @@ export class OpponentPlayerService {
         playerNumber: data.playerNumber,
         teamId: data.teamId,
       });
-      if (!playerNumberAlreadyExist) {
+      if (playerNumberAlreadyExist) {
         throw new BadRequestException(`Player number already exist`);
       }
       const teamPlayers = await this.oppPlayerModel.find({
         teamId: data.teamId,
       });
-      if (teamPlayers.length < 10) {
-        // Adding created player to the team schema object
-        const createdPlayer = await this.oppPlayerModel.create(data);
-        return createdPlayer;
-      } else {
-        throw new ConflictException(`Can't add players anymore to this team`);
-      }
+      // if (teamPlayers.length < 10) {
+      const createdPlayer = await this.oppPlayerModel.create(data);
+      return createdPlayer;
+      // } else {
+      //   throw new ConflictException(`Can't add players anymore to this team`);
+      // }
     } catch (e) {
       // console.log('Err createTeam => ', e);
       throw new BadRequestException('Failed to create player:', e);

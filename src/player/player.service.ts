@@ -73,13 +73,12 @@ export class PlayerService {
         throw new BadRequestException('Away Jersey already exist!');
       }
       const teamPlayers = await this.playerModel.find({ teamId: data.teamId });
-      if (teamPlayers.length < 10) {
-        // Adding created player to the team schema object
-        const createdPlayer = await this.playerModel.create(data);
-        return createdPlayer;
-      } else {
-        throw new ConflictException(`Can't add players anymore to this team`);
-      }
+      // if (teamPlayers.length < 10) {
+      const createdPlayer = await this.playerModel.create(data);
+      return createdPlayer;
+      // } else {
+      //   throw new ConflictException(`Can't add players anymore to this team`);
+      // }
     } catch (e) {
       // console.log('Err createTeam => ', e);
       throw new BadRequestException('Failed to create player:', e);
@@ -93,6 +92,7 @@ export class PlayerService {
         throw new ConflictException(`Team you have selected doesn't exist`); // Jabhi tw change krega banda jab new teamId exist krti hogi
       }
       const homeJerseyAlreadyExist = await this.playerModel.findOne({
+        _id: { $ne: data.playerId },
         homeJersey: data.homeJersey,
         teamId: data.teamId,
       });
