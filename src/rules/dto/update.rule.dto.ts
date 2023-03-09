@@ -7,7 +7,7 @@ export class UpdateRuleDto {
   @IsString()
   ruleName: string;
 
-  @IsString()
+  // @IsString()
   mercyRuleLimit: string;
 
   @IsString()
@@ -49,7 +49,7 @@ export class UpdateRuleDto {
   overtimePeriodDuration: number;
 
   // Goal differential for running clock
-  @IsNumber()
+  // @IsNumber()
   goalDiffForRunningClock: number;
 
   @IsNumber()
