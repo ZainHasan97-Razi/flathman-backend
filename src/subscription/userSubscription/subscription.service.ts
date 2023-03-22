@@ -184,7 +184,15 @@ export class SubscriptionService {
     try {
       let d = await this.subscriptionModel
         .findById(id)
-        .populate('teamId subscriptionType');
+        // .populate('teamId subscriptionType');
+        .populate({
+          path: 'teamId',
+          populate: {
+            path: 'gameRules',
+            model: 'Rule',
+          },
+        })
+        .populate('subscriptionType');
 
       // This condition checks while getting Data that if endTime is exceed from currentTime then it updates
       let isUpdated = false;
