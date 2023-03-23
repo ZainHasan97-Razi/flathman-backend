@@ -10,11 +10,11 @@ import {
   IsObject,
   IsMongoId,
   IsBoolean,
+  IsOptional,
 } from 'class-validator';
 
 export class CreatePlayerDto {
   @IsMongoId({ message: 'Invalid team!' })
-  @IsNotEmpty({ message: 'Invalid team!' })
   teamId;
 
   @IsString({ message: 'Player name is required!' })
@@ -23,10 +23,14 @@ export class CreatePlayerDto {
 
   // @IsEmail({ message: 'Invalid email format!' })
   // @IsNotEmpty({ message: 'Email is required!' })
-  email: string;
+  // email: string;
+  @IsOptional()
+  @IsEmail()
+  email?: string;
 
-  // @IsBoolean()
-  isCaptain: boolean;
+  @IsOptional()
+  @IsBoolean()
+  isCaptain?: boolean;
 
   @IsString({ message: 'Home Jersey is required!' })
   @IsNotEmpty({ message: 'Home Jersey is required!' })
@@ -36,26 +40,32 @@ export class CreatePlayerDto {
   @IsNotEmpty({ message: 'Away Jersey is required!' })
   awayJersey: string;
 
-  @IsString({ message: 'Position is required!' })
-  @IsNotEmpty({ message: 'Position is required!' })
+  @IsOptional()
+  // @IsString({ message: 'Position is required!' })
+  // @IsNotEmpty({ message: 'Position is required!' })
   position1: string;
 
-  @IsString({ message: 'Position is required!' })
-  @IsNotEmpty({ message: 'Position is required!' })
+  @IsOptional()
+  // @IsString({ message: 'Position is required!' })
+  // @IsNotEmpty({ message: 'Position is required!' })
   position2: string;
 
+  @IsOptional()
   // @IsString({ message: 'Height is required!' })
   // @IsNotEmpty({ message: 'Height is required!' })
   height: string;
 
+  @IsOptional()
   // @IsString({ message: 'Weight is required!' })
   // @IsNotEmpty({ message: 'Weight is required!' })
   weight: string;
 
+  @IsOptional()
   // @IsString({ message: 'Grade is required!' })
   // @IsNotEmpty({ message: 'Grade is required!' })
   grade: string;
 
+  @IsOptional()
   // @IsNotEmpty({ message: 'Phone number is required!' })
   // @IsString({ message: 'Phone number is required!' })
   // @MaxLength(10, { message: 'Phone number should be of 10 digits' })

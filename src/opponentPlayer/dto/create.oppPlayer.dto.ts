@@ -9,6 +9,7 @@ import {
   IsObject,
   IsMongoId,
   IsBoolean,
+  IsOptional,
 } from 'class-validator';
 
 export class CreateOpponentPlayerDto {
@@ -20,11 +21,13 @@ export class CreateOpponentPlayerDto {
   @IsNotEmpty({ message: 'Player name is required!' })
   playerName: string;
 
+  @IsOptional()
   // @IsBoolean()
   isCaptain: boolean;
 
-  @IsString({ message: 'Position is required!' })
-  @IsNotEmpty({ message: 'Position is required!' })
+  @IsOptional()
+  // @IsString({ message: 'Position is required!' })
+  // @IsNotEmpty({ message: 'Position is required!' })
   position: string;
 
   @IsString({ message: 'Player number is required!' })
