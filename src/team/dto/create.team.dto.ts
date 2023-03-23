@@ -17,24 +17,24 @@ export class CreateTeamDto {
   // @IsString({ message: 'Team nick name is required!' })
   @IsOptional()
   @IsNotEmpty({ message: 'Team nick name is required!' })
-  teamNickName: string;
+  teamNickName?: string;
 
   // @IsString({ message: 'Coach name is required!' })
   @IsOptional()
   @IsNotEmpty({ message: 'Coacg name is required!' })
-  coachName: string;
+  coachName?: string;
 
   // @IsNotEmpty({ message: 'Coach email is required!' })
   @IsOptional()
   @IsEmail({ message: 'Invalid coach email!' })
-  coachEmail: string;
+  coachEmail?: string;
 
   @IsOptional()
   @IsNotEmpty({ message: 'Coach phone is required!' })
   @IsString({ message: 'Invalid coach phone!' })
   @MaxLength(10, { message: 'Coach phone should be of 10 digits' })
   @MinLength(10, { message: 'Coach phone should be of 10 digits' })
-  coachCell: string;
+  coachCell?: string;
 
   @IsMongoId({ message: 'Invalid team owner!' })
   // @IsNotEmpty({ message: 'Team owner is required!' })

@@ -43,32 +43,32 @@ export class CreatePlayerDto {
   @IsOptional()
   // @IsString({ message: 'Position is required!' })
   // @IsNotEmpty({ message: 'Position is required!' })
-  position1: string;
+  position1?: string;
 
   @IsOptional()
   // @IsString({ message: 'Position is required!' })
   // @IsNotEmpty({ message: 'Position is required!' })
-  position2: string;
+  position2?: string;
 
   @IsOptional()
   // @IsString({ message: 'Height is required!' })
   // @IsNotEmpty({ message: 'Height is required!' })
-  height: string;
+  height?: string;
 
   @IsOptional()
   // @IsString({ message: 'Weight is required!' })
   // @IsNotEmpty({ message: 'Weight is required!' })
-  weight: string;
+  weight?: string;
 
   @IsOptional()
   // @IsString({ message: 'Grade is required!' })
   // @IsNotEmpty({ message: 'Grade is required!' })
-  grade: string;
+  grade?: string;
 
   @IsOptional()
   // @IsNotEmpty({ message: 'Phone number is required!' })
   // @IsString({ message: 'Phone number is required!' })
   // @MaxLength(10, { message: 'Phone number should be of 10 digits' })
   // @MinLength(10, { message: 'Phone number should be of 10 digits' })
-  phone: string;
+  phone?: string;
 }
