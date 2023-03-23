@@ -7,13 +7,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(bodyParser({ limit: '524288000' }));
   app.enableCors();
-  // app.useGlobalPipes(
-  //   new ValidationPipe({
-  //     skipUndefinedProperties: true,
-  //     skipNullProperties: true,
-  //     // skipMissingProperties: true
-  //   }),
-  // ); // Read at https://docs.nestjs.com/techniques/validation
+  app.useGlobalPipes(
+    new ValidationPipe({
+      skipUndefinedProperties: true,
+      skipNullProperties: true,
+      // skipMissingProperties: true
+    }),
+  ); // Read at https://docs.nestjs.com/techniques/validation
   await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
