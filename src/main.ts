@@ -11,6 +11,7 @@ async function bootstrap() {
     new ValidationPipe({
       skipUndefinedProperties: true,
       skipNullProperties: true,
+      stopAtFirstError: false,
       // skipMissingProperties: true
     }),
   ); // Read at https://docs.nestjs.com/techniques/validation

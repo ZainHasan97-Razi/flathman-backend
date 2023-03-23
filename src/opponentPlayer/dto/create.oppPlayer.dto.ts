@@ -21,11 +21,11 @@ export class CreateOpponentPlayerDto {
   @IsNotEmpty({ message: 'Player name is required!' })
   playerName: string;
 
-  @IsOptional()
+  // @IsOptional()
   // @IsBoolean()
   isCaptain?: boolean;
 
-  @IsOptional()
+  // @IsOptional()
   // @IsString({ message: 'Position is required!' })
   // @IsNotEmpty({ message: 'Position is required!' })
   position?: string;

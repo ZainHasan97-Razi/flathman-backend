@@ -28,8 +28,8 @@ export class UpdatePlayerDto {
   // @IsEmail({ message: 'Invalid email format!' })
   // @IsNotEmpty({ message: 'Email is required!' })
   // email: string;
-  @IsOptional()
-  @IsEmail()
+  // @IsOptional()
+  // @IsEmail()
   email?: string;
 
   // @IsBoolean()
@@ -43,32 +43,32 @@ export class UpdatePlayerDto {
   @IsNotEmpty({ message: 'Away Jersey is required!' })
   awayJersey: string;
 
-  @IsOptional()
+  // @IsOptional()
   // @IsString({ message: 'Position is required!' })
   // @IsNotEmpty({ message: 'Position is required!' })
   position1?: string;
 
-  @IsOptional()
+  // @IsOptional()
   // @IsString({ message: 'Position is required!' })
   // @IsNotEmpty({ message: 'Position is required!' })
   position2?: string;
 
-  @IsOptional()
+  // @IsOptional()
   // @IsString({ message: 'Height is required!' })
   // @IsNotEmpty({ message: 'Height is required!' })
   height?: string;
 
-  @IsOptional()
+  // @IsOptional()
   // @IsString({ message: 'Weight is required!' })
   // @IsNotEmpty({ message: 'Weight is required!' })
   weight?: string;
 
-  @IsOptional()
+  // @IsOptional()
   // @IsString({ message: 'Grade is required!' })
   // @IsNotEmpty({ message: 'Grade is required!' })
   grade?: string;
 
-  @IsOptional()
+  // @IsOptional()
   // @IsNotEmpty({ message: 'Phone number is required!' })
   // @IsString({ message: 'Phone number is required!' })
   // @MaxLength(10, { message: 'Phone number should be of 10 digits' })
