@@ -27,7 +27,8 @@ export class MatchService {
         .exec();
       return response;
     } catch (e) {
-      throw new NotFoundException(`Couldn't found any match logs`);
+      // throw new NotFoundException(`Couldn't found any match logs`);
+      throw e;
     }
   }
 
@@ -50,7 +51,8 @@ export class MatchService {
         .exec();
       return response;
     } catch (e) {
-      throw new NotFoundException(`Couldn't found any match logs`);
+      // throw new NotFoundException(`Couldn't found any match logs`);
+      throw e;
     }
   }
 
@@ -60,7 +62,8 @@ export class MatchService {
         .find({ userId: id, isSuspended: false })
         .exec();
     } catch (e) {
-      throw new NotFoundException(`Couldn't found User's logs`);
+      // throw new NotFoundException(`Couldn't found User's logs`);
+      throw e;
     }
   }
 

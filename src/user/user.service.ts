@@ -22,7 +22,8 @@ export class UserService {
       const response = await this.userModel.find().exec();
       return response;
     } catch (e) {
-      throw new NotFoundException(`Couldn't found any user`);
+      // throw new NotFoundException(`Couldn't found any user`);
+      throw e;
     }
   }
 

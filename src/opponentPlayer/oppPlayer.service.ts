@@ -25,7 +25,8 @@ export class OpponentPlayerService {
       const response = await this.oppPlayerModel.find().exec();
       return response;
     } catch (e) {
-      throw new NotFoundException(`Couldn't found any players`);
+      // throw new NotFoundException(`Couldn't found any players`);
+      throw e;
     }
   }
 
@@ -35,7 +36,8 @@ export class OpponentPlayerService {
       return response;
     } catch (e) {
       // console.log(e);
-      throw new NotFoundException(`Couldn't found any player`);
+      // throw new NotFoundException(`Couldn't found any player`);
+      throw e;
     }
   }
 
@@ -44,7 +46,8 @@ export class OpponentPlayerService {
       const response = await this.oppPlayerModel.find({ teamId: id }).exec();
       return response;
     } catch (e) {
-      throw new NotFoundException(`Couldn't found team's Player`);
+      // throw new NotFoundException(`Couldn't found team's Player`);
+      throw e;
     }
   }
 

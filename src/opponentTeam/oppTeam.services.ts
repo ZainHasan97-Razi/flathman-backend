@@ -31,7 +31,8 @@ export class OpponentTeamService {
       const response = await this.opponentTeamModel.find().exec();
       return response;
     } catch (e) {
-      throw new NotFoundException(`Couldn't found any Team`);
+      // throw new NotFoundException(`Couldn't found any Team`);
+      throw e;
     }
   }
 
@@ -86,7 +87,8 @@ export class OpponentTeamService {
         .exec();
       return response;
     } catch (e) {
-      throw new NotFoundException(`Couldn't found user's Team`);
+      // throw new NotFoundException(`Couldn't found user's Team`);
+      throw e;
     }
   }
 
@@ -109,7 +111,8 @@ export class OpponentTeamService {
       return createdTeam;
     } catch (e) {
       // console.log('Err createTeam => ', e);
-      throw new BadRequestException(e?.message);
+      // throw new BadRequestException(e?.message);
+      throw e;
     }
   }
 
@@ -142,7 +145,8 @@ export class OpponentTeamService {
       );
       return { message: 'Team has been updated successfully!' };
     } catch (e) {
-      throw new BadRequestException(e?.message);
+      // throw new BadRequestException(e?.message);
+      throw e;
     }
   }
 

@@ -284,7 +284,8 @@ export class SubscriptionService {
       }
     } catch (e) {
       // console.log('Err createTeam => ', e);
-      throw new BadRequestException(e?.message || e);
+      // throw new BadRequestException(e?.message || e);
+      throw e;
     }
   }
 

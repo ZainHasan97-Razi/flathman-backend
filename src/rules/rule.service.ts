@@ -19,7 +19,8 @@ export class RuleService {
       const response = await this.ruleModel.find().exec();
       return response;
     } catch (e) {
-      throw new NotFoundException(`Couldn't found any rules`);
+      // throw new NotFoundException(`Couldn't found any rules`);
+      throw e;
     }
   }
 
@@ -31,7 +32,8 @@ export class RuleService {
       }
       return response;
     } catch (e) {
-      throw new InternalServerErrorException(e?.message || `Request failed`);
+      // throw new InternalServerErrorException(e?.message || `Request failed`);
+      throw e;
     }
   }
 
@@ -47,7 +49,8 @@ export class RuleService {
       }
     } catch (e) {
       // console.log('Err createTeam => ', e);
-      throw new BadRequestException(e?.message);
+      // throw new BadRequestException(e?.message);
+      throw e;
     }
   }
 
@@ -63,7 +66,8 @@ export class RuleService {
       );
       return { message: `Rule ${data.ruleName} has been updated` };
     } catch (e) {
-      throw new BadRequestException(e?.message | e, 'Failed to update rule');
+      // throw new BadRequestException(e?.message | e, 'Failed to update rule');
+      throw e;
     }
   }
 

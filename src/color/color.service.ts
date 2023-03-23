@@ -45,7 +45,8 @@ export class ColorService {
       const response = await this.colorModel.find().exec();
       return response;
     } catch (e) {
-      throw new NotFoundException(`Couldn't found any colors`);
+      // throw new NotFoundException(`Couldn't found any colors`);
+      throw e;
     }
   }
 
@@ -57,7 +58,8 @@ export class ColorService {
       };
       //   console.log('resp at delete color', response);
     } catch (e) {
-      throw new BadRequestException(`Failed to delete color`);
+      // throw new BadRequestException(`Failed to delete color`);
+      throw e;
     }
   }
 }

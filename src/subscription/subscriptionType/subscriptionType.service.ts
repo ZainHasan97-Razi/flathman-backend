@@ -25,7 +25,8 @@ export class SubscriptionTypeService {
       const response = await this.subscriptionTypeModel.find().exec();
       return response;
     } catch (e) {
-      throw new NotFoundException(`Couldn't found any subscription-type`);
+      // throw new NotFoundException(`Couldn't found any subscription-type`);
+      throw e;
     }
   }
 
@@ -38,7 +39,8 @@ export class SubscriptionTypeService {
       return response;
     } catch (e) {
       // console.log(e);
-      throw new NotFoundException(`Failed to fetch subscription-type`);
+      // throw new NotFoundException(`Failed to fetch subscription-type`);
+      throw e;
     }
   }
 
@@ -82,7 +84,8 @@ export class SubscriptionTypeService {
       }
     } catch (e) {
       // console.log('Err CreateSubscriptionTypeDto => ', e);
-      throw new BadRequestException(e?.message || e);
+      // throw new BadRequestException(e?.message || e);
+      throw e;
     }
   }
 
@@ -101,7 +104,8 @@ export class SubscriptionTypeService {
         );
       }
     } catch (e) {
-      throw new BadRequestException(`Request failed: Couldn't update team`);
+      // throw new BadRequestException(`Request failed: Couldn't update team`);
+      throw e;
     }
   }
 
@@ -114,9 +118,10 @@ export class SubscriptionTypeService {
       return response;
     } catch (e) {
       // console.log(e);
-      throw new NotFoundException(
-        e?.message || `Failed to fetch subscription-type`,
-      );
+      // throw new NotFoundException(
+      //   e?.message || `Failed to fetch subscription-type`,
+      // );
+      throw e;
     }
   }
   async subscriptionNameIsUnique(subName: string) {
