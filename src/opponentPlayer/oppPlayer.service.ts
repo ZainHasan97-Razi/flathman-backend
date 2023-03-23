@@ -61,9 +61,9 @@ export class OpponentPlayerService {
       if (playerNumberAlreadyExist) {
         throw new BadRequestException(`Player number already exist`);
       }
-      const teamPlayers = await this.oppPlayerModel.find({
-        teamId: data.teamId,
-      });
+      // const teamPlayers = await this.oppPlayerModel.find({
+      //   teamId: data.teamId,
+      // });
       // if (teamPlayers.length < 10) {
       const createdPlayer = await this.oppPlayerModel.create(data);
       return createdPlayer;

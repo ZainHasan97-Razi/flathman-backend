@@ -72,7 +72,7 @@ export class PlayerService {
       if (awayJerseyAlreadyExist) {
         throw new BadRequestException('Away Jersey already exist!');
       }
-      const teamPlayers = await this.playerModel.find({ teamId: data.teamId });
+      // const teamPlayers = await this.playerModel.find({ teamId: data.teamId });
       // if (teamPlayers.length < 10) {
       const createdPlayer = await this.playerModel.create(data);
       return createdPlayer;
