@@ -54,10 +54,13 @@ export class PlayerService {
       if (!team) {
         throw new ConflictException(`Invalid team!`);
       }
-      const player = await this.playerModel.findOne({ phone: data.phone });
-      if (player) {
-        throw new ConflictException(`TWO PLAYERS CAN'T HAVE THE SAME PHONE #`);
-      }
+      // const player = await this.playerModel.findOne({
+      //   phone: data.phone,
+      //   teamId: data.teamId,
+      // });
+      // if (player) {
+      //   throw new ConflictException(`TWO PLAYERS CAN'T HAVE THE SAME PHONE #`);
+      // }
       const homeJerseyAlreadyExist = await this.playerModel.findOne({
         homeJersey: data.homeJersey,
         teamId: data.teamId,
@@ -81,7 +84,8 @@ export class PlayerService {
       // }
     } catch (e) {
       // console.log('Err createTeam => ', e);
-      throw new BadRequestException('Failed to create player:', e);
+      // throw new BadRequestException('Failed to create player:', e);
+      throw e;
     }
   }
 

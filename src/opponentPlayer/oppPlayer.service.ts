@@ -72,7 +72,8 @@ export class OpponentPlayerService {
       // }
     } catch (e) {
       // console.log('Err createTeam => ', e);
-      throw new BadRequestException('Failed to create player:', e);
+      // throw new BadRequestException(e);
+      throw e;
     }
   }
 
