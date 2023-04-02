@@ -43,9 +43,9 @@ export class UpdatePlayerDto {
   @IsNotEmpty({ message: 'Away Jersey is required!' })
   awayJersey: string;
 
-  // @IsOptional()
+  @IsOptional()
   // @IsString({ message: 'Position is required!' })
-  // @IsNotEmpty({ message: 'Position is required!' })
+  @IsNotEmpty({ message: 'Position is required!' })
   position1?: string;
 
   // @IsOptional()

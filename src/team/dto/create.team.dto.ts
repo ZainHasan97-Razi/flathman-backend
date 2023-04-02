@@ -39,4 +39,7 @@ export class CreateTeamDto {
   @IsMongoId({ message: 'Invalid team owner!' })
   // @IsNotEmpty({ message: 'Team owner is required!' })
   teamOwner;
+
+  @IsMongoId({ message: 'Game rule is required!' })
+  gameRules;
 }

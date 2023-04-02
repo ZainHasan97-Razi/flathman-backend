@@ -14,5 +14,6 @@ export const TeamSchema = new mongoose.Schema({
   gameRules: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Rule',
+    required: true,
   },
 });

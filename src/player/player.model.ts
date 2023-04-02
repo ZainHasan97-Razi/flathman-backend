@@ -7,7 +7,7 @@ export const PlayerSchema = new mongoose.Schema({
   isCaptain: { type: String, default: false },
   homeJersey: { type: String, required: true },
   awayJersey: { type: String, required: true },
-  position1: { type: String },
+  position1: { type: String, required: true },
   position2: { type: String },
   height: { type: String },
   weight: { type: String },
