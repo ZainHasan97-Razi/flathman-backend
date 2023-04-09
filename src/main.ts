@@ -8,14 +8,16 @@ async function bootstrap() {
   app.use(bodyParser({ limit: '524288000' }));
   app.enableCors();
   // app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalPipes(
-    new ValidationPipe({
-      skipUndefinedProperties: true,
-      skipNullProperties: true,
-      stopAtFirstError: false,
-      // skipMissingProperties: true
-    }),
-  ); // Read at https://docs.nestjs.com/techniques/validation
+  app.useGlobalPipes(new ValidationPipe({ stopAtFirstError: true }));
+
+  // app.useGlobalPipes(
+  //   new ValidationPipe({
+  //     skipUndefinedProperties: true,
+  //     skipNullProperties: true,
+  //     stopAtFirstError: false,
+  //     // skipMissingProperties: true,
+  //   }),
+  // ); // Read at https://docs.nestjs.com/techniques/validation
   await app.listen(process.env.PORT || 3000);
 }
 bootstrap();

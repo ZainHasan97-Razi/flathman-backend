@@ -17,7 +17,7 @@ export class CreatePlayerDto {
   @IsMongoId({ message: 'Invalid team!' })
   teamId;
 
-  @IsString({ message: 'Player name is required!' })
+  // @IsString({ message: 'Player name is required!' })
   @IsNotEmpty({ message: 'Player name is required!' })
   playerName: string;
 
@@ -32,18 +32,18 @@ export class CreatePlayerDto {
   // @IsBoolean()
   isCaptain?: boolean;
 
-  @IsString({ message: 'Home Jersey is required!' })
+  // @IsString({ message: 'Home Jersey is required!' })
   @IsNotEmpty({ message: 'Home Jersey is required!' })
   homeJersey: string;
 
-  @IsString({ message: 'Away Jersey is required!' })
+  // @IsString({ message: 'Away Jersey is required!' })
   @IsNotEmpty({ message: 'Away Jersey is required!' })
   awayJersey: string;
 
   // @IsOptional()
   // @IsString({ message: 'Position is required!' })
   @IsNotEmpty({ message: 'Position is required!' })
-  position1?: string;
+  position1: string;
 
   // @IsOptional()
   // @IsString({ message: 'Position is required!' })
