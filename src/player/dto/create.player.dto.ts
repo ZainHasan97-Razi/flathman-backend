@@ -42,7 +42,7 @@ export class CreatePlayerDto {
 
   // @IsOptional()
   // @IsString({ message: 'Position is required!' })
-  @IsNotEmpty({ message: 'Position is required!' })
+  @IsNotEmpty({ message: 'Position1 is required!' })
   position1: string;
 
   // @IsOptional()

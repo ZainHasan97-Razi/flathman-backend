@@ -99,7 +99,7 @@ export class OpponentTeamService {
       //     'Invalid Coach cell, number should be of 10 characters and numeric',
       //   );
       // }
-      await this.teamnameIsUnique(data.teamName);
+      // await this.teamnameIsUnique(data.teamName);
       await this.teamOwnerExist(data.teamOwner);
 
       const createdTeam = await this.opponentTeamModel.create(data);

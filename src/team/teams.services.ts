@@ -87,7 +87,7 @@ export class TeamService {
 
   async createTeam(data: CreateTeamDto) {
     try {
-      await this.teamnameIsUnique(data.teamName);
+      // await this.teamnameIsUnique(data.teamName);
       await this.teamOwnerExist(data.teamOwner);
 
       const createdTeam = await this.teamModel.create(data);
