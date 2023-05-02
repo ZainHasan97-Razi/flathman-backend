@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { OpponentPlayerService } from './oppPlayer.service';
 import { CreateOpponentPlayerDto } from './dto/create.oppPlayer.dto';
+import { UpdateOpponentPlayerDto } from './dto/update.oppPlayer.dto';
 // import { UpdatePlayerDto } from './dto/update.player.dto';
 
 @Controller('opponentPlayer')
@@ -22,11 +23,11 @@ export class OpponentPlayerController {
     return response;
   }
 
-  // @Patch('update')
-  // async update(@Body() body: UpdatePlayerDto) {
-  //   const player = await this.playerService.updatePlayer(body);
-  //   return player;
-  // }
+  @Patch('update')
+  async update(@Body() body: UpdateOpponentPlayerDto) {
+    const player = await this.oppPlayerService.updatePlayer(body);
+    return player;
+  }
 
   @Get()
   findAll() {

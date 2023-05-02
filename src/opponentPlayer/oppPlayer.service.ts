@@ -10,6 +10,7 @@ import { Model } from 'mongoose';
 import { CreateOpponentPlayerDto } from './dto/create.oppPlayer.dto';
 import { CreateOpponentTeamDto } from 'src/opponentTeam/dto/create.oppTeam.dto';
 import { OpponentTeamService } from 'src/opponentTeam/oppTeam.services';
+import { UpdateOpponentPlayerDto } from './dto/update.oppPlayer.dto';
 
 @Injectable()
 export class OpponentPlayerService {
@@ -76,6 +77,30 @@ export class OpponentPlayerService {
     } catch (e) {
       // console.log('Err createTeam => ', e);
       // throw new BadRequestException(e);
+      throw e;
+    }
+  }
+
+  async updatePlayer(data: UpdateOpponentPlayerDto) {
+    try {
+      // const team = await this.teamModel.findById(data.teamId);
+      // if (!team) {
+      //   throw new ConflictException(`Team you have selected doesn't exist`); // Jabhi tw change krega banda jab new teamId exist krti hogi
+      // }
+      const player = await this.oppPlayerModel.findOne({
+        _id: data.playerId,
+      });
+      if (!player) {
+        throw new NotFoundException(`Player ${data.playerName} doesn't exist`);
+      }
+      const updatedPlayer = await this.oppPlayerModel.findByIdAndUpdate(
+        { _id: data.playerId },
+        data,
+      );
+      if (updatedPlayer) {
+        return { message: 'Player has been updated successfully!' };
+      }
+    } catch (e) {
       throw e;
     }
   }
