@@ -18,7 +18,6 @@ import { OpponentTeamService } from 'src/opponentTeam/oppTeam.services';
       { name: 'Rule', schema: RuleSchema },
       { name: 'User', schema: UserSchema },
     ]),
-    // forwardRef(() => TeamModulebb),
   ],
   controllers: [OpponentPlayerController],
   providers: [OpponentPlayerService, OpponentTeamService, RuleService],
