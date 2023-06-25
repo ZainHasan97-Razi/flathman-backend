@@ -14,16 +14,21 @@ import {
 
 export class UpdatePlayerDto {
   @IsMongoId({ message: 'Invalid player!' })
-  @IsNotEmpty({ message: 'Invalid player!' })
   playerId: string;
 
   @IsMongoId({ message: 'Invalid team!' })
-  @IsNotEmpty({ message: 'Invalid team!' })
   teamId;
 
-  @IsString({ message: 'Player name is required!' })
-  @IsNotEmpty({ message: 'Player name is required!' })
+  // @IsNotEmpty({ message: 'Player name is required!' })
   playerName: string;
+
+  @IsString({ message: 'First name is required!' })
+  @IsNotEmpty({ message: 'First name is required!' })
+  firstName: string;
+
+  @IsString({ message: 'Last name is required!' })
+  @IsNotEmpty({ message: 'Last name is required!' })
+  lastName: string;
 
   // @IsEmail({ message: 'Invalid email format!' })
   // @IsNotEmpty({ message: 'Email is required!' })
