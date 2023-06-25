@@ -29,7 +29,6 @@ export class TeamService {
       const response = await this.teamModel.find().exec();
       return response;
     } catch (e) {
-      // throw new NotFoundException(`Couldn't found any Team`);
       throw e;
     }
   }
@@ -64,13 +63,8 @@ export class TeamService {
     try {
       const response = await this.teamModel.findById(id).populate('gameRules');
       //Maximillian
-      if (!response) {
-        throw new NotFoundException(`Couldn't found any team`);
-      } else {
-        return response;
-      }
+      return response;
     } catch (e) {
-      // console.log('FingOne team Err ==>>>>>  ', e);
       throw e;
     }
   }
@@ -80,42 +74,27 @@ export class TeamService {
       const response = await this.teamModel.find({ teamOwner: id }).exec();
       return response;
     } catch (e) {
-      // throw new NotFoundException(`Couldn't found user's Team`);
       throw e;
     }
   }
 
   async createTeam(data: CreateTeamDto) {
     try {
-      // await this.teamnameIsUnique(data.teamName);
       await this.teamOwnerExist(data.teamOwner);
-
       const createdTeam = await this.teamModel.create(data);
-
       return createdTeam;
     } catch (e) {
-      // console.log('Err createTeam => ', e);
-      // throw new BadRequestException(e?.message);
       throw e;
     }
   }
 
   async updateTeam(data: UpdateTeamDto) {
     try {
-      // if (
-      //   (data?.coachCell && data.coachCell.length !== 10) ||
-      //   isNaN(Number(data.coachCell))
-      // ) {
-      //   throw new BadRequestException(
-      //     'Invalid Coach cell, number should be of 10 characters and numeric',
-      //   );
-      // }
       const teamId = data.teamId;
       let team = await this.teamModel.findById(teamId);
       if (!team) {
         throw new NotFoundException(`Team ${data.teamNickName} doesn't exist`);
       }
-      // const updatedTeam = await this.teamModel.findOneAndUpdate(
       await this.teamModel.findOneAndUpdate(
         { _id: teamId }, // filter team with _id
         {
@@ -129,8 +108,6 @@ export class TeamService {
       );
       return { message: 'Team has been updated successfully!' };
     } catch (e) {
-      // console.log('Err at updateTeam => ', e?.message);
-      // throw new BadRequestException(e?.message);
       throw e;
     }
   }

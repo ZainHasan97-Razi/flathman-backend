@@ -313,7 +313,6 @@ export class SubscriptionService {
   }
 
   async updateWhileGet(data: UpdateSubscriptionWhileGetDto) {
-    // console.log('updateWhileGet');
     try {
       const subscription = await this.subscriptionModel
         .findById(data.subscriptionId)
@@ -367,7 +366,6 @@ export class SubscriptionService {
       }
       return response;
     } catch (e) {
-      // console.log(e);
       throw e;
     }
   }

@@ -31,7 +31,6 @@ export class OpponentTeamService {
       const response = await this.opponentTeamModel.find().exec();
       return response;
     } catch (e) {
-      // throw new NotFoundException(`Couldn't found any Team`);
       throw e;
     }
   }
@@ -69,13 +68,8 @@ export class OpponentTeamService {
 
       //Maximillian
       // populate('cart.items.productId')
-      if (!response) {
-        throw new NotFoundException(`Couldn't found any team`);
-      } else {
-        return response;
-      }
+      return response;
     } catch (e) {
-      // console.log('FingOne team Err ==>>>>>  ', e);
       throw e;
     }
   }
@@ -87,51 +81,27 @@ export class OpponentTeamService {
         .exec();
       return response;
     } catch (e) {
-      // throw new NotFoundException(`Couldn't found user's Team`);
       throw e;
     }
   }
 
   async createTeam(data: CreateOpponentTeamDto) {
     try {
-      // if (data.coachCell.length !== 10 || isNaN(Number(data.coachCell))) {
-      //   throw new BadRequestException(
-      //     'Invalid Coach cell, number should be of 10 characters and numeric',
-      //   );
-      // }
-      // await this.teamnameIsUnique(data.teamName);
       await this.teamOwnerExist(data.teamOwner);
-
       const createdTeam = await this.opponentTeamModel.create(data);
-      if (createdTeam) {
-        return {
-          message: `Team ${data.teamName} has been created successfully!`,
-        };
-      }
       return createdTeam;
     } catch (e) {
-      // console.log('Err createTeam => ', e);
-      // throw new BadRequestException(e?.message);
       throw e;
     }
   }
 
   async updateTeam(data: UpdateOppTeamDto) {
     try {
-      // if (
-      //   (data?.coachCell && data.coachCell.length !== 10) ||
-      //   isNaN(Number(data.coachCell))
-      // ) {
-      //   throw new BadRequestException(
-      //     'Invalid Coach cell, number should be of 10 characters and numeric',
-      //   );
-      // }
       const teamId = data.teamId;
       let team = await this.opponentTeamModel.findById(teamId);
       if (!team) {
         throw new NotFoundException(`Team ${data.teamNickName} doesn't exist`);
       }
-      // const updatedTeam = await this.teamModel.findOneAndUpdate(
       await this.opponentTeamModel.findOneAndUpdate(
         { _id: teamId }, // filter team with _id
         {
@@ -145,7 +115,6 @@ export class OpponentTeamService {
       );
       return { message: 'Team has been updated successfully!' };
     } catch (e) {
-      // throw new BadRequestException(e?.message);
       throw e;
     }
   }

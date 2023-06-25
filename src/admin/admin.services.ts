@@ -89,8 +89,6 @@ export class AdminService {
     return await this.subscriptionType.create(body);
   }
   async DeleteSubscriptionType(id: string) {
-    console.log('id at admin.serviceeee => ', id);
-
     return await this.subscriptionType.delete(id);
   }
 

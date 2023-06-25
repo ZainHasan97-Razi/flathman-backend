@@ -22,7 +22,6 @@ export class UserService {
       const response = await this.userModel.find().exec();
       return response;
     } catch (e) {
-      // throw new NotFoundException(`Couldn't found any user`);
       throw e;
     }
   }
@@ -51,22 +50,4 @@ export class UserService {
       throw e;
     }
   }
-
-  // async updateTeam(data: CreateUserDto) {
-  //   try {
-  //     const team = await this.teamModel.findOne({ teamName: data.teamName });
-  //     if (!team) {
-  //       throw new NotFoundException(`Team ${data.teamName} doesn't exist`);
-  //     }
-  //     const updatedTeam = await this.teamModel.findOneAndUpdate({
-  //       teamName: data.teamName,
-  //       players: data.players,
-  //     });
-  //     if (updatedTeam) {
-  //       return { message: 'Team has been updated successfully!' };
-  //     }
-  //   } catch (e) {
-  //     throw new BadRequestException(`Request failed: Couldn't update team`);
-  //   }
-  // }
 }

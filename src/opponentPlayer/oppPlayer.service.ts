@@ -26,7 +26,6 @@ export class OpponentPlayerService {
       const response = await this.oppPlayerModel.find().exec();
       return response;
     } catch (e) {
-      // throw new NotFoundException(`Couldn't found any players`);
       throw e;
     }
   }
@@ -36,8 +35,6 @@ export class OpponentPlayerService {
       const response = await this.oppPlayerModel.findById(id);
       return response;
     } catch (e) {
-      // console.log(e);
-      // throw new NotFoundException(`Couldn't found any player`);
       throw e;
     }
   }
@@ -47,7 +44,6 @@ export class OpponentPlayerService {
       const response = await this.oppPlayerModel.find({ teamId: id }).exec();
       return response;
     } catch (e) {
-      // throw new NotFoundException(`Couldn't found team's Player`);
       throw e;
     }
   }
@@ -65,18 +61,9 @@ export class OpponentPlayerService {
       if (playerNumberAlreadyExist) {
         throw new BadRequestException(`Player number already exist`);
       }
-      // const teamPlayers = await this.oppPlayerModel.find({
-      //   teamId: data.teamId,
-      // });
-      // if (teamPlayers.length < 10) {
       const createdPlayer = await this.oppPlayerModel.create(data);
       return createdPlayer;
-      // } else {
-      //   throw new ConflictException(`Can't add players anymore to this team`);
-      // }
     } catch (e) {
-      // console.log('Err createTeam => ', e);
-      // throw new BadRequestException(e);
       throw e;
     }
   }
