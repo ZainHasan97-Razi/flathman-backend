@@ -57,13 +57,6 @@ export class PlayerService {
       if (!team) {
         throw new ConflictException(`Invalid team!`);
       }
-      // const player = await this.playerModel.findOne({
-      //   phone: data.phone,
-      //   teamId: data.teamId,
-      // });
-      // if (player) {
-      //   throw new ConflictException(`TWO PLAYERS CAN'T HAVE THE SAME PHONE #`);
-      // }
       const homeJerseyAlreadyExist = await this.playerModel.findOne({
         homeJersey: data.homeJersey,
         teamId: data.teamId,
@@ -78,16 +71,9 @@ export class PlayerService {
       if (awayJerseyAlreadyExist) {
         throw new BadRequestException('Away Jersey already exist!');
       }
-      // const teamPlayers = await this.playerModel.find({ teamId: data.teamId });
-      // if (teamPlayers.length < 10) {
       const createdPlayer = await this.playerModel.create(data);
       return createdPlayer;
-      // } else {
-      //   throw new ConflictException(`Can't add players anymore to this team`);
-      // }
     } catch (e) {
-      // console.log('Err createTeam => ', e);
-      // throw new BadRequestException('Failed to create player:', e);
       throw e;
     }
   }
@@ -120,13 +106,8 @@ export class PlayerService {
       if (!player) {
         throw new NotFoundException(`Player ${data.playerName} doesn't exist`);
       }
-      const updatedPlayer = await this.playerModel.findByIdAndUpdate(
-        { _id: data.playerId },
-        data,
-      );
-      if (updatedPlayer) {
-        return { message: 'Player has been updated successfully!' };
-      }
+      await this.playerModel.findByIdAndUpdate({ _id: data.playerId }, data);
+      return { message: 'Player has been updated successfully!' };
     } catch (e) {
       // throw new BadRequestException(`Request failed: Couldn't update player`);
       throw e;
