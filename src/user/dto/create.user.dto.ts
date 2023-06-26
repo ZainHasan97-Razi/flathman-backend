@@ -9,6 +9,7 @@ import {
   ArrayMinSize,
   IsArray,
   IsEmail,
+  length,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -16,7 +17,7 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Username is required!' })
   userName: string;
 
-  @IsBoolean()
+  // @IsBoolean()
   isAdmin: boolean;
 
   @IsNotEmpty({ message: 'Email is required!' })
@@ -25,8 +26,8 @@ export class CreateUserDto {
 
   @IsNotEmpty({ message: 'Contact number is required!' })
   @IsString({ message: 'Invalid contact number!' })
-  @MaxLength(10, { message: 'Contact number should be of 10 digits' })
-  @MinLength(10, { message: 'Contact number should be of 10 digits' })
+  @MaxLength(10)
+  @MinLength(10)
   contactNumber: string;
 
   @IsNotEmpty({ message: 'Password is required!' })
