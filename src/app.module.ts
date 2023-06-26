@@ -67,7 +67,7 @@ export class AppModule implements NestModule {
         // { path: 'user', method: RequestMethod.ALL },
         // { path: 'user/:id', method: RequestMethod.ALL },
         // { path: 'player', method: RequestMethod.ALL },
-        { path: 'player/create', method: RequestMethod.ALL },
+        // { path: 'player/create', method: RequestMethod.ALL },
         // { path: 'player/:id', method: RequestMethod.ALL },
         // { path: 'player/my/:id', method: RequestMethod.ALL },
         // { path: 'subscription', method: RequestMethod.ALL },
@@ -78,6 +78,10 @@ export class AppModule implements NestModule {
         // { path: 'color/create', method: RequestMethod.ALL },
         // { path: 'color', method: RequestMethod.ALL },
         // { path: 'admin/contact-us', method: RequestMethod.ALL },
+        {
+          path: 'opponentTeam/by-licensed-team/:id',
+          method: RequestMethod.ALL,
+        },
       )
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }

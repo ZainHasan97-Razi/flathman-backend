@@ -7,10 +7,12 @@ import {
   Param,
   Delete,
   Req,
+  UsePipes,
 } from '@nestjs/common';
 import { OpponentPlayerService } from './oppPlayer.service';
 import { CreateOpponentPlayerDto } from './dto/create.oppPlayer.dto';
 import { UpdateOpponentPlayerDto } from './dto/update.oppPlayer.dto';
+import { MongoIdValidationPipe } from 'src/common/pipes/mongoid.validation.pipe';
 // import { UpdatePlayerDto } from './dto/update.player.dto';
 
 @Controller('opponentPlayer')
@@ -45,6 +47,7 @@ export class OpponentPlayerController {
   }
 
   @Delete(':id')
+  @UsePipes(new MongoIdValidationPipe())
   delete(@Param('id') id: string) {
     return this.oppPlayerService.delete(id);
   }
