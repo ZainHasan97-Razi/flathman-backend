@@ -49,6 +49,7 @@ export class AppModule implements NestModule {
       .apply(AuthorizationMiddleware)
       .exclude(
         { path: 'auth/login', method: RequestMethod.ALL },
+        { path: 'auth/signup', method: RequestMethod.ALL },
         // { path: 'admin/createUser', method: RequestMethod.ALL },
         // { path: 'admin/createRule', method: RequestMethod.ALL },
         // { path: 'admin/createTeam', method: RequestMethod.ALL },

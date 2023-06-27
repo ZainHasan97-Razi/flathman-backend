@@ -71,6 +71,7 @@ export class PlayerService {
       if (awayJerseyAlreadyExist) {
         throw new BadRequestException('Away Jersey already exist!');
       }
+      data.playerName = data.firstName + ' ' + data.lastName;
       const createdPlayer = await this.playerModel.create(data);
       return createdPlayer;
     } catch (e) {
@@ -106,6 +107,7 @@ export class PlayerService {
       if (!player) {
         throw new NotFoundException(`Player ${data.playerName} doesn't exist`);
       }
+      data.playerName = data.firstName + ' ' + data.lastName;
       await this.playerModel.findByIdAndUpdate({ _id: data.playerId }, data);
       return { message: 'Player has been updated successfully!' };
     } catch (e) {

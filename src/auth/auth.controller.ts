@@ -15,9 +15,8 @@ export class AuthController {
     return response;
   }
 
-  // @Post('/signup')
-  // Signup(@Body() body: CreateUserDto) {
-  //   const response = this.authService.Signup(body);
-  //   return response;
-  // }
+  @Post('/signup')
+  Signup(@Body() body: CreateUserDto) {
+    return this.authService.Create(body);
+  }
 }

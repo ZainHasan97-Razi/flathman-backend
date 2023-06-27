@@ -17,9 +17,14 @@ export class CreatePlayerDto {
   @IsMongoId({ message: 'Invalid team!' })
   teamId;
 
-  // @IsString({ message: 'Player name is required!' })
-  @IsNotEmpty({ message: 'Player name is required!' })
+  // @IsNotEmpty({ message: 'Player name is required!' })
   playerName: string;
+
+  @IsNotEmpty({ message: 'First name is required!' })
+  firstName: string;
+
+  @IsNotEmpty({ message: 'Last name is required!' })
+  lastName: string;
 
   // @IsEmail({ message: 'Invalid email format!' })
   // @IsNotEmpty({ message: 'Email is required!' })
