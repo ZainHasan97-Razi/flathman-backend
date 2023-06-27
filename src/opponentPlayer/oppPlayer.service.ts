@@ -95,7 +95,6 @@ export class OpponentPlayerService {
   async delete(id: string) {
     try {
       const response = await this.oppPlayerModel.findByIdAndDelete(id);
-      console.log('resp at deleted opp player', response);
     } catch (e) {
       throw e;
     }

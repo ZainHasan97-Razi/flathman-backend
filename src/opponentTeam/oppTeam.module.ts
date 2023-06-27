@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { OpponentTeamController } from './oppTeam.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { OpponentTeamSchema } from './oppTeam.model';
@@ -9,17 +9,23 @@ import { UserSchema } from 'src/user/user.model';
 import { UserService } from 'src/user/user.service';
 import { OpponentPlayerSchema } from 'src/opponentPlayer/oppPlayer.model';
 import { OpponentPlayerService } from 'src/opponentPlayer/oppPlayer.service';
+import { TeamSchema } from 'src/team/teams.model';
+import { TeamService } from 'src/team/teams.services';
+import { PlayerSchema } from 'src/player/player.model';
+import { PlayerService } from 'src/player/player.service';
 // import { PlayerModule } from 'src/player/player.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: 'OpponentTeam', schema: OpponentTeamSchema },
+      { name: 'OpponentPlayer', schema: OpponentPlayerSchema },
       { name: 'Rule', schema: RuleSchema },
       { name: 'User', schema: UserSchema },
-      { name: 'OpponentPlayer', schema: OpponentPlayerSchema },
+      { name: 'Team', schema: TeamSchema },
+      { name: 'Player', schema: PlayerSchema },
     ]),
-    // forwardRef(() => PlayerModule),
+    // forwardRef(() => TeamModulebb),
   ],
   controllers: [OpponentTeamController],
   providers: [
@@ -27,6 +33,8 @@ import { OpponentPlayerService } from 'src/opponentPlayer/oppPlayer.service';
     RuleService,
     UserService,
     OpponentPlayerService,
+    TeamService,
+    PlayerService,
   ],
   exports: [OpponentTeamService],
 })

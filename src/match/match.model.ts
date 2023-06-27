@@ -15,8 +15,5 @@ export const MatchSchema = new mongoose.Schema(
       enum: ['forfit', 'cancelled', 'completed'],
     },
   },
-  {
-    // WILL CREATE TIME STAMPS (CREATED AT & MODIFIED AT)
-    timestamps: true,
-  },
+  { timestamps: true },
 );
