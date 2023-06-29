@@ -17,10 +17,12 @@ import { SubscriptionService } from 'src/subscription/userSubscription/subscript
 import { SubscriptionTypeSchema } from 'src/subscription/subscriptionType/subscriptionType.model';
 import { SubscriptionTypeService } from 'src/subscription/subscriptionType/subscriptionType.service';
 import { PlayerModule } from 'src/player/player.module';
+import { EmailModule } from 'src/email/email.module';
 
 @Module({
   // imports: [UserModule, TeamModule],
   imports: [
+    EmailModule,
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema },
       { name: 'Team', schema: TeamSchema },

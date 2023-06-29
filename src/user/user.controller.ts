@@ -14,4 +14,9 @@ export class UserController {
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
+
+  @Post('test-email')
+  testEmail() {
+    return this.userService.testEmail();
+  }
 }

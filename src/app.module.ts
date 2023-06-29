@@ -20,6 +20,7 @@ import { AuthModule } from './auth/auth.module';
 import { OpponentPlayerModule } from './opponentPlayer/oppPlayer.module';
 import { OpponentTeamModulebb } from './opponentTeam/oppTeam.module';
 import { ColorModule } from './color/color.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { ColorModule } from './color/color.module';
     OpponentPlayerModule,
     OpponentTeamModulebb,
     ColorModule,
+    EmailModule,
   ],
   // controllers: [AppController],
   // providers: [AppService],
@@ -67,8 +69,9 @@ export class AppModule implements NestModule {
         // { path: 'team/my/:id', method: RequestMethod.ALL },
         // { path: 'user', method: RequestMethod.ALL },
         // { path: 'user/:id', method: RequestMethod.ALL },
+        { path: `user/test-email`, method: RequestMethod.ALL },
         // { path: 'player', method: RequestMethod.ALL },
-        { path: 'player/create', method: RequestMethod.ALL },
+        // { path: 'player/create', method: RequestMethod.ALL },
         // { path: 'player/:id', method: RequestMethod.ALL },
         // { path: 'player/my/:id', method: RequestMethod.ALL },
         // { path: 'subscription', method: RequestMethod.ALL },

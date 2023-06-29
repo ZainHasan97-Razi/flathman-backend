@@ -9,10 +9,12 @@ import { UserSchema } from 'src/user/user.model';
 import { UserService } from 'src/user/user.service';
 import { PlayerSchema } from 'src/player/player.model';
 import { PlayerService } from 'src/player/player.service';
+import { EmailModule } from 'src/email/email.module';
 // import { PlayerModule } from 'src/player/player.module';
 
 @Module({
   imports: [
+    EmailModule,
     MongooseModule.forFeature([
       { name: 'Team', schema: TeamSchema },
       { name: 'Rule', schema: RuleSchema },
