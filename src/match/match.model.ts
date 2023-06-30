@@ -16,7 +16,6 @@ export const MatchSchema = new mongoose.Schema(
     },
   },
   {
-    // WILL CREATE TIME STAMPS (CREATED AT & MODIFIED AT)
     timestamps: true,
   },
 );

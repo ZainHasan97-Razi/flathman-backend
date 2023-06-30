@@ -21,6 +21,7 @@ import { OpponentPlayerModule } from './opponentPlayer/oppPlayer.module';
 import { OpponentTeamModulebb } from './opponentTeam/oppTeam.module';
 import { ColorModule } from './color/color.module';
 import { EmailModule } from './email/email.module';
+import { OtpModule } from './otp/otp.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { EmailModule } from './email/email.module';
     OpponentTeamModulebb,
     ColorModule,
     EmailModule,
+    OtpModule,
   ],
   // controllers: [AppController],
   // providers: [AppService],
@@ -52,6 +54,8 @@ export class AppModule implements NestModule {
       .exclude(
         { path: 'auth/login', method: RequestMethod.ALL },
         { path: 'auth/signup', method: RequestMethod.ALL },
+        { path: 'user/send-reset-otp', method: RequestMethod.ALL },
+        { path: 'user/confirm-reset-otp', method: RequestMethod.ALL },
         // { path: 'admin/createUser', method: RequestMethod.ALL },
         // { path: 'admin/createRule', method: RequestMethod.ALL },
         // { path: 'admin/createTeam', method: RequestMethod.ALL },

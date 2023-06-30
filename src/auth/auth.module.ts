@@ -5,10 +5,12 @@ import { UserSchema } from '../user/user.model';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { EmailModule } from 'src/email/email.module';
+import { OtpModule } from 'src/otp/otp.module';
 
 @Module({
   imports: [
     EmailModule,
+    OtpModule,
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
   ],
   controllers: [AuthController],

@@ -8,21 +8,23 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create.user.dto';
 // import { HelperService } from 'src/constants/helper.service';
-import jwt = require('jsonwebtoken');
-import bcrypt from 'bcryptjs';
 import { EmailService } from 'src/email/email.service';
+import { OtpService } from 'src/otp/otp.service';
+import { OtpTypeEnum } from 'src/constants/enums';
+import jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel('User') private userModel: Model<CreateUserDto>, // private readonly HelperService: HelperService,
     private readonly emailService: EmailService,
+    private readonly otpService: OtpService,
   ) {}
 
   async findAll() {
     try {
-      const response = await this.userModel.find().exec();
-      return response;
+      return await this.userModel.find().exec();
     } catch (e) {
       throw e;
     }
@@ -30,13 +32,8 @@ export class UserService {
 
   async findOne(id: string) {
     try {
-      const response = await this.userModel.findById(id);
-      if (!response) {
-        throw new NotFoundException(`Couldn't found any user`);
-      }
-      return response;
+      return await this.userModel.findById(id);
     } catch (e) {
-      // console.log(e);
       throw e;
     }
   }
@@ -60,6 +57,50 @@ export class UserService {
         'Test Email',
         'Hi this is a test email',
       );
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async findByEmail(email: string) {
+    try {
+      return await this.userModel.findOne({ email });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async sendResetPasswordOtp(email: string, type: string) {
+    try {
+      const user = await this.findByEmail(email);
+      if (!user) {
+        throw new BadRequestException('Invalid user email!');
+      }
+      await this.otpService.sendEmailOtp(email, type, user);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async confirmResetPasswordOtp(
+    email: string,
+    code: string,
+    password: string,
+    type: OtpTypeEnum.reset_password_otp,
+  ) {
+    try {
+      const user = await this.findByEmail(email);
+      if (!user) {
+        throw new BadRequestException('Invalid user email!');
+      }
+      let response = { data: null, message: '' };
+      await this.otpService.confirmEmailOtp(email, code, type);
+      const hashedpassword = await bcrypt.hash(password, 12);
+      await this.userModel.findByIdAndUpdate(user._id, {
+        password: hashedpassword,
+      });
+      response.message = 'Password has been updated successfully!';
+      return response;
     } catch (e) {
       throw e;
     }
