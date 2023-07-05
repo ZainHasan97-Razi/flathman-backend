@@ -13,6 +13,8 @@ import { CreateUserDto } from 'src/user/dto/create.user.dto';
 import { OpponentPlayerService } from 'src/opponentPlayer/oppPlayer.service';
 import { CreateOpponentPlayerDto } from 'src/opponentPlayer/dto/create.oppPlayer.dto';
 import { UpdateOppTeamDto } from './dto/update.oppTeam.dto';
+import { CreateTeamDto } from 'src/team/dto/create.team.dto';
+import { TeamService } from 'src/team/teams.services';
 
 @Injectable()
 export class OpponentTeamService {
@@ -22,8 +24,11 @@ export class OpponentTeamService {
     @InjectModel('User') private userModel: Model<CreateUserDto>,
     @InjectModel('OpponentPlayer')
     private oppPlayerModel: Model<CreateOpponentPlayerDto>,
-    private readonly ruleService: RuleService,
+    // private readonly ruleService: RuleService,
     private readonly oppPlayerService: OpponentPlayerService,
+
+    // @InjectModel('Team') private teamModel: Model<CreateUserDto>,
+    private readonly teamService: TeamService,
   ) {}
 
   async findAll() {
@@ -76,10 +81,17 @@ export class OpponentTeamService {
 
   async findMyTeam(id: string) {
     try {
-      const response = await this.opponentTeamModel
-        .find({ teamOwner: id })
-        .exec();
+      const response = await this.opponentTeamModel.find({ teamOwner: id });
       return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async findOppteamsOfLicensedTeam(id: String) {
+    try {
+      // await this.licensedTeamExist(id);
+      return await this.opponentTeamModel.find({ licensedTeam: id });
     } catch (e) {
       throw e;
     }
@@ -132,4 +144,11 @@ export class OpponentTeamService {
       throw new ConflictException(`Team owner doesn't exist!`);
     }
   };
+
+  // licensedTeamExist = async (id: String) => {
+  //   let licensedTeam = await this.teamModel.findById(id);
+  //   if (!licensedTeam) {
+  //     throw new BadRequestException('Invalid licensed team!');
+  //   }
+  // };
 }
