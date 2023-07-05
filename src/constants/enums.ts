@@ -18,3 +18,7 @@ export enum PulsarPlatformIds {
   INSTAGRAM = 114,
   TIKTOK = 118,
 }
+
+export enum OtpTypeEnum {
+  reset_password_otp = 'reset_password_otp',
+}

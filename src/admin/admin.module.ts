@@ -17,10 +17,13 @@ import { SubscriptionService } from 'src/subscription/userSubscription/subscript
 import { SubscriptionTypeSchema } from 'src/subscription/subscriptionType/subscriptionType.model';
 import { SubscriptionTypeService } from 'src/subscription/subscriptionType/subscriptionType.service';
 import { PlayerModule } from 'src/player/player.module';
+import { EmailModule } from 'src/email/email.module';
+import { OtpModule } from 'src/otp/otp.module';
 
 @Module({
-  // imports: [UserModule, TeamModule],
   imports: [
+    EmailModule,
+    OtpModule,
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema },
       { name: 'Team', schema: TeamSchema },
@@ -36,7 +39,6 @@ import { PlayerModule } from 'src/player/player.module';
     AdminService,
     UserService,
     TeamService,
-    // HelperService,
     AuthService,
     PlayerService,
     RuleService,
