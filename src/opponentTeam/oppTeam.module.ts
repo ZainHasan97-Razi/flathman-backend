@@ -13,10 +13,14 @@ import { TeamSchema } from 'src/team/teams.model';
 import { TeamService } from 'src/team/teams.services';
 import { PlayerSchema } from 'src/player/player.model';
 import { PlayerService } from 'src/player/player.service';
+import { EmailModule } from 'src/email/email.module';
+import { OtpModule } from 'src/otp/otp.module';
 // import { PlayerModule } from 'src/player/player.module';
 
 @Module({
   imports: [
+    EmailModule,
+    OtpModule,
     MongooseModule.forFeature([
       { name: 'OpponentTeam', schema: OpponentTeamSchema },
       { name: 'OpponentPlayer', schema: OpponentPlayerSchema },
