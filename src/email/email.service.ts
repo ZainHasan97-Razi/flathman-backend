@@ -14,8 +14,8 @@ export class EmailService {
       port: 2525,
       // secure: true,
       auth: {
-        user: '7cec85339f33f7',
-        pass: 'dd13a721debe3e',
+        user: 'db4ffc1402f6fb',
+        pass: '0706c049cde3d9',
       },
     });
   }
