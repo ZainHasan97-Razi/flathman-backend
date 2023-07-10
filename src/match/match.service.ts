@@ -73,6 +73,17 @@ export class MatchService {
       if (!userExist) {
         throw new NotFoundException(`Couldn't found User`);
       }
+      let payload = data;
+      if (Number(payload.teamA.goals) === Number(payload.teamB.goals)) {
+        payload.teamA.status = 'tie';
+        payload.teamB.status = 'tie';
+      } else if (Number(payload.teamA.goals) > Number(payload.teamB.goals)) {
+        payload.teamA.status = 'winner';
+        payload.teamB.status = 'looser';
+      } else {
+        payload.teamA.status = 'looser';
+        payload.teamB.status = 'winner';
+      }
       const savedMatch = await this.matchModel.create(data);
       if (savedMatch) {
         return {
