@@ -135,8 +135,6 @@ export class MatchService {
   }
 
   async endSuspendedGame(data: CompleteSuspendedMatchDto) {
-    console.log('data ==>>>>', data);
-
     try {
       const suspendedGame = await this.matchModel.findById(
         // new mongoose.Types.ObjectId(data.matchId),
@@ -155,6 +153,14 @@ export class MatchService {
           message: `Suspended match has been marked completed successfully!`,
         };
       }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async delete(id: string) {
+    try {
+      await this.matchModel.findByIdAndDelete(id);
     } catch (e) {
       throw e;
     }
