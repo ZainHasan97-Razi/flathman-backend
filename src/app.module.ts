@@ -86,10 +86,11 @@ export class AppModule implements NestModule {
         // { path: 'color/create', method: RequestMethod.ALL },
         // { path: 'color', method: RequestMethod.ALL },
         // { path: 'admin/contact-us', method: RequestMethod.ALL },
-        {
-          path: 'opponentTeam/by-licensed-team/:id',
-          method: RequestMethod.ALL,
-        },
+        // {
+        //   path: 'opponentTeam/by-licensed-team/:id',
+        //   method: RequestMethod.ALL,
+        // },
+        // { path: 'match/create', method: RequestMethod.ALL },
       )
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
