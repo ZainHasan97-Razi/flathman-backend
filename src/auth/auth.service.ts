@@ -81,6 +81,7 @@ export class AuthService {
       // if (body.isAdmin) {
       //   throw new BadRequestException('Inappropriate registeration request');
       // }
+      body.email = body.email.toLowerCase();
       await this.emailIsUnique(body.email.toLowerCase());
       await this.usernameIsUnique(body.userName);
       await this.userContactIsUnique(body.contactNumber);
@@ -106,6 +107,7 @@ export class AuthService {
 
   async Update(body: UpdateUserDto) {
     try {
+      body.email = body.email.toLowerCase();
       if (body.isAdmin) {
         throw new BadRequestException('Inappropriate updation request');
       }
