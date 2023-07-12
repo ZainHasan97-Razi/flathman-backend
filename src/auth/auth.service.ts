@@ -26,7 +26,9 @@ export class AuthService {
   async Signin(body: UserLoginDto) {
     try {
       // await this.HelperService.emailIsUnique(details.email);
-      const user = await this.userModel.findOne({ email: body.email });
+      const user = await this.userModel.findOne({
+        email: body.email.toLowerCase(),
+      });
       if (!user) {
         throw new BadRequestException(`User email doesn't exist`);
       }
@@ -38,9 +40,13 @@ export class AuthService {
         throw new BadRequestException('Password is invalid');
       }
       // const token = jwt.sign({ email: body.email }, process.env.SECRET_KEY, {
-      const token = jwt.sign({ email: body.email }, '12345678987654321', {
-        expiresIn: '100d',
-      });
+      const token = jwt.sign(
+        { email: body.email.toLowerCase() },
+        '12345678987654321',
+        {
+          expiresIn: '100d',
+        },
+      );
       if (!token) {
         throw new InternalServerErrorException(`Couldn't generate token`);
       }
@@ -51,14 +57,14 @@ export class AuthService {
           _id: user._id,
           userName: user.userName,
           isAdmin: user.isAdmin,
-          email: user.email,
+          email: user.email.toLowerCase(),
           contactNumber: user.contactNumber,
         };
       } else {
         newUser = {
           _id: user._id,
           userName: user.userName,
-          email: user.email,
+          email: user.email.toLowerCase(),
           contactNumber: user.contactNumber,
         };
       }
@@ -75,7 +81,8 @@ export class AuthService {
       // if (body.isAdmin) {
       //   throw new BadRequestException('Inappropriate registeration request');
       // }
-      await this.emailIsUnique(body.email);
+      body.email = body.email.toLowerCase();
+      await this.emailIsUnique(body.email.toLowerCase());
       await this.usernameIsUnique(body.userName);
       await this.userContactIsUnique(body.contactNumber);
 
@@ -100,6 +107,7 @@ export class AuthService {
 
   async Update(body: UpdateUserDto) {
     try {
+      body.email = body.email.toLowerCase();
       if (body.isAdmin) {
         throw new BadRequestException('Inappropriate updation request');
       }
@@ -170,7 +178,9 @@ export class AuthService {
   }
 
   emailIsUnique = async (emailAddress: string) => {
-    const result = await this.userModel.findOne({ email: emailAddress });
+    const result = await this.userModel.findOne({
+      email: emailAddress.toLowerCase(),
+    });
     if (result) {
       throw new ConflictException('Email already exist!');
     }

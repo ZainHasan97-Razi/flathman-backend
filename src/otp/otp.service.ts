@@ -7,7 +7,6 @@ import { EmailService } from 'src/email/email.service';
 import { Otp } from './otp.model';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
-import { UserService } from 'src/user/user.service';
 import { OtpTypeEnum } from 'src/constants/enums';
 
 @Injectable()
@@ -24,7 +23,7 @@ export class OtpService {
 
       let payload = {
         user: user._id,
-        email: user.email,
+        email: user.email.toLowerCase(),
         type: type,
         code: otp,
         expiry: expiry,
@@ -35,7 +34,7 @@ export class OtpService {
 
       // Send the OTP via email
       this.emailService.sendEmail(
-        email,
+        email.toLowerCase(),
         'OTP Verification',
         `Your OTP is: ${otp}`,
       );
@@ -54,7 +53,11 @@ export class OtpService {
       throw new InternalServerErrorException('Invalid otp type!');
     }
     const storedOtp = await this.otpModel
-      .findOne({ email, type, expiry: { $gt: Date.now() - 86400000 } })
+      .findOne({
+        email: email.toLowerCase(),
+        type,
+        expiry: { $gt: Date.now() - 86400000 },
+      })
       .sort({ createdAt: -1 })
       .exec();
 

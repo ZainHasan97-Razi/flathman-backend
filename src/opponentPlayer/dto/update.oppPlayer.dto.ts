@@ -1,11 +1,5 @@
 // import { BaseProjectDto } from './base-project.dto';
-import {
-  IsNotEmpty,
-  IsEmail,
-  IsString,
-  IsMongoId,
-  IsOptional,
-} from 'class-validator';
+import { IsNotEmpty, IsString, IsMongoId, IsOptional } from 'class-validator';
 
 export class UpdateOpponentPlayerDto {
   @IsMongoId({ message: 'Invalid player!' })
