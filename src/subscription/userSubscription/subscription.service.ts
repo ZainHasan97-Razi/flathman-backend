@@ -81,6 +81,17 @@ export class SubscriptionService {
     }
   }
 
+  async getMySubscriptionById(body: { subscriptionId: string }) {
+    try {
+      const data = await this.subscriptionModel
+        .findById(body.subscriptionId)
+        .populate('subscriptionType teamId');
+      return data;
+    } catch (e) {
+      throw e;
+    }
+  }
+
   async getMySubscriptions(body: { userId: string }) {
     try {
       const response = await this.subscriptionModel
