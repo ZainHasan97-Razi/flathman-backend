@@ -90,6 +90,7 @@ export class AppModule implements NestModule {
           path: 'opponentTeam/by-licensed-team/:id',
           method: RequestMethod.ALL,
         },
+        { path: 'subscription/subscriptionId', method: RequestMethod.ALL },
       )
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }

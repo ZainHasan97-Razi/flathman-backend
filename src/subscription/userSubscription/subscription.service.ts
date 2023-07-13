@@ -74,7 +74,13 @@ export class SubscriptionService {
 
       const data = await this.subscriptionModel
         .find({ userId: body.userId })
-        .populate('subscriptionType teamId');
+        .populate('subscriptionType')
+        .populate({
+          path: 'teamId',
+          populate: {
+            path: 'gameRules',
+          },
+        });
       return data;
     } catch (e) {
       throw e;
@@ -85,7 +91,13 @@ export class SubscriptionService {
     try {
       const data = await this.subscriptionModel
         .findById(body.subscriptionId)
-        .populate('subscriptionType teamId');
+        .populate('subscriptionType')
+        .populate({
+          path: 'teamId',
+          populate: {
+            path: 'gameRules',
+          },
+        });
       return data;
     } catch (e) {
       throw e;
