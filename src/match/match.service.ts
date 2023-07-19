@@ -73,6 +73,17 @@ export class MatchService {
       if (!userExist) {
         throw new NotFoundException(`Couldn't found User`);
       }
+      let payload = data;
+      if (Number(payload.teamA.goals) === Number(payload.teamB.goals)) {
+        payload.teamA.status = 'tie';
+        payload.teamB.status = 'tie';
+      } else if (Number(payload.teamA.goals) > Number(payload.teamB.goals)) {
+        payload.teamA.status = 'winner';
+        payload.teamB.status = 'looser';
+      } else {
+        payload.teamA.status = 'looser';
+        payload.teamB.status = 'winner';
+      }
       const savedMatch = await this.matchModel.create(data);
       if (savedMatch) {
         return {
@@ -124,8 +135,6 @@ export class MatchService {
   }
 
   async endSuspendedGame(data: CompleteSuspendedMatchDto) {
-    console.log('data ==>>>>', data);
-
     try {
       const suspendedGame = await this.matchModel.findById(
         // new mongoose.Types.ObjectId(data.matchId),
@@ -144,6 +153,14 @@ export class MatchService {
           message: `Suspended match has been marked completed successfully!`,
         };
       }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async delete(id: string) {
+    try {
+      await this.matchModel.findByIdAndDelete(id);
     } catch (e) {
       throw e;
     }

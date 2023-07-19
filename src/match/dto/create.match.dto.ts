@@ -16,10 +16,10 @@ export class CreateMatchDto {
   userId;
 
   @IsObject()
-  winnerTeam;
+  teamA;
 
   @IsObject()
-  otherTeam;
+  teamB;
 
   @IsNotEmpty()
   @IsObject()

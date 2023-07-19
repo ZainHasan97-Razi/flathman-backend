@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Patch,
+  Delete,
+} from '@nestjs/common';
 import { MatchService } from './match.service';
 import { CreateMatchDto } from './dto/create.match.dto';
 import { UpdateMatchDto } from './dto/update.match.dto';
@@ -51,4 +59,8 @@ export class MatchController {
   // findOneSuspended(@Param('id') id: string) {
   //   return this.matchService.findOneSuspended(id);
   // }
+  @Delete(':id')
+  findOneAndDelete(@Param('id') id: string) {
+    return this.matchService.delete(id);
+  }
 }
