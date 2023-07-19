@@ -15,11 +15,6 @@ import { SubscriptionService } from './subscription.service';
 export class SubscriptionController {
   constructor(private readonly subscriptionService: SubscriptionService) {}
 
-  // @Get()
-  // findAll() {
-  //   return this.subscriptionService.findAll();
-  // }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.subscriptionService.findOne(id);
@@ -30,11 +25,14 @@ export class SubscriptionController {
     return this.subscriptionService.getMyAllSubscription(body);
   }
 
+  @Post('subscriptionId')
+  getMySubscriptionById(@Body() body: { subscriptionId: string }) {
+    return this.subscriptionService.getMySubscriptionById(body);
+  }
+
   @Post('my')
   findMySubscription(@Body() body) {
-    // console.log('findMySubscription id =>>> ', body);
     return this.subscriptionService.getMySubscriptions(body);
-    // return [];
   }
 
   @Patch('update-usage-count')
@@ -46,13 +44,6 @@ export class SubscriptionController {
   updateSUbscriptionTeam(
     @Body() body: { teamId: string; subscriptionId: string },
   ) {
-    // console.log('bodyyy', body);
     return this.subscriptionService.assignTeamASubscription(body);
   }
-
-  // @Get('my')
-  // findMySubscription(@Req() req: Request) {
-  //   console.log('findMySubscription id =>>> ', req);
-  //   return this.subscriptionService.getMySubscriptions(req);
-  // }
 }

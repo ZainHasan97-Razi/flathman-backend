@@ -91,7 +91,12 @@ export class AppModule implements NestModule {
         //   method: RequestMethod.ALL,
         // },
         // { path: 'match/create', method: RequestMethod.ALL },
-        { path: 'match/:id', method: RequestMethod.ALL },
+        // { path: 'match/:id', method: RequestMethod.ALL },
+        // {
+        //   path: 'opponentTeam/by-licensed-team/:id',
+        //   method: RequestMethod.ALL,
+        // },
+        // { path: 'subscription/subscriptionId', method: RequestMethod.ALL },
       )
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }

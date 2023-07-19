@@ -64,7 +64,7 @@ export class UserService {
 
   async findByEmail(email: string) {
     try {
-      return await this.userModel.findOne({ email });
+      return await this.userModel.findOne({ email: email.toLowerCase() });
     } catch (e) {
       throw e;
     }
@@ -72,11 +72,11 @@ export class UserService {
 
   async sendResetPasswordOtp(email: string, type: string) {
     try {
-      const user = await this.findByEmail(email);
+      const user = await this.findByEmail(email.toLowerCase());
       if (!user) {
         throw new BadRequestException('Invalid user email!');
       }
-      await this.otpService.sendEmailOtp(email, type, user);
+      await this.otpService.sendEmailOtp(email.toLowerCase(), type, user);
     } catch (e) {
       throw e;
     }
@@ -89,12 +89,12 @@ export class UserService {
     type: OtpTypeEnum.reset_password_otp,
   ) {
     try {
-      const user = await this.findByEmail(email);
+      const user = await this.findByEmail(email.toLowerCase());
       if (!user) {
         throw new BadRequestException('Invalid user email!');
       }
       let response = { data: null, message: '' };
-      await this.otpService.confirmEmailOtp(email, code, type);
+      await this.otpService.confirmEmailOtp(email.toLowerCase(), code, type);
       const hashedpassword = await bcrypt.hash(password, 12);
       await this.userModel.findByIdAndUpdate(user._id, {
         password: hashedpassword,

@@ -29,7 +29,7 @@ export class UserController {
   @Post('send-reset-otp')
   sendResetPasswordOtp(@Body() body: { email: string }) {
     return this.userService.sendResetPasswordOtp(
-      body.email,
+      body.email.toLowerCase(),
       OtpTypeEnum.reset_password_otp,
     );
   }
@@ -37,7 +37,7 @@ export class UserController {
   @Post('confirm-reset-otp')
   confirmResetPasswordOtp(@Body() body: ConfirmResetPasswordDto) {
     return this.userService.confirmResetPasswordOtp(
-      body.email,
+      body.email.toLowerCase(),
       body.code,
       body.password,
       OtpTypeEnum.reset_password_otp,

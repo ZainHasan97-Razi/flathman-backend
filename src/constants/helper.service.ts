@@ -16,7 +16,9 @@ export class HelperService {
   ) {}
 
   emailIsUnique = async (emailAddress: string) => {
-    const result = await this.userModel.findOne({ email: emailAddress });
+    const result = await this.userModel.findOne({
+      email: emailAddress.toLowerCase(),
+    });
     if (result) {
       throw new ConflictException('Email already exist!');
     }
