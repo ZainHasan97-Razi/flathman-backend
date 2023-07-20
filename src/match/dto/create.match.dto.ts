@@ -33,7 +33,7 @@ export class CreateMatchDto {
   @IsArray()
   activityLog;
 
-  @IsNotEmpty()
-  @IsString()
-  status: string;
+  // @IsNotEmpty()
+  // @IsString()
+  // status: string;
 }
