@@ -8,8 +8,7 @@ export const MatchSchema = new mongoose.Schema(
     general: { type: Object, required: true },
     rules: { type: Object, required: true },
     activityLog: { type: Array, required: true },
-    isSuspended: { type: Boolean, default: false },
-    status: {
+    gameStatus: {
       type: String,
       default: 'completed',
       enum: ['forfit', 'cancelled', 'completed'],
