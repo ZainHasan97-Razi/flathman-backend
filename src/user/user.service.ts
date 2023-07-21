@@ -11,7 +11,6 @@ import { CreateUserDto } from './dto/create.user.dto';
 import { EmailService } from 'src/email/email.service';
 import { OtpService } from 'src/otp/otp.service';
 import { OtpTypeEnum } from 'src/constants/enums';
-import jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 @Injectable()
