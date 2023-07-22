@@ -75,14 +75,14 @@ export class MatchService {
       }
       let payload = data;
       if (Number(payload.teamA.goals) === Number(payload.teamB.goals)) {
-        payload.teamA.status = 'tie';
-        payload.teamB.status = 'tie';
+        payload.teamA.status = 'Tied';
+        payload.teamB.status = 'Tied';
       } else if (Number(payload.teamA.goals) > Number(payload.teamB.goals)) {
-        payload.teamA.status = 'winner';
-        payload.teamB.status = 'looser';
+        payload.teamA.status = 'Won';
+        payload.teamB.status = 'Lost';
       } else {
-        payload.teamA.status = 'looser';
-        payload.teamB.status = 'winner';
+        payload.teamA.status = 'Won';
+        payload.teamB.status = 'Lost';
       }
       const savedMatch = await this.matchModel.create(data);
       if (savedMatch) {
