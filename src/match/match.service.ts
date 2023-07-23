@@ -81,8 +81,8 @@ export class MatchService {
         payload.teamA.status = 'Won';
         payload.teamB.status = 'Lost';
       } else {
-        payload.teamA.status = 'Won';
-        payload.teamB.status = 'Lost';
+        payload.teamA.status = 'Lost';
+        payload.teamB.status = 'Won';
       }
       const savedMatch = await this.matchModel.create(data);
       if (savedMatch) {
