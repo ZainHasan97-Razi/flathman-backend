@@ -165,4 +165,12 @@ export class MatchService {
       throw e;
     }
   }
+
+  async findByLicensedTeamId(id: string) {
+    try {
+      return await this.matchModel.find({ 'teamA.teamId': id });
+    } catch (e) {
+      throw e;
+    }
+  }
 }
