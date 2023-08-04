@@ -55,6 +55,11 @@ export class MatchController {
   findOne(@Param('id') id: string) {
     return this.matchService.findOne(id);
   }
+
+  @Get('licensed-team/:id')
+  findByLicensedTeamId(@Param('id') id: string) {
+    return this.matchService.findByLicensedTeamId(id);
+  }
   // @Get(':id')
   // findOneSuspended(@Param('id') id: string) {
   //   return this.matchService.findOneSuspended(id);
