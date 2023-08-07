@@ -52,9 +52,9 @@ export class UserService {
   async testEmail() {
     try {
       await this.emailService.sendEmail(
-        'zainrazi97@gmail.com',
+        process.env.TO_EMAIL_TESTER,
         'Test Email',
-        'Hi this is a test email',
+        'Hi this is a test email from Hashed app',
       );
     } catch (e) {
       throw e;

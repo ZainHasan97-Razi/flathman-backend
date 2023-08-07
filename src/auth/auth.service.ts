@@ -42,7 +42,7 @@ export class AuthService {
       // const token = jwt.sign({ email: body.email }, process.env.SECRET_KEY, {
       const token = jwt.sign(
         { email: body.email.toLowerCase() },
-        '12345678987654321',
+        process.env.SECRET_KEY,
         {
           expiresIn: '100d',
         },
