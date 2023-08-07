@@ -22,13 +22,12 @@ import { OpponentTeamModulebb } from './opponentTeam/oppTeam.module';
 import { ColorModule } from './color/color.module';
 import { EmailModule } from './email/email.module';
 import { OtpModule } from './otp/otp.module';
+import { config } from 'dotenv';
+config();
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://flethmangeneburaaq:flethmangeneburaaq123@cluster0.zk6j3.mongodb.net/flethman?retryWrites=true&w=majority',
-      // `mongodb+srv://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@cluster0.zk6j3.mongodb.net/flethman?retryWrites=true&w=majority`,
-    ),
+    MongooseModule.forRoot(process.env.DATABASE_URL),
     AdminModule,
     UserModule,
     AuthModule,
