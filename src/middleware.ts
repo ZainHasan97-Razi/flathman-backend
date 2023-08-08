@@ -6,16 +6,13 @@ import jwt = require('jsonwebtoken');
 @Injectable()
 export class AuthorizationMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: any) {
-    // console.log('req.headers.authorization =>>>> ', req.headers.authorization);
-    let key = '12345678987654321';
-
     try {
       const header = req.headers.authorization;
       if (header == undefined) throw 'forbidden';
       if (typeof header !== 'undefined') {
         const bearer = header.split(' ');
         const token = bearer[1];
-        const decode = jwt.verify(token, key);
+        const decode = jwt.verify(token, process.env.SECRET_KEY);
         req.body.decodeToken = decode;
         // console.log('Success D');
       }

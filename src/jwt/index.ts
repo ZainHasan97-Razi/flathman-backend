@@ -1,13 +1,12 @@
 let jwt = require('jsonwebtoken');
 // key will come from env
-let key = '12345678987654321';
 
 export const encryptData = async (data: any) => {
   console.log('Data in jwt middleware', data);
   let ecryptedData;
   try {
     console.log('Request abc   ', data);
-    ecryptedData = jwt.sign(data.toJSON(), key);
+    ecryptedData = jwt.sign(data.toJSON(), process.env.SECRET_KEY);
     console.log('Encrypted data =>> ', ecryptedData);
     return ecryptedData;
   } catch (err) {
@@ -21,7 +20,7 @@ export const decryptData = async (data: any) => {
     const bearer = data.encrypt.value.split(' ');
     console.log('Bearer', bearer);
     const token = bearer[0];
-    const decryptData = jwt.verify(token, key);
+    const decryptData = jwt.verify(token, process.env.SECRET_KEY);
     return decryptData;
   } catch (err) {
     console.log('Error', err);
