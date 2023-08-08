@@ -23,6 +23,7 @@ import { ColorModule } from './color/color.module';
 import { EmailModule } from './email/email.module';
 import { OtpModule } from './otp/otp.module';
 import { config } from 'dotenv';
+import { AppVersionModule } from './appVersion/appVersion.module';
 config();
 
 @Module({
@@ -42,6 +43,7 @@ config();
     ColorModule,
     EmailModule,
     OtpModule,
+    AppVersionModule,
   ],
   // controllers: [AppController],
   // providers: [AppService],
@@ -96,6 +98,7 @@ export class AppModule implements NestModule {
         //   method: RequestMethod.ALL,
         // },
         // { path: 'subscription/subscriptionId', method: RequestMethod.ALL },
+        { path: 'app-version/current', method: RequestMethod.ALL },
       )
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
