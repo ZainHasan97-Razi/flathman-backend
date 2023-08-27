@@ -98,6 +98,7 @@ export class SubscriptionService {
             path: 'gameRules',
           },
         });
+      if (!data) throw new BadRequestException('Invalid subscription id');
       return data;
     } catch (e) {
       throw e;
