@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { UpdateSubscriptionOnEndGameDto } from '../dto/update.subscription.dto';
 import { SubscriptionService } from './subscription.service';
+import mongoose from 'mongoose';
 
 @Controller('subscription')
 export class SubscriptionController {
@@ -42,7 +43,11 @@ export class SubscriptionController {
 
   @Patch('update-subscription-team')
   updateSUbscriptionTeam(
-    @Body() body: { teamId: string; subscriptionId: string },
+    @Body()
+    body: {
+      teamId: mongoose.Types.ObjectId;
+      subscriptionId: mongoose.Types.ObjectId;
+    },
   ) {
     return this.subscriptionService.assignTeamASubscription(body);
   }

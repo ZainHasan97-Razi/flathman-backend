@@ -14,6 +14,7 @@ import {
   UpdateSubscriptionWhileGetDto,
 } from '../dto/update.subscription.dto';
 import { SubscriptionTypeService } from '../subscriptionType/subscriptionType.service';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class SubscriptionService {
@@ -98,6 +99,7 @@ export class SubscriptionService {
             path: 'gameRules',
           },
         });
+      if (!data) throw new BadRequestException('Invalid subscription id');
       return data;
     } catch (e) {
       throw e;
@@ -394,36 +396,44 @@ export class SubscriptionService {
   }
 
   async assignTeamASubscription(data: {
-    teamId: string;
-    subscriptionId: string;
+    teamId: mongoose.Types.ObjectId;
+    subscriptionId: mongoose.Types.ObjectId;
   }) {
-    if (!data.teamId || data.teamId.length < 1) {
-      throw new NotFoundException(`Team id is invalid`);
-    }
-    const subscription = await this.subscriptionModel.findById(
-      data.subscriptionId,
-    );
-    if (!subscription) {
-      throw new NotFoundException(`Failed to find subsciption`);
-    }
-    if (subscription && subscription.isExpired) {
-      throw new BadRequestException(
-        'Subscription is expired, please get subsctiption first',
-      );
-    }
-    const prevTeamSubscription = await this.subscriptionModel.findOne({
-      teamId: data.teamId,
-    });
-    if (prevTeamSubscription) {
-      await this.subscriptionModel.findByIdAndUpdate(prevTeamSubscription._id, {
-        teamId: null,
-      });
-    }
-    // ASSIGN A TEAM_ID TO A SUSBSCIPTION
-    await this.subscriptionModel.findByIdAndUpdate(data.subscriptionId, {
-      teamId: data.teamId,
-    });
+    if (!mongoose.Types.ObjectId.isValid(data.teamId))
+      throw new BadRequestException('Invalid team id!!');
+    if (!mongoose.Types.ObjectId.isValid(data.subscriptionId))
+      throw new BadRequestException('Invalid subscription id!!');
     try {
+      const subscription = await this.subscriptionModel.findById(
+        data.subscriptionId,
+      );
+      if (!subscription) {
+        throw new NotFoundException(`Failed to find subsciption`);
+      }
+      if (subscription && subscription.isExpired) {
+        throw new BadRequestException(
+          'Subscription is expired, please get subsctiption first',
+        );
+      }
+      const prevTeamSubscription = await this.subscriptionModel.findOne({
+        teamId: data.teamId,
+      });
+      if (prevTeamSubscription) {
+        await this.subscriptionModel.findByIdAndUpdate(
+          prevTeamSubscription._id,
+          {
+            teamId: null,
+          },
+        );
+      }
+      // ASSIGN A TEAM_ID TO A SUSBSCIPTION
+      return await this.subscriptionModel.findByIdAndUpdate(
+        data.subscriptionId,
+        {
+          teamId: data.teamId,
+        },
+        { new: true },
+      );
     } catch (e) {
       console.log('Err at assignTeamASubscription', e);
       throw e;
