@@ -398,33 +398,37 @@ export class SubscriptionService {
     teamId: string;
     subscriptionId: string;
   }) {
-    if (!data.teamId || data.teamId.length < 1) {
-      throw new NotFoundException(`Team id is invalid`);
-    }
-    const subscription = await this.subscriptionModel.findById(
-      data.subscriptionId,
-    );
-    if (!subscription) {
-      throw new NotFoundException(`Failed to find subsciption`);
-    }
-    if (subscription && subscription.isExpired) {
-      throw new BadRequestException(
-        'Subscription is expired, please get subsctiption first',
-      );
-    }
-    const prevTeamSubscription = await this.subscriptionModel.findOne({
-      teamId: data.teamId,
-    });
-    if (prevTeamSubscription) {
-      await this.subscriptionModel.findByIdAndUpdate(prevTeamSubscription._id, {
-        teamId: null,
-      });
-    }
-    // ASSIGN A TEAM_ID TO A SUSBSCIPTION
-    await this.subscriptionModel.findByIdAndUpdate(data.subscriptionId, {
-      teamId: data.teamId,
-    });
     try {
+      const subscription = await this.subscriptionModel.findById(
+        data.subscriptionId,
+      );
+      if (!subscription) {
+        throw new NotFoundException(`Failed to find subsciption`);
+      }
+      if (subscription && subscription.isExpired) {
+        throw new BadRequestException(
+          'Subscription is expired, please get subsctiption first',
+        );
+      }
+      const prevTeamSubscription = await this.subscriptionModel.findOne({
+        teamId: data.teamId,
+      });
+      if (prevTeamSubscription) {
+        await this.subscriptionModel.findByIdAndUpdate(
+          prevTeamSubscription._id,
+          {
+            teamId: null,
+          },
+        );
+      }
+      // ASSIGN A TEAM_ID TO A SUSBSCIPTION
+      return await this.subscriptionModel.findByIdAndUpdate(
+        data.subscriptionId,
+        {
+          teamId: data.teamId,
+        },
+        { new: true },
+      );
     } catch (e) {
       console.log('Err at assignTeamASubscription', e);
       throw e;
