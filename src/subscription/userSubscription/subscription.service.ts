@@ -14,6 +14,7 @@ import {
   UpdateSubscriptionWhileGetDto,
 } from '../dto/update.subscription.dto';
 import { SubscriptionTypeService } from '../subscriptionType/subscriptionType.service';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class SubscriptionService {
@@ -395,9 +396,13 @@ export class SubscriptionService {
   }
 
   async assignTeamASubscription(data: {
-    teamId: string;
-    subscriptionId: string;
+    teamId: mongoose.Types.ObjectId;
+    subscriptionId: mongoose.Types.ObjectId;
   }) {
+    if (!mongoose.Types.ObjectId.isValid(data.teamId))
+      throw new BadRequestException('Invalid team id!!');
+    if (!mongoose.Types.ObjectId.isValid(data.subscriptionId))
+      throw new BadRequestException('Invalid subscription id!!');
     try {
       const subscription = await this.subscriptionModel.findById(
         data.subscriptionId,
