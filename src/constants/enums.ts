@@ -12,13 +12,29 @@ export enum STATUS {
   SERVICE_UNAVAILABLE = 503,
 }
 
-export enum PulsarPlatformIds {
-  TWITTER = 101,
-  YOUTUBE = 111,
-  INSTAGRAM = 114,
-  TIKTOK = 118,
-}
-
 export enum OtpTypeEnum {
   reset_password_otp = 'reset_password_otp',
+}
+
+export enum SubscriptionTypeEnum {
+  free_trial = 'free_trial', // Free trial hamesha times usage hogi
+  times_usage = 'times_usage',
+}
+
+export enum SubscriptionStatusEnum {
+  active = 'active',
+  expired = 'expired',
+  cancel = 'cancel',
+}
+
+export enum PlatformEnum {
+  android = 'android',
+  ios = 'ios',
+}
+
+export enum BundleStatusEnum {
+  active = 'active',
+  active_android = 'active_android',
+  active_ios = 'active_ios',
+  in_active = 'in_active',
 }

@@ -9,10 +9,11 @@ import {
   IsOptional,
   IsEnum,
 } from 'class-validator';
+import { PlatformEnum } from 'src/constants/enums';
 
 export class CreateAppVersionDto {
   // @IsString({ message: 'Team name is required!' })
-  @IsEnum({ android: 'android', ios: 'ios' })
+  @IsEnum(PlatformEnum)
   platform: string;
 
   @IsNotEmpty({ message: 'Version is required!' })
