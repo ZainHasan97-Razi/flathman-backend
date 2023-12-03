@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 import { BundleStatusEnum, SubscriptionTypeEnum } from 'src/constants/enums';
 
-export const SubscriptionBundleSchema = new mongoose.Schema(
+export const BundleSchema = new mongoose.Schema(
   {
     title: {
       type: String,

@@ -24,7 +24,7 @@ import { EmailModule } from './email/email.module';
 import { OtpModule } from './otp/otp.module';
 import { config } from 'dotenv';
 import { AppVersionModule } from './appVersion/appVersion.module';
-import { SubscriptionBundleModule } from './subscriptionBundle/subscriptionBundle.module';
+import { BundleModule } from './bundle/bundle.module';
 import { UserSubscriptionModule } from './userSubscription/userSubscription.module';
 config();
 
@@ -40,7 +40,7 @@ config();
     RuleModule,
     // SubscriptionModule,
     // SubscriptionTypeModule,
-    SubscriptionBundleModule,
+    BundleModule,
     UserSubscriptionModule,
     OpponentPlayerModule,
     OpponentTeamModulebb,

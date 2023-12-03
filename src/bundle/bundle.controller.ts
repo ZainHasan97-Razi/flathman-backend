@@ -8,7 +8,7 @@ import {
   Query,
   Patch,
 } from '@nestjs/common';
-import { SubscriptionBundleService } from './subscriptionBundle.service';
+import { BundleService } from './bundle.service';
 import mongoose from 'mongoose';
 import { CreateBundleDto } from './dto/create.bundle.dto';
 import { UpdateBundleDto } from './dto/update.bundle.dto';
@@ -17,7 +17,7 @@ import { MongoIdType } from 'src/common/types/mongoid.type';
 
 @Controller('bundle')
 export class SubscriptionBundleController {
-  constructor(private readonly bundleService: SubscriptionBundleService) {}
+  constructor(private readonly bundleService: BundleService) {}
 
   @Post('create')
   async create(@Body() body: CreateBundleDto) {

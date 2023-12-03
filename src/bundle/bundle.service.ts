@@ -11,10 +11,10 @@ import { CreateBundleDto } from './dto/create.bundle.dto';
 import { UpdateBundleDto } from './dto/update.bundle.dto';
 import { BundleStatusEnum } from 'src/constants/enums';
 @Injectable()
-export class SubscriptionBundleService {
+export class BundleService {
   constructor(
-    // private subscriptionModel: Model<SubscriptionModelDto>,
-    private bundleModel: Model<CreateBundleDto & UpdateBundleDto>,
+    @InjectModel('Bundle')
+    private bundleModel: Model<CreateBundleDto & UpdateBundleDto>, // private subscriptionModel: Model<SubscriptionModelDto>,
   ) {}
 
   async create(body: CreateBundleDto) {
