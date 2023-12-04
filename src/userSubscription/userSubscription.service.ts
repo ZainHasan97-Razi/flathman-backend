@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import mongoose from 'mongoose';
@@ -15,7 +10,6 @@ import {
   SubscriptionTypeEnum,
 } from 'src/constants/enums';
 import { BundleService } from 'src/bundle/bundle.service';
-import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto/create.user.dto';
 @Injectable()
 export class UserSubscriptionService {
