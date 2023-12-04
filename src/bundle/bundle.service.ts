@@ -50,4 +50,12 @@ export class BundleService {
       throw e;
     }
   }
+
+  async findOne(id: MongoIdType) {
+    try {
+      return await this.bundleModel.findById(id);
+    } catch (e) {
+      throw e;
+    }
+  }
 }

@@ -40,6 +40,7 @@ export const BundleSchema = new mongoose.Schema(
     displayOrder: {
       type: Number,
       required: true,
+      unique: true,
     },
     startTime: {
       type: Number,
