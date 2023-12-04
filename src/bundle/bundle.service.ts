@@ -27,7 +27,7 @@ export class BundleService {
 
   async update(id: MongoIdType, body: UpdateBundleDto) {
     try {
-      return await this.bundleModel.findByIdAndUpdate(id, body);
+      return await this.bundleModel.findByIdAndUpdate(id, body, { new: true });
     } catch (e) {
       throw e;
     }
@@ -36,7 +36,7 @@ export class BundleService {
   async findByUserId(userId: MongoIdType) {
     try {
       return await this.bundleModel.find({
-        status: BundleStatusEnum.in_active,
+        status: BundleStatusEnum.active,
       });
     } catch (e) {
       throw e;

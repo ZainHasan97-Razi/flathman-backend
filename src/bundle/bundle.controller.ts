@@ -20,18 +20,16 @@ export class SubscriptionBundleController {
   constructor(private readonly bundleService: BundleService) {}
 
   @Post('create')
-  async create(@Body() body: CreateBundleDto) {
-    const response = await this.bundleService.create(body);
-    return response;
+  create(@Body() body: CreateBundleDto) {
+    return this.bundleService.create(body);
   }
 
   @Patch('update/:id')
-  async update(
+  update(
     @Param('id', MongoIdValidationPipe) id: MongoIdType,
     @Body() body: UpdateBundleDto,
   ) {
-    const player = await this.bundleService.update(id, body);
-    return player;
+    return this.bundleService.update(id, body);
   }
 
   @Get('/:userId')
