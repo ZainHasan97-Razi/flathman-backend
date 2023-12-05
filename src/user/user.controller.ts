@@ -1,8 +1,10 @@
-import { Controller, Body, Post, Get, Param } from '@nestjs/common';
+import { Controller, Body, Post, Get, Param, Delete } from '@nestjs/common';
 import { UserService } from './user.service';
 import { OtpService } from 'src/otp/otp.service';
 import { OtpTypeEnum } from 'src/constants/enums';
 import { ConfirmResetPasswordDto } from './dto/confirm.reset.pass.dto';
+import { MongoIdValidationPipe } from 'src/common/pipes/mongoid.validation.pipe';
+import mongoose from 'mongoose';
 
 @Controller('user')
 export class UserController {
@@ -17,7 +19,7 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', MongoIdValidationPipe) id: mongoose.Types.ObjectId) {
     return this.userService.findOne(id);
   }
 
@@ -42,5 +44,10 @@ export class UserController {
       body.password,
       OtpTypeEnum.reset_password_otp,
     );
+  }
+
+  @Delete('delete-account')
+  delete(@Param('id', MongoIdValidationPipe) id: mongoose.Types.ObjectId) {
+    return this.userService.delete(id);
   }
 }

@@ -106,7 +106,7 @@ export class SubscriptionService {
     }
   }
 
-  async getMySubscriptions(body: { userId: string }) {
+  async getMySubscriptions(body: { userId: mongoose.Types.ObjectId }) {
     try {
       const response = await this.subscriptionModel
         .find({ userId: body.userId })

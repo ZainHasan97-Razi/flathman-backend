@@ -13,6 +13,7 @@ import { RuleService } from 'src/rules/rule.service';
 import { CreateUserDto } from 'src/user/dto/create.user.dto';
 import { CreatePlayerDto } from 'src/player/dto/create.player.dto';
 import { PlayerService } from 'src/player/player.service';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class TeamService {
@@ -69,7 +70,7 @@ export class TeamService {
     }
   }
 
-  async findMyTeam(id: string) {
+  async findMyTeam(id: mongoose.Types.ObjectId) {
     try {
       const response = await this.teamModel.find({ teamOwner: id }).exec();
       return response;

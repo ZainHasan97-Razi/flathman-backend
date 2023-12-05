@@ -11,6 +11,7 @@ import { CreateUserDto } from './dto/create.user.dto';
 import { EmailService } from 'src/email/email.service';
 import { OtpService } from 'src/otp/otp.service';
 import { OtpTypeEnum } from 'src/constants/enums';
+import mongoose from 'mongoose';
 const bcrypt = require('bcryptjs');
 
 @Injectable()
@@ -29,7 +30,7 @@ export class UserService {
     }
   }
 
-  async findOne(id: string) {
+  async findOne(id: mongoose.Types.ObjectId) {
     try {
       return await this.userModel.findById(id);
     } catch (e) {
@@ -37,11 +38,13 @@ export class UserService {
     }
   }
 
-  async delete(id: string) {
+  async delete(id: mongoose.Types.ObjectId) {
     try {
-      const response = await this.userModel.findByIdAndDelete(id);
+      const response = await this.userModel.findByIdAndUpdate(id, {
+        deletedAt: new Date(),
+      });
       if (!response) {
-        throw new NotFoundException(`Couldn't delete user`);
+        throw new NotFoundException(`Failed to delete user`);
       }
       return response;
     } catch (e) {
