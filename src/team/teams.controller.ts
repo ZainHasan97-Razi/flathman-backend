@@ -10,6 +10,8 @@ import {
 } from '@nestjs/common';
 import { TeamService } from './teams.services';
 import { CreateTeamDto } from './dto/create.team.dto';
+import { MongoIdValidationPipe } from 'src/common/pipes/mongoid.validation.pipe';
+import mongoose from 'mongoose';
 
 @Controller('team')
 export class TeamController {
@@ -31,7 +33,9 @@ export class TeamController {
   }
 
   @Get('my/:id')
-  findUserTeams(@Param('id') id: string) {
+  findUserTeams(
+    @Param('id', MongoIdValidationPipe) id: mongoose.Types.ObjectId,
+  ) {
     return this.teamService.findMyTeam(id);
   }
 

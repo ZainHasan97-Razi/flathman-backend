@@ -27,6 +27,10 @@ export const UserSchema = new mongoose.Schema(
       default: [],
       // required: true,
     },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true },
 );

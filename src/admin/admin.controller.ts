@@ -20,6 +20,8 @@ import { UpdateSubscriptionDto } from 'src/subscription/dto/update.subscription.
 import { UpdateUserDto } from 'src/user/dto/update.user.dto';
 import { UpdateTeamDto } from 'src/team/dto/update.team.dto';
 import { SubscriptionModelDto } from 'src/subscription/dto/subscription.model.dto';
+import mongoose from 'mongoose';
+import { MongoIdValidationPipe } from 'src/common/pipes/mongoid.validation.pipe';
 
 @Controller('admin')
 export class AdminController {
@@ -34,7 +36,7 @@ export class AdminController {
     return this.adminService.UpdateUser(body);
   }
   @Delete('deleteUser/:id')
-  deleteUser(@Param('id') id: string) {
+  deleteUser(@Param('id', MongoIdValidationPipe) id: mongoose.Types.ObjectId) {
     return this.adminService.DeleteUser(id);
   }
 
