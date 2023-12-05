@@ -40,6 +40,10 @@ export class UserService {
 
   async delete(id: mongoose.Types.ObjectId) {
     try {
+      const user = await this.userModel.findOne({ _id: id, deletedAt: null });
+      if (!user) {
+        throw new NotFoundException(`User does not exist!`);
+      }
       const response = await this.userModel.findByIdAndUpdate(id, {
         deletedAt: new Date(),
       });

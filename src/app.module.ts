@@ -57,6 +57,7 @@ export class AppModule implements NestModule {
         { path: 'auth/signup', method: RequestMethod.ALL },
         { path: 'user/send-reset-otp', method: RequestMethod.ALL },
         { path: 'user/confirm-reset-otp', method: RequestMethod.ALL },
+        // { path: 'user/delete-account/:id', method: RequestMethod.DELETE },
         // { path: 'admin/createUser', method: RequestMethod.ALL },
         // { path: 'admin/createRule', method: RequestMethod.ALL },
         // { path: 'admin/createTeam', method: RequestMethod.ALL },

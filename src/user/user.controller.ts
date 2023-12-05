@@ -46,7 +46,7 @@ export class UserController {
     );
   }
 
-  @Delete('delete-account')
+  @Delete('delete-account/:id')
   delete(@Param('id', MongoIdValidationPipe) id: mongoose.Types.ObjectId) {
     return this.userService.delete(id);
   }
