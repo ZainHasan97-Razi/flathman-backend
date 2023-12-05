@@ -24,15 +24,15 @@ export class UserService {
 
   async findAll() {
     try {
-      return await this.userModel.find().exec();
+      return await this.userModel.find({ deletedAt: null }).exec();
     } catch (e) {
       throw e;
     }
   }
 
-  async findOne(id: mongoose.Types.ObjectId) {
+  async findOne(_id: mongoose.Types.ObjectId) {
     try {
-      return await this.userModel.findById(id);
+      return await this.userModel.findOne({ _id, deletedAt: null });
     } catch (e) {
       throw e;
     }
@@ -66,7 +66,10 @@ export class UserService {
 
   async findByEmail(email: string) {
     try {
-      return await this.userModel.findOne({ email: email.toLowerCase() });
+      return await this.userModel.findOne({
+        email: email.toLowerCase(),
+        deletedAt: null,
+      });
     } catch (e) {
       throw e;
     }

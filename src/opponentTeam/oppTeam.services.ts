@@ -139,7 +139,10 @@ export class OpponentTeamService {
   };
 
   teamOwnerExist = async (ownerId: string) => {
-    const result = await this.userModel.findOne({ teamOwner: ownerId });
+    const result = await this.userModel.findOne({
+      teamOwner: ownerId,
+      deletedAt: null,
+    });
     if (!result) {
       throw new ConflictException(`Team owner doesn't exist!`);
     }
