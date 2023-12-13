@@ -2,7 +2,6 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateAppVersionDto } from './dto/create.appversion.dto';
-import { platform } from 'os';
 
 @Injectable()
 export class AppVersionService {
@@ -15,6 +14,7 @@ export class AppVersionService {
     try {
       const versionAlreadyExist = await this.appVersionModel.findOne({
         version: body.version,
+        platform: body.platform,
       });
       if (versionAlreadyExist) {
         if (versionAlreadyExist.deletedAt)
