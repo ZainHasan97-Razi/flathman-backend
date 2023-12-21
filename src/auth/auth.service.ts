@@ -28,6 +28,7 @@ export class AuthService {
       // await this.HelperService.emailIsUnique(details.email);
       const user = await this.userModel.findOne({
         email: body.email.toLowerCase(),
+        deletedAt: null,
       });
       if (!user) {
         throw new BadRequestException(`User email doesn't exist`);
@@ -176,6 +177,7 @@ export class AuthService {
   emailIsUnique = async (emailAddress: string) => {
     const result = await this.userModel.findOne({
       email: emailAddress.toLowerCase(),
+      deletedAt: null,
     });
     if (result) {
       throw new ConflictException('Email already exist!');
@@ -183,21 +185,30 @@ export class AuthService {
   };
 
   usernameIsUnique = async (username: string) => {
-    const result = await this.userModel.findOne({ userName: username });
+    const result = await this.userModel.findOne({
+      userName: username,
+      deletedAt: null,
+    });
     if (result) {
       throw new ConflictException('Username already exist!');
     }
   };
 
   userContactIsUnique = async (contactNum: string) => {
-    const result = await this.userModel.findOne({ contactNumber: contactNum });
+    const result = await this.userModel.findOne({
+      contactNumber: contactNum,
+      deletedAt: null,
+    });
     if (result) {
       throw new ConflictException('Contact number already exist!');
     }
   };
 
   userDoesExist = async (userId: string) => {
-    const user = await this.userModel.findById(userId);
+    const user = await this.userModel.findById({
+      _id: userId,
+      deletedAt: null,
+    });
     if (!user) {
       throw new ConflictException(`User doesn't exist`);
     } else {

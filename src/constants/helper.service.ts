@@ -18,6 +18,7 @@ export class HelperService {
   emailIsUnique = async (emailAddress: string) => {
     const result = await this.userModel.findOne({
       email: emailAddress.toLowerCase(),
+      deletedAt: null,
     });
     if (result) {
       throw new ConflictException('Email already exist!');
@@ -25,7 +26,10 @@ export class HelperService {
   };
 
   usernameIsUnique = async (username: string) => {
-    const result = await this.userModel.findOne({ userName: username });
+    const result = await this.userModel.findOne({
+      userName: username,
+      deletedAt: null,
+    });
     if (result) {
       throw new ConflictException('Username already exist!');
     }
@@ -37,8 +41,4 @@ export class HelperService {
       throw new ConflictException('Team name already exist!');
     }
   };
-
-  // isAdminRegisterRequest = async (isAdmin: boolean) => {
-  //   const result = await this.userModel.fin
-  // }
 }

@@ -18,6 +18,7 @@ import { UpdateUserDto } from 'src/user/dto/update.user.dto';
 import { UpdateTeamDto } from 'src/team/dto/update.team.dto';
 import { UpdatePlayerDto } from 'src/player/dto/update.player.dto';
 import { SubscriptionModelDto } from 'src/subscription/dto/subscription.model.dto';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class AdminService {
@@ -37,7 +38,7 @@ export class AdminService {
   async UpdateUser(body: UpdateUserDto) {
     return await this.authService.Update(body);
   }
-  async DeleteUser(id: string) {
+  async DeleteUser(id: mongoose.Types.ObjectId) {
     const user = await this.userService.findOne(id);
     if (user) {
       // delete all user teams and players

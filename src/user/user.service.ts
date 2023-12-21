@@ -11,6 +11,7 @@ import { CreateUserDto } from './dto/create.user.dto';
 import { EmailService } from 'src/email/email.service';
 import { OtpService } from 'src/otp/otp.service';
 import { OtpTypeEnum } from 'src/constants/enums';
+import mongoose from 'mongoose';
 const bcrypt = require('bcryptjs');
 
 @Injectable()
@@ -23,25 +24,31 @@ export class UserService {
 
   async findAll() {
     try {
-      return await this.userModel.find().exec();
+      return await this.userModel.find({ deletedAt: null }).exec();
     } catch (e) {
       throw e;
     }
   }
 
-  async findOne(id: string) {
+  async findOne(_id: mongoose.Types.ObjectId) {
     try {
-      return await this.userModel.findById(id);
+      return await this.userModel.findOne({ _id, deletedAt: null });
     } catch (e) {
       throw e;
     }
   }
 
-  async delete(id: string) {
+  async delete(id: mongoose.Types.ObjectId) {
     try {
-      const response = await this.userModel.findByIdAndDelete(id);
+      const user = await this.userModel.findOne({ _id: id, deletedAt: null });
+      if (!user) {
+        throw new NotFoundException(`User does not exist!`);
+      }
+      const response = await this.userModel.findByIdAndUpdate(id, {
+        deletedAt: new Date(),
+      });
       if (!response) {
-        throw new NotFoundException(`Couldn't delete user`);
+        throw new NotFoundException(`Failed to delete user`);
       }
       return response;
     } catch (e) {
@@ -63,7 +70,10 @@ export class UserService {
 
   async findByEmail(email: string) {
     try {
-      return await this.userModel.findOne({ email: email.toLowerCase() });
+      return await this.userModel.findOne({
+        email: email.toLowerCase(),
+        deletedAt: null,
+      });
     } catch (e) {
       throw e;
     }

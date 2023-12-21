@@ -69,7 +69,10 @@ export class MatchService {
 
   async create(data: CreateMatchDto) {
     try {
-      const userExist = this.userModel.findOne(data.userId);
+      const userExist = this.userModel.findOne({
+        _id: data.userId,
+        deletedAt: null,
+      });
       if (!userExist) {
         throw new NotFoundException(`Couldn't found User`);
       }
@@ -116,7 +119,10 @@ export class MatchService {
 
   async suspend(data: SuspendMatchDto) {
     try {
-      const userExist = this.userModel.findOne(data.userId);
+      const userExist = this.userModel.findOne({
+        _id: data.userId,
+        deletedAt: null,
+      });
       if (!userExist) {
         throw new NotFoundException(`Couldn't found User`);
       }
