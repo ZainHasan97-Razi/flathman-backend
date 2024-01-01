@@ -12,6 +12,11 @@ export const UserSubscriptionSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
+    teamId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Team',
+      default: null,
+    },
     status: {
       type: String,
       default: SubscriptionStatusEnum.active,

@@ -38,3 +38,10 @@ export enum BundleStatusEnum {
   active_ios = 'active_ios',
   in_active = 'in_active',
 }
+
+export enum ClockTypesEnum {
+  clock_with_stats = 'clock_with_stats',
+  stats_only = 'stats_only',
+  penalty_clock_only = 'penalty_clock_only',
+  game_and_penalty_clock = 'game_and_penalty_clock',
+}

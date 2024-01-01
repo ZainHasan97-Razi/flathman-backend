@@ -93,4 +93,36 @@ export class UserSubscriptionService {
       throw e;
     }
   }
+
+  // not tested
+  async findUserAvailableSubscriptionWithAssignedTeams(userId: MongoIdType) {
+    try {
+      return await this.userSubscriptionModel
+        .find({
+          userId,
+          teamId: { $ne: null },
+          status: SubscriptionStatusEnum.active,
+          timesUsed: { $lt: '$numberOfUsage' },
+        })
+        .lean();
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  // not tested
+  async findUserAvailableSubscriptionWithoutAssignedTeams(userId: MongoIdType) {
+    try {
+      return await this.userSubscriptionModel
+        .find({
+          userId,
+          teamId: null,
+          status: SubscriptionStatusEnum.active,
+          timesUsed: { $lt: '$numberOfUsage' },
+        })
+        .lean();
+    } catch (e) {
+      throw e;
+    }
+  }
 }

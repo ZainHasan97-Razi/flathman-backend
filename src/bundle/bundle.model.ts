@@ -1,5 +1,31 @@
 import * as mongoose from 'mongoose';
-import { BundleStatusEnum, SubscriptionTypeEnum } from 'src/constants/enums';
+import {
+  BundleStatusEnum,
+  ClockTypesEnum,
+  SubscriptionTypeEnum,
+} from 'src/constants/enums';
+
+const subSchemaFeatures = new mongoose.Schema(
+  {
+    slug: {
+      type: String,
+      enum: Object.values(ClockTypesEnum),
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      default: null,
+    },
+    available: {
+      type: Boolean,
+      required: true,
+    },
+  },
+  { _id: false },
+);
 
 export const BundleSchema = new mongoose.Schema(
   {
@@ -7,10 +33,7 @@ export const BundleSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    features: {
-      type: Array,
-      required: true,
-    },
+    features: [subSchemaFeatures],
     price: {
       type: String,
       required: true,
