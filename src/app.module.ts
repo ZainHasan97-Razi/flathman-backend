@@ -11,8 +11,8 @@ import { UserModule } from './user/user.module';
 import { MatchModule } from './match/match.module';
 import { PlayerModule } from './player/player.module';
 import { RuleModule } from './rules/rule.module';
-import { SubscriptionModule } from './subscription/userSubscription/subscription.module';
-import { SubscriptionTypeModule } from './subscription/subscriptionType/subscriptionType.module';
+import { SubscriptionModule } from './subscription/userSubscription/subscription.module'; // comment after new subscription module deploy
+import { SubscriptionTypeModule } from './subscription/subscriptionType/subscriptionType.module'; // comment after new subscription module deploy
 import { TeamModulebb } from './team/teams.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthorizationMiddleware } from './middleware';
@@ -24,6 +24,8 @@ import { EmailModule } from './email/email.module';
 import { OtpModule } from './otp/otp.module';
 import { config } from 'dotenv';
 import { AppVersionModule } from './appVersion/appVersion.module';
+import { BundleModule } from './bundle/bundle.module';
+import { UserSubscriptionModule } from './userSubscription/userSubscription.module';
 config();
 
 @Module({
@@ -36,8 +38,10 @@ config();
     PlayerModule,
     MatchModule,
     RuleModule,
-    SubscriptionModule,
-    SubscriptionTypeModule,
+    SubscriptionModule, // comment after new subscription module deploy
+    SubscriptionTypeModule, // comment after new subscription module deploy
+    BundleModule,
+    UserSubscriptionModule,
     OpponentPlayerModule,
     OpponentTeamModulebb,
     ColorModule,

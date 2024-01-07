@@ -78,10 +78,6 @@ export class AuthService {
 
   async Create(body: CreateUserDto) {
     try {
-      // await this.HelperService.emailIsUnique(body.email);
-      // if (body.isAdmin) {
-      //   throw new BadRequestException('Inappropriate registeration request');
-      // }
       body.email = body.email.toLowerCase();
       await this.emailIsUnique(body.email.toLowerCase());
       await this.usernameIsUnique(body.userName);
