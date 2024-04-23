@@ -1,5 +1,95 @@
 import * as mongoose from 'mongoose';
 
+// Game rule setting
+export const GameRuleSettingSubSchema = new mongoose.Schema(
+  {
+    ruleName: { type: String, required: true, default: '' },
+    ruleId: { type: String, required: true },
+    mercyRuleLimit: { type: String, default: null },
+    gender: { type: String, required: true },
+    gamePeriods: { type: Number, required: true },
+    periodDuration: { type: Number, required: true },
+    gapBetweenPeriods: { type: Number, required: true },
+    gapBetweenHalves: { type: Number, required: true },
+    timeoutsPerHalf: { type: Number, required: true },
+    timeoutsInOvertimePeriod: { type: Number, required: true },
+    maxOvertimePeriods: { type: Number, required: true },
+    overtimePeriodDuration: { type: Number, required: true },
+    goalDiffForRunningClock: { type: Number, default: null },
+    maxPersonalFouls: { type: Number, required: true },
+    maxFOViolationPerHalf: { type: Number, required: true },
+  },
+  { timestamps: true, _id: false },
+);
+
+// Turnover options
+export const defalt_turnover_options = [
+  { name: 'Bad Pass', slug: 'bad_pass' },
+  { name: 'Warding', slug: 'warding' },
+  { name: 'Illegal Screen', slug: 'illegal_screen' },
+  { name: 'Push', slug: 'push' },
+  { name: 'Dropped Ball', slug: 'dropped_ball' },
+  { name: 'Failure to Advance', slug: 'failure_to_advance' },
+  { name: 'Unforced error', slug: 'unforced_error' },
+  { name: 'Equipment', slug: 'equipment' },
+];
+export const OptionSubSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    slug: { type: String, required: true },
+  },
+  { timestamps: false, _id: false },
+);
+
+// Penalty options
+const penalty_option_slugs = { technical: 'technical', personal: 'personal' };
+
+export const PenaltyOptionSubSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      enum: Object.values(penalty_option_slugs),
+      unique: true,
+    },
+    option: { type: [OptionSubSchema] },
+  },
+  { timestamps: false, _id: false },
+);
+
+export const defalt_penalty_options = [
+  {
+    name: penalty_option_slugs.technical,
+    option: [
+      { name: 'Crease Violation', slug: 'crease_violation' },
+      { name: 'Holding', slug: 'holding' },
+      { name: 'Illegal Screen', slug: 'illegal_screen' },
+      { name: 'Illegal Procedure', slug: 'illegal_procedure' },
+      { name: 'Conduct Foul', slug: 'conduct_foul' },
+      { name: 'Interferene', slug: 'interference' },
+      { name: 'Pushing', slug: 'pushing' },
+      { name: 'Warding', slug: 'warding' },
+      { name: 'Holding Ball From Play', slug: 'holding_ball_from_play' },
+      { name: 'Misconduct', slug: 'misconduct' },
+    ],
+  },
+  {
+    name: penalty_option_slugs.personal,
+    option: [
+      { name: 'Cross Check', slug: 'cross_check' },
+      { name: 'Illegal Body Check', slug: 'illegal_body_check' },
+      { name: 'Targeting', slug: 'targeting' },
+      { name: 'Illegal Crosse', slug: 'illegal_crosse' },
+      { name: 'Slashing', slug: 'slashing' },
+      { name: 'Tripping', slug: 'tripping' },
+      { name: 'Unnecessary roughness', slug: 'unnecessary_roughness' },
+      { name: 'Fouling Out', slug: 'fouling_out' },
+      { name: 'Ejection', slug: 'ejection' },
+      { name: 'Miscounduct', slug: 'misconduct' },
+    ],
+  },
+];
+
 export const TeamSchema = new mongoose.Schema(
   {
     teamName: { type: String, required: true, default: '' },
@@ -16,6 +106,18 @@ export const TeamSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Rule',
       required: true,
+    },
+    game_rules_setting: { type: GameRuleSettingSubSchema, default: null },
+    game_clock_setting: { type: Object, default: null },
+    shot_clock_setting: { type: Object, default: null },
+    penalty_clock_setting: { type: Object, default: null },
+    turnover_options: {
+      type: [OptionSubSchema],
+      default: defalt_turnover_options,
+    },
+    penalty_options: {
+      type: [PenaltyOptionSubSchema],
+      default: defalt_penalty_options,
     },
   },
   { timestamps: true },
