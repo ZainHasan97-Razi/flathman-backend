@@ -13,9 +13,9 @@ export class UpdateTeamDto {
   @IsNotEmpty({ message: 'Invalid team!' })
   teamId;
 
-  @IsString({ message: 'Team name is required!' })
-  @IsNotEmpty({ message: 'Team name is required!' }) // Because Gene said that team name won't be changeable
-  teamName: string;
+  // @IsString({ message: 'Team name is required!' })
+  // @IsNotEmpty({ message: 'Team name is required!' }) // Because Gene said that team name won't be changeable
+  // teamName: string;
 
   // @IsOptional()
   // @IsString({ message: 'Team nick name is required!' })
