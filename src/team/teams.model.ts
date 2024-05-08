@@ -90,6 +90,8 @@ export const defalt_penalty_options = [
   },
 ];
 
+export const default_penalty_time_options = [30, 60, 90, 120];
+
 export const TeamSchema = new mongoose.Schema(
   {
     teamName: { type: String, required: true, default: '' },
@@ -119,6 +121,10 @@ export const TeamSchema = new mongoose.Schema(
       type: [PenaltyOptionSubSchema],
       default: defalt_penalty_options,
     },
+    penalty_time_options: {
+      type: Array,
+      default: default_penalty_time_options,
+    }, // In seconds
   },
   { timestamps: true },
 );
