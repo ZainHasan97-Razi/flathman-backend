@@ -90,7 +90,7 @@ export const defalt_penalty_options = [
   },
 ];
 
-export const default_penalty_time_options = [30, 60, 90, 120];
+export const default_penalty_time_options = [30, 60, 90, 120, 180];
 
 export const TeamSchema = new mongoose.Schema(
   {
