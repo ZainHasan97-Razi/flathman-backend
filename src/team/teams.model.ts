@@ -92,6 +92,36 @@ export const defalt_penalty_options = [
 
 export const default_penalty_time_options = [30, 60, 90, 120, 180];
 
+// Turnover options
+export const default_stats_rating = [
+  { name: 'Penalty', slug: 'penaltyNum', value: 0 },
+  { name: 'Faceoff attempt', slug: 'foffsAttempts', value: 0 },
+  { name: 'Faceoff won', slug: 'faceoffsWon', value: 0 },
+  { name: 'F/o violation', slug: 'faceoffViolations', value: 0 },
+  { name: 'Ground ball', slug: 'groundBall', value: 0 },
+  { name: 'Takeaway', slug: 'takeAway', value: 0 },
+  { name: 'Turnover', slug: 'turnOver', value: 0 },
+  { name: 'Caused Turnover', slug: 'causedTurnover', value: 0 },
+  { name: 'New Goalie', slug: 'equipment', value: 0 },
+  { name: 'Shot Attempt', slug: 'shotAttempts', value: 0 },
+  { name: 'Goal', slug: 'goals', value: 0 },
+  { name: 'Assist', slug: 'assists', value: 0 },
+  { name: 'Save', slug: 'saves', value: 0 },
+  { name: 'Lost possession', slug: 'lostPossessions', value: 0 },
+  { name: 'Retain Possession', slug: 'retainedPoss', value: 0 },
+  { name: 'Unforced Error', slug: 'unforcedError', value: 0 },
+  { name: 'Shot On Goal', slug: 'shotOG', value: 0 },
+  { name: 'Goal Against', slug: 'goalsAgainst', value: 0 },
+];
+export const StatsRatingSubSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    slug: { type: String, required: true },
+    value: { type: Number, required: true },
+  },
+  { timestamps: false, _id: false },
+);
+
 export const TeamSchema = new mongoose.Schema(
   {
     teamName: { type: String, required: true, default: '' },
@@ -125,6 +155,10 @@ export const TeamSchema = new mongoose.Schema(
       type: Array,
       default: default_penalty_time_options,
     }, // In seconds
+    stats_rating: {
+      type: [StatsRatingSubSchema],
+      default: default_stats_rating,
+    },
   },
   { timestamps: true },
 );
