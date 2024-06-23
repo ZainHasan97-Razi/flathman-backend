@@ -24,6 +24,7 @@ import { EmailModule } from './email/email.module';
 import { OtpModule } from './otp/otp.module';
 import { config } from 'dotenv';
 import { AppVersionModule } from './appVersion/appVersion.module';
+import { ScheduleGameModule } from './scheduleGame/scheduleGame.module';
 config();
 
 @Module({
@@ -44,6 +45,7 @@ config();
     EmailModule,
     OtpModule,
     AppVersionModule,
+    ScheduleGameModule,
   ],
   // controllers: [AppController],
   // providers: [AppService],
