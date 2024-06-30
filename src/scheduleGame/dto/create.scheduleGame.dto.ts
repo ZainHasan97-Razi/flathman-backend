@@ -4,6 +4,7 @@ import {
   IsEnum,
   IsOptional,
   IsMongoId,
+  IsBoolean,
 } from 'class-validator';
 import {
   ScheduleStatusEnum,
@@ -19,7 +20,7 @@ export class CreateScheduleGameDto {
   teamId: MongoIdType;
 
   @IsMongoId()
-  opponentTeam: string;
+  opponentTeam: MongoIdType;
 
   @IsNumber()
   scheduleDateTime: number;
@@ -30,7 +31,7 @@ export class CreateScheduleGameDto {
   @IsString()
   away: string;
 
-  @IsString()
+  @IsBoolean()
   conference: boolean;
 
   @IsOptional()

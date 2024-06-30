@@ -53,6 +53,14 @@ export class ScheduleGameService {
     }
   }
 
+  findById(id: MongoIdType) {
+    try {
+      return this.scheduleGameModel.findById(id);
+    } catch (e) {
+      throw e;
+    }
+  }
+
   findByUserId(userId: MongoIdType) {
     try {
       return this.scheduleGameModel.find({
@@ -64,10 +72,9 @@ export class ScheduleGameService {
     }
   }
 
-  findByUserAndTeamId(userId: MongoIdType, teamId: MongoIdType) {
+  findByTeamId(teamId: MongoIdType) {
     try {
       return this.scheduleGameModel.find({
-        userId,
         teamId,
         status: ScheduleStatusEnum.active,
       });

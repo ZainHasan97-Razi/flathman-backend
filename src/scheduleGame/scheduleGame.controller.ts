@@ -3,6 +3,7 @@ import { ScheduleGameService } from './scheduleGame.service';
 import { CreateScheduleGameDto } from './dto/create.scheduleGame.dto';
 import { MongoIdType } from 'src/common/common.types';
 import { ScheduleStatusEnumType } from './scheduleGame.schema';
+import { UpdateScheduleGameDto } from './dto/update.scheduleGame.dto';
 
 @Controller('schedule-game')
 export class ScheduleGameController {
@@ -14,11 +15,11 @@ export class ScheduleGameController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: MongoIdType, @Body() body: CreateScheduleGameDto) {
+  update(@Param('id') id: MongoIdType, @Body() body: UpdateScheduleGameDto) {
     return this.scheduleGameService.update(id, body);
   }
 
-  @Post('update-status/:id')
+  @Patch('update-status/:id')
   updateStatus(
     @Param('id') id: MongoIdType,
     @Body('status') status: ScheduleStatusEnumType,
@@ -26,16 +27,20 @@ export class ScheduleGameController {
     return this.scheduleGameService.updateStatus(id, status);
   }
 
+  @Get(':id')
+  findById(@Param('id') id: MongoIdType) {
+    return this.scheduleGameService.findByUserId(id);
+  }
+
   @Get('user/:userId')
   findByUserId(@Param('userId') userId: MongoIdType) {
     return this.scheduleGameService.findByUserId(userId);
   }
 
-  @Get('user/:userId/team/:teamId')
+  @Get('team/:teamId')
   findByUserAndTeamId(
-    @Param('userId') userId: MongoIdType,
     @Param('teamId') teamId: MongoIdType,
   ) {
-    return this.scheduleGameService.findByUserAndTeamId(userId, teamId);
+    return this.scheduleGameService.findByTeamId(teamId);
   }
 }
