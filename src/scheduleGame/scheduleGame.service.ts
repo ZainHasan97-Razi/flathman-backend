@@ -55,7 +55,7 @@ export class ScheduleGameService {
 
   findById(id: MongoIdType) {
     try {
-      return this.scheduleGameModel.findById(id);
+      return this.scheduleGameModel.findById(id).lean().populate("teamId opponentTeam");
     } catch (e) {
       throw e;
     }
@@ -66,7 +66,7 @@ export class ScheduleGameService {
       return this.scheduleGameModel.find({
         userId,
         status: ScheduleStatusEnum.active,
-      });
+      }).lean().populate("teamId opponentTeam");
     } catch (e) {
       throw e;
     }
@@ -77,7 +77,7 @@ export class ScheduleGameService {
       return this.scheduleGameModel.find({
         teamId,
         status: ScheduleStatusEnum.active,
-      });
+      }).lean().populate("teamId opponentTeam");
     } catch (e) {
       throw e;
     }

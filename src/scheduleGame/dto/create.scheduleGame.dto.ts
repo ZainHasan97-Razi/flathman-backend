@@ -11,6 +11,7 @@ import {
   ScheduleStatusEnumType,
 } from '../scheduleGame.schema';
 import { MongoIdType } from 'src/common/common.types';
+import { IsDateFormat, IsTimeFormat, TransformToTimestamp } from 'src/decorators/date-time.decorator';
 
 export class CreateScheduleGameDto {
   @IsMongoId()
@@ -22,14 +23,21 @@ export class CreateScheduleGameDto {
   @IsMongoId()
   opponentTeam: MongoIdType;
 
-  @IsNumber()
+  @IsDateFormat({ message: 'Invalid date format. Expected format: MM-DD-YYYY' })
+  date: string;
+
+  @IsTimeFormat({ message: 'Invalid time format. Expected format: HH:MM' })
+  time: string;
+
+  // @IsNumber()
+  @TransformToTimestamp() // seconds
   scheduleDateTime: number;
 
   @IsString()
-  home: string;
+  homeTeam: string;
 
   @IsString()
-  away: string;
+  awayTeam: string;
 
   @IsBoolean()
   conference: boolean;

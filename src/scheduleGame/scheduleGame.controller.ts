@@ -29,7 +29,7 @@ export class ScheduleGameController {
 
   @Get(':id')
   findById(@Param('id') id: MongoIdType) {
-    return this.scheduleGameService.findByUserId(id);
+    return this.scheduleGameService.findById(id);
   }
 
   @Get('user/:userId')
