@@ -26,6 +26,7 @@ import { config } from 'dotenv';
 import { AppVersionModule } from './appVersion/appVersion.module';
 import { BundleModule } from './bundle/bundle.module';
 import { UserSubscriptionModule } from './userSubscription/userSubscription.module';
+import { ScheduleGameModule } from './scheduleGame/scheduleGame.module';
 config();
 
 @Module({
@@ -48,6 +49,7 @@ config();
     EmailModule,
     OtpModule,
     AppVersionModule,
+    ScheduleGameModule,
   ],
   // controllers: [AppController],
   // providers: [AppService],

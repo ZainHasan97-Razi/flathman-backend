@@ -124,7 +124,7 @@ export const StatsRatingSubSchema = new mongoose.Schema(
 
 export const TeamSchema = new mongoose.Schema(
   {
-    teamName: { type: String, required: true, default: '' },
+    teamName: { type: String, required: true, unique: true },
     teamNickName: { type: String, default: null },
     coachName: { type: String, default: null },
     coachCell: { type: String, default: null },
