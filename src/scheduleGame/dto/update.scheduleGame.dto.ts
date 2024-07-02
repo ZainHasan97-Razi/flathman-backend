@@ -1,6 +1,10 @@
-import { IsString, IsNumber, IsMongoId } from 'class-validator';
+import { IsString, IsMongoId, IsBoolean } from 'class-validator';
 import { MongoIdType } from 'src/common/common.types';
-import { IsDateFormat, IsTimeFormat, TransformToTimestamp } from 'src/decorators/date-time.decorator';
+import {
+  IsDateFormat,
+  IsTimeFormat,
+  TransformToTimestamp,
+} from 'src/decorators/date-time.decorator';
 
 export class UpdateScheduleGameDto {
   @IsMongoId()
@@ -17,11 +21,11 @@ export class UpdateScheduleGameDto {
   scheduleDateTime: number;
 
   @IsString()
-  home: string;
+  homeTeam: string;
 
   @IsString()
-  away: string;
+  awayTeam: string;
 
-  @IsString()
+  @IsBoolean()
   conference: boolean;
 }
