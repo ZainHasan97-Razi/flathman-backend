@@ -12,6 +12,9 @@ import { CompleteSuspendedMatchDto } from './dto/completeSuspendedMatch.match.dt
 import { CreateMatchDto } from './dto/create.match.dto';
 import { SuspendMatchDto } from './dto/suspend.match.dto';
 import { UpdateMatchDto } from './dto/update.match.dto';
+import { GameResultEnum, GameResultEnumType } from './match.model';
+import { MongoIdType } from 'src/common/common.types';
+const isEmpty = require("is-empty");
 
 @Injectable()
 export class MatchService {
@@ -22,10 +25,7 @@ export class MatchService {
 
   async findAll() {
     try {
-      const response = await this.matchModel
-        .find({ isSuspended: false })
-        .exec();
-      return response;
+      return await this.matchModel.find({deletedAt: null}).lean();
     } catch (e) {
       // throw new NotFoundException(`Couldn't found any match logs`);
       throw e;
@@ -34,7 +34,7 @@ export class MatchService {
 
   async findOne(id: string) {
     try {
-      const response = await this.matchModel.findById(id);
+      const response = await this.matchModel.findById(id).lean();
       if (!response) {
         throw new NotFoundException(`Couldn't found match log`);
       }
@@ -67,27 +67,52 @@ export class MatchService {
     }
   }
 
-  async create(data: CreateMatchDto) {
+  async create(body: CreateMatchDto) {
+    // console.log("calling");
     try {
       const userExist = this.userModel.findOne({
-        _id: data.userId,
+        _id: body.userId,
         deletedAt: null,
       });
       if (!userExist) {
         throw new NotFoundException(`Couldn't found User`);
       }
-      let payload = data;
-      if (Number(payload.teamA.goals) === Number(payload.teamB.goals)) {
-        payload.teamA.status = 'Tied';
-        payload.teamB.status = 'Tied';
-      } else if (Number(payload.teamA.goals) > Number(payload.teamB.goals)) {
-        payload.teamA.status = 'Won';
-        payload.teamB.status = 'Lost';
-      } else {
-        payload.teamA.status = 'Lost';
-        payload.teamB.status = 'Won';
-      }
-      const savedMatch = await this.matchModel.create(data);
+      // let payload = body;
+      // if(payload.teamA.goals && payload.teamB.goals) {
+      //   if(isEmpty(payload.teamA.goals) && isEmpty(payload.teamB.goals)) {
+      //     payload.teamA.status = GameResultEnum.tied;
+      //     payload.teamB.status = GameResultEnum.tied;
+      //     // payload["gameResult"] = GameResultEnum.tied as GameResultEnumType;
+      //     // console.log("case 1");
+      //   } else if(isEmpty(payload.teamA.goals) && !isEmpty(payload.teamB.goals)) {
+      //     payload.teamA.status = GameResultEnum.lost;
+      //     payload.teamB.status = GameResultEnum.won;
+      //     // payload["gameResult"] = GameResultEnum.lost as GameResultEnumType;
+      //     // console.log("case 2");
+      //   } else if(!isEmpty(payload.teamA.goals) && isEmpty(payload.teamB.goals)) {
+      //     payload.teamA.status = GameResultEnum.won;
+      //     payload.teamB.status = GameResultEnum.lost;
+      //     // payload["gameResult"] = GameResultEnum.won as GameResultEnumType;
+      //     // console.log("case 3");
+      //   } else if (Number(payload.teamA.goals) === Number(payload.teamB.goals)) {
+      //     payload.teamA.status = GameResultEnum.tied;
+      //     payload.teamB.status = GameResultEnum.tied;
+      //     // payload["gameResult"] = GameResultEnum.tied as GameResultEnumType;
+      //     // console.log("case 4");
+      //   } else if (Number(payload.teamA.goals) > Number(payload.teamB.goals)) {
+      //     payload.teamA.status = GameResultEnum.won;
+      //     payload.teamB.status = GameResultEnum.lost;
+      //     // payload["gameResult"] = GameResultEnum.won as GameResultEnumType;
+      //     // console.log("case 5");
+      //   } else if (Number(payload.teamA.goals) < Number(payload.teamB.goals)) {
+      //     payload.teamA.status = GameResultEnum.lost;
+      //     payload.teamB.status = GameResultEnum.won;
+      //     // payload["gameResult"] = GameResultEnum.lost as GameResultEnumType;
+      //     // console.log("case 6");
+      //   }
+      // }
+      // console.log("payload::: ", payload);
+      const savedMatch = await this.matchModel.create(body);
       if (savedMatch) {
         return {
           message: `Match has been saved successfully!`,
@@ -99,18 +124,11 @@ export class MatchService {
     }
   }
 
-  async update(data: UpdateMatchDto) {
+  async update(id: MongoIdType, body: UpdateMatchDto) {
     try {
-      const userExist = this.userModel.findByIdAndUpdate(data.matchId, data);
-      if (!userExist) {
-        throw new NotFoundException(`Couldn't found User`);
-      }
-      const savedMatch = await this.matchModel.findOne(data);
-      if (savedMatch) {
-        return {
-          message: `Match has been saved successfully!`,
-        };
-      }
+      return await this.matchModel.findByIdAndUpdate(id, body, {
+        new: true,
+      });
     } catch (e) {
       // console.log('Err createTeam => ', e);
       throw e;
@@ -178,5 +196,24 @@ export class MatchService {
     } catch (e) {
       throw e;
     }
+  }
+
+  async gameResultsAndScheduleListByLicensedTeam(teamId: MongoIdType) { // not going to use currently becz effectiveDateTime is set in game end result as an another approach
+    const data = await this.matchModel.aggregate([
+      {$match: {"teamA.teamId": teamId, deletedAt: null}},
+      {
+        $addFields: {
+          createdAtUnix: { $toLong: { $toDate: "$createdAt" } },
+          effectiveDateTime: {
+            $ifNull: ["$effectiveDateTime", "$createdAtUnix"]
+          }
+        }
+      },
+      {
+        $sort: { effectiveDateTime: 1 }
+      }
+    ])
+    // console.log("dataaaa: ", data);
+    return data;
   }
 }

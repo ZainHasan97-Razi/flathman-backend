@@ -31,7 +31,7 @@ export class CreateScheduleGameDto {
 
   // @IsNumber()
   @TransformToTimestamp() // seconds
-  scheduleDateTime: number;
+  effectiveDateTime: number;
 
   @IsString()
   homeTeam: string;
