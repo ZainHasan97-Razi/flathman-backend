@@ -64,14 +64,18 @@ export function IsTimeFormat(validationOptions?: ValidationOptions) {
 export class TransformToTimestampConstraint implements ValidatorConstraintInterface {
   validate(value: any, args: ValidationArguments) {
     const { date, time } = args.object as any;
+    // console.log("date time::: ", date, time);
     const dateValid = new IsDateFormatConstraint().validate(date);
     const timeValid = new IsTimeFormatConstraint().validate(time);
-
+    
+    // console.log("dateValid timeValid::: ", dateValid, timeValid);
     if (dateValid && timeValid) {
       const [month, day, year] = date.split('-');
       const [hour, minute] = time.split(':');
-      const scheduleDateTime = new Date(`${year}-${month}-${day}T${hour}:${minute}:00Z`);
-      (args.object as any).scheduleDateTime = Math.floor(scheduleDateTime.getTime() / 1000); // Convert to Unix timestamp in seconds
+      const effectiveDateTime = new Date(`${year}-${month}-${day}T${hour}:${minute}:00Z`);
+      // (args.object as any).effectiveDateTime = Math.floor(effectiveDateTime.getTime() / 1000); // Convert to Unix timestamp in seconds
+      // console.log("effectiveDateTime::: ", effectiveDateTime);
+      args.object["effectiveDateTime"] = Math.floor(effectiveDateTime.getTime() / 1000); // Convert to Unix timestamp in seconds
       return true;
     }
     return false;

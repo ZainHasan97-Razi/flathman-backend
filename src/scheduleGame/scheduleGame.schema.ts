@@ -14,7 +14,7 @@ export const ScheduleGameSchema = new mongoose.Schema(
     opponentTeam: { type: mongoose.Types.ObjectId, required: true, ref: 'OpponentTeam' },
     date: {type: String, required: true},
     time: {type: String, required: true},
-    scheduleDateTime: { type: Number, required: true }, // in unix seconds
+    effectiveDateTime: { type: Number, required: true }, // in unix seconds
     homeTeam: { type: String, required: true },
     awayTeam: { type: String, required: true },
     conference: { type: Boolean, required: true },
