@@ -69,6 +69,11 @@ export class MatchController {
   findOneAndDelete(@Param('id') id: string) {
     return this.matchService.delete(id);
   }
+
+  @Get('scheduled-games/:id')
+  findScheduledGamesByLicensedTeam(@Param('id') id: MongoIdType) {
+    return this.matchService.gameResultsAndScheduleListByLicensedTeam(id, true);
+  }
   
   // @Get("game-result-and-schedule-list/:teamId")
   // gameResultsAndScheduleList(@Param('teamId') teamId: MongoIdType) {

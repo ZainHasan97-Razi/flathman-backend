@@ -1,18 +1,15 @@
 import {
   Injectable,
   NotFoundException,
-  BadRequestException,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from 'src/user/dto/create.user.dto';
 import { CompleteSuspendedMatchDto } from './dto/completeSuspendedMatch.match.dto';
 import { CreateMatchDto } from './dto/create.match.dto';
 import { SuspendMatchDto } from './dto/suspend.match.dto';
 import { UpdateMatchDto } from './dto/update.match.dto';
-import { GameResultEnum, GameResultEnumType } from './match.model';
+import { GameStatusEnum } from './match.model';
 import { MongoIdType } from 'src/common/common.types';
 const isEmpty = require("is-empty");
 
@@ -68,7 +65,6 @@ export class MatchService {
   }
 
   async create(body: CreateMatchDto) {
-    // console.log("calling");
     try {
       const userExist = this.userModel.findOne({
         _id: body.userId,
@@ -77,41 +73,6 @@ export class MatchService {
       if (!userExist) {
         throw new NotFoundException(`Couldn't found User`);
       }
-      // let payload = body;
-      // if(payload.teamA.goals && payload.teamB.goals) {
-      //   if(isEmpty(payload.teamA.goals) && isEmpty(payload.teamB.goals)) {
-      //     payload.teamA.status = GameResultEnum.tied;
-      //     payload.teamB.status = GameResultEnum.tied;
-      //     // payload["gameResult"] = GameResultEnum.tied as GameResultEnumType;
-      //     // console.log("case 1");
-      //   } else if(isEmpty(payload.teamA.goals) && !isEmpty(payload.teamB.goals)) {
-      //     payload.teamA.status = GameResultEnum.lost;
-      //     payload.teamB.status = GameResultEnum.won;
-      //     // payload["gameResult"] = GameResultEnum.lost as GameResultEnumType;
-      //     // console.log("case 2");
-      //   } else if(!isEmpty(payload.teamA.goals) && isEmpty(payload.teamB.goals)) {
-      //     payload.teamA.status = GameResultEnum.won;
-      //     payload.teamB.status = GameResultEnum.lost;
-      //     // payload["gameResult"] = GameResultEnum.won as GameResultEnumType;
-      //     // console.log("case 3");
-      //   } else if (Number(payload.teamA.goals) === Number(payload.teamB.goals)) {
-      //     payload.teamA.status = GameResultEnum.tied;
-      //     payload.teamB.status = GameResultEnum.tied;
-      //     // payload["gameResult"] = GameResultEnum.tied as GameResultEnumType;
-      //     // console.log("case 4");
-      //   } else if (Number(payload.teamA.goals) > Number(payload.teamB.goals)) {
-      //     payload.teamA.status = GameResultEnum.won;
-      //     payload.teamB.status = GameResultEnum.lost;
-      //     // payload["gameResult"] = GameResultEnum.won as GameResultEnumType;
-      //     // console.log("case 5");
-      //   } else if (Number(payload.teamA.goals) < Number(payload.teamB.goals)) {
-      //     payload.teamA.status = GameResultEnum.lost;
-      //     payload.teamB.status = GameResultEnum.won;
-      //     // payload["gameResult"] = GameResultEnum.lost as GameResultEnumType;
-      //     // console.log("case 6");
-      //   }
-      // }
-      // console.log("payload::: ", payload);
       const savedMatch = await this.matchModel.create(body);
       if (savedMatch) {
         return {
@@ -198,9 +159,18 @@ export class MatchService {
     }
   }
 
-  async gameResultsAndScheduleListByLicensedTeam(teamId: MongoIdType) { // not going to use currently becz effectiveDateTime is set in game end result as an another approach
+  async gameResultsAndScheduleListByLicensedTeam(teamId: MongoIdType, hasScheduledGames: boolean = false) {
+    const scheduledGameFilters = {
+      "$or": [
+        {gameStatus:  GameStatusEnum.scheduled},
+        {gameStatus:  GameStatusEnum.forfeit},
+      ]
+    }
     const data = await this.matchModel.aggregate([
-      {$match: {"teamA.teamId": teamId, deletedAt: null}},
+      {$match: {
+        "teamA.teamId": teamId, deletedAt: null,
+        ...(hasScheduledGames ? scheduledGameFilters : {})
+      }},
       {
         $addFields: {
           createdAtUnix: { $toLong: { $toDate: "$createdAt" } },
