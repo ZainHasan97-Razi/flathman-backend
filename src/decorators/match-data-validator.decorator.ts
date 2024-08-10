@@ -25,7 +25,7 @@ export class ValidateDataUponMatchStatusConstraint
       const { date, time, homeTeam, awayTeam, conference } = args.object as any;
       const dateValid = new IsDateFormatConstraint().validate(date);
       const timeValid = new IsTimeFormatConstraint().validate(time);
-      if (dateValid && timeValid && homeTeam && awayTeam && conference) {
+      if (dateValid && timeValid && homeTeam && awayTeam && conference !== null) {
         const [month, day, year] = date.split('-');
         const [hour, minute] = time.split(':');
         const effectiveDateTime = new Date(`${year}-${month}-${day}T${hour}:${minute}:00Z`);
