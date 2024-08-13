@@ -173,7 +173,16 @@ export class MatchService {
       }},
       {
         $addFields: {
-          createdAtUnix: { $toLong: { $toDate: "$createdAt" } },
+          createdAtUnix: {
+            $divide: [
+              {$toLong: {$toDate: "$createdAt"}},
+              1000
+            ]
+          }
+        }
+      },
+      {
+        $addFields: {
           effectiveDateTime: {
             $ifNull: ["$effectiveDateTime", "$createdAtUnix"]
           }
