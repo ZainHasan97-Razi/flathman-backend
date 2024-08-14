@@ -195,4 +195,108 @@ export class MatchService {
     // console.log("dataaaa: ", data);
     return data;
   }
+
+  async gameResultCounts(teamId: MongoIdType) {
+    const data = await this.matchModel.aggregate([
+      {$match: {"teamA.teamId": teamId, deletedAt: null}},
+      {
+        $facet: {
+          conference: [
+            {$match: {conference: true}},
+            {
+              $group: {
+                _id: null,
+                won: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          {$eq: ["$gameResult","Won"]},
+                          {$eq: ["$gameResult","Forfeit"]}
+                        ]
+                      },
+                      1,
+                      0
+                    ]
+                  }
+                },
+                lost: {
+                  $sum: {
+                    $cond: [
+                      {$eq: ["$gameResult", "Lost"]},
+                      1,
+                      0
+                    ]
+                  }
+                },
+                tied: {
+                  $sum: {
+                    $cond: [
+                      {$eq: ["$gameResult", "Tied"]},
+                      1,
+                      0
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              $project: {_id: 0, won: 1, lost: 1, tied: 1}
+            }
+          ],
+          overall: [
+            {
+              $group: {
+                _id: null,
+                won: {
+                  $sum: {
+                    $cond: [
+                      {
+                        $or: [
+                          {$eq: ["$gameResult","Won"]},
+                          {$eq: ["$gameResult","Forfeit"]}
+                        ]
+                      },
+                      1,
+                      0
+                    ]
+                  }
+                },
+                lost: {
+                  $sum: {
+                    $cond: [
+                      {$eq: ["$gameResult", "Lost"]},
+                      1,
+                      0
+                    ]
+                  }
+                },
+                tied: {
+                  $sum: {
+                    $cond: [
+                      {$eq: ["$gameResult", "Tied"]},
+                      1,
+                      0
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              $project: {_id: 0, won: 1, lost: 1, tied: 1}
+            }
+          ]
+        }
+      },
+      {$addFields: {
+        conference: {
+          $arrayElemAt: ["$conference", 0]
+        },
+        overall: {
+          $arrayElemAt: ["$overall", 0]
+        }
+      }}
+    ])
+    return data[0];
+  }
 }
