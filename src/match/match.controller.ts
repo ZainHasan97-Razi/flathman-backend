@@ -74,6 +74,11 @@ export class MatchController {
   findScheduledGamesByLicensedTeam(@Param('id') id: MongoIdType) {
     return this.matchService.gameResultsAndScheduleListByLicensedTeam(id, true);
   }
+
+  @Get('game-result-count/:id')
+  gameResultCountsByLicensedTeamId(@Param('id') id: MongoIdType) {
+    return this.matchService.gameResultCounts(id);
+  }
   
   // @Get("game-result-and-schedule-list/:teamId")
   // gameResultsAndScheduleList(@Param('teamId') teamId: MongoIdType) {
