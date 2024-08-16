@@ -21,7 +21,7 @@ export class ValidateDataUponMatchStatusConstraint
   implements ValidatorConstraintInterface
 {
   validate(gameStatus: GameStatusEnumType, args: ValidationArguments) {
-    if (gameStatus === GameStatusEnum.scheduled) {
+    if (gameStatus === GameStatusEnum.scheduled || gameStatus === GameStatusEnum.forfeit) {
       const { date, time, homeTeam, awayTeam, conference } = args.object as any;
       const dateValid = new IsDateFormatConstraint().validate(date);
       const timeValid = new IsTimeFormatConstraint().validate(time);
