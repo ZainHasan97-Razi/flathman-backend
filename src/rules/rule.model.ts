@@ -10,6 +10,7 @@ export const RuleSchema = new mongoose.Schema(
     periodDuration: { type: Number, required: true },
     gapBetweenPeriods: { type: Number, required: true },
     gapBetweenHalves: { type: Number, required: true },
+    timeoutDuration: {type: Number, required: true, default: 0},
     timeoutsPerHalf: { type: Number, required: true },
     timeoutsInOvertimePeriod: { type: Number, required: true },
     maxOvertimePeriods: { type: Number, required: true },
