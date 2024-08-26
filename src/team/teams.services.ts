@@ -13,6 +13,7 @@ import { RuleService } from 'src/rules/rule.service';
 import { CreateUserDto } from 'src/user/dto/create.user.dto';
 import { CreatePlayerDto } from 'src/player/dto/create.player.dto';
 import { PlayerService } from 'src/player/player.service';
+import { CreateRuleDto } from 'src/rules/dto/create.rule.dto';
 import mongoose from 'mongoose';
 
 @Injectable()
@@ -21,6 +22,7 @@ export class TeamService {
     @InjectModel('Team') private teamModel: Model<CreateTeamDto>,
     @InjectModel('User') private userModel: Model<CreateUserDto>,
     @InjectModel('Player') private playerModel: Model<CreatePlayerDto>,
+    @InjectModel('Rule') private ruleModel: Model<CreateRuleDto>,
     private readonly ruleService: RuleService,
     private readonly playerService: PlayerService,
   ) {}
@@ -82,31 +84,38 @@ export class TeamService {
   async createTeam(data: CreateTeamDto) {
     try {
       await this.teamOwnerExist(data.teamOwner);
-      const createdTeam = await this.teamModel.create(data);
-      return createdTeam;
+      const ruleData = await this.ruleModel.findById(data.gameRules);
+      return await this.teamModel.create({...data, game_rules_setting: ruleData});
     } catch (e) {
       throw e;
     }
   }
 
-  async updateTeam(data: UpdateTeamDto) {
+  async updateTeam(data) {
     try {
       const teamId = data.teamId;
       let team = await this.teamModel.findById(teamId);
       if (!team) {
         throw new NotFoundException(`Team ${data.teamNickName} doesn't exist`);
       }
-      await this.teamModel.findOneAndUpdate(
-        { _id: teamId }, // filter team with _id
-        {
-          // Data to update
-          // teamName: data?.teamName ? data.teamName : team.teamName,
-          // teamNickName: data?.teamNickName
-          //   ? data.teamNickName
-          //   : team.teamNickName,
-          ...data,
-        },
-      );
+      const ruleIsChanged = data.gameRules != team.gameRules;
+      if(ruleIsChanged) {
+        const newRuleData = await this.ruleModel.findById(data.gameRules);
+        await this.teamModel.findOneAndUpdate(
+          { _id: teamId }, // filter team with _id
+          {
+            ...data,
+            game_rules_setting: newRuleData
+          },
+        );
+      } else {
+        await this.teamModel.findOneAndUpdate(
+          { _id: teamId }, // filter team with _id
+          {
+            ...data,
+          },
+        );
+      }
       return { message: 'Team has been updated successfully!' };
     } catch (e) {
       throw e;
