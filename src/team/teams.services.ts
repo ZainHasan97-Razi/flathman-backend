@@ -93,27 +93,23 @@ export class TeamService {
 
   async updateTeam(data) {
     try {
-      const teamId = data.teamId;
-      let team = await this.teamModel.findById(teamId);
+      let team = await this.teamModel.findById(data.teamId);
       if (!team) {
         throw new NotFoundException(`Team ${data.teamNickName} doesn't exist`);
       }
-      const ruleIsChanged = data.gameRules != team.gameRules;
-      if(ruleIsChanged) {
-        const newRuleData = await this.ruleModel.findById(data.gameRules);
-        await this.teamModel.findOneAndUpdate(
-          { _id: teamId }, // filter team with _id
-          {
-            ...data,
-            game_rules_setting: newRuleData
-          },
-        );
+      if(data.gameRules) {
+        const ruleIsChanged = (data.gameRules?._id || data.gameRules) != team.gameRules;
+        if(ruleIsChanged) {
+          const newRuleData = await this.ruleModel.findById(data.gameRules);
+          await this.teamModel.findOneAndUpdate(
+            { _id: data.teamId }, // filter team with _id
+            { ...data, game_rules_setting: newRuleData },
+          );
+        } 
       } else {
         await this.teamModel.findOneAndUpdate(
-          { _id: teamId }, // filter team with _id
-          {
-            ...data,
-          },
+          { _id: data.teamId }, // filter team with _id
+          { ...data },
         );
       }
       return { message: 'Team has been updated successfully!' };
