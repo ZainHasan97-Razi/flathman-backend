@@ -43,4 +43,10 @@ export class TeamController {
   delete(@Param('id') id: string) {
     return this.teamService.delete(id);
   }
+
+  // New endpoint to fetch default turnover options
+  @Get('defaults/turnover-options')
+  getDefaultTurnoverOptions() {
+    return this.teamService.getDefaultTurnoverOptions();
+  }
 }
