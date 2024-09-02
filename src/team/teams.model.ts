@@ -34,6 +34,7 @@ export const defalt_turnover_options = [
   { name: 'Unforced error', slug: 'unforced_error' },
   { name: 'Equipment', slug: 'equipment' },
 ];
+
 export const OptionSubSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
@@ -115,6 +116,7 @@ export const default_stats_rating = [
   { name: 'Shot On Goal', slug: 'shotOG', value: 0 },
   { name: 'Goal Against', slug: 'goalsAgainst', value: -1 },
 ];
+
 export const StatsRatingSubSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
@@ -164,3 +166,10 @@ export const TeamSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
+// Add a method to fetch default turnover options
+TeamSchema.statics.getDefaultTurnoverOptions = function() {
+  return defalt_turnover_options;
+};
+
+export const Team = mongoose.model('Team', TeamSchema);
