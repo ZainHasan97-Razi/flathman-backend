@@ -36,6 +36,16 @@ export class TeamService {
     }
   }
 
+  // New method to get default turnover options
+  async getDefaultTurnoverOptions() {
+    try {
+      // Returning the default turnover options directly from your model schema file
+      return defalt_turnover_options;
+    } catch (e) {
+      throw new InternalServerErrorException('Error fetching turnover options');
+    }
+  }
+
   async delete(id: string) {
     try {
       const team = await this.findOne(id);
