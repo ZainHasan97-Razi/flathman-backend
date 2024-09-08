@@ -44,6 +44,7 @@ export const OptionSubSchema = new mongoose.Schema(
 
 // Penalty options
 const penalty_option_slugs = { technical: 'technical', personal: 'personal' };
+export type penaltyOptionSlugsEnumType = keyof typeof penalty_option_slugs;
 
 export const PenaltyOptionSubSchema = new mongoose.Schema(
   {
