@@ -162,9 +162,6 @@ export class TeamService {
       }
     } else {
       let {gameRules} = await this.teamModel.findById(teamId).lean().populate("gameRules");
-      delete gameRules["_id"]
-      delete gameRules["createdAt"]
-      delete gameRules["updatedAt"]
       settingDefaultPayload = {game_rules_setting: gameRules};
     }
     return settingDefaultPayload;
