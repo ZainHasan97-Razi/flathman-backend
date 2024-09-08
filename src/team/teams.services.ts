@@ -15,6 +15,8 @@ import { CreatePlayerDto } from 'src/player/dto/create.player.dto';
 import { PlayerService } from 'src/player/player.service';
 import { CreateRuleDto } from 'src/rules/dto/create.rule.dto';
 import mongoose from 'mongoose';
+import { MongoIdType } from 'src/common/common.types';
+import { defalt_penalty_options, defalt_turnover_options, default_penalty_time_options, default_stats_rating, SettingNameEnumType } from './teams.model';
 
 @Injectable()
 export class TeamService {
@@ -139,4 +141,37 @@ export class TeamService {
       throw new ConflictException(`Team owner doesn't exist!`);
     }
   };
+
+  async getDefaultSettingData(settingName: SettingNameEnumType, teamId: MongoIdType) {
+    console.log("settingName: ", settingName);
+    let settingDefaultPayload;
+    if(settingName != "game_rules_setting") {
+      switch(settingName) {
+        case "penalty_time_options":
+          settingDefaultPayload = {penalty_time_options: default_penalty_time_options}
+          break;
+        case "penalty_options":
+          settingDefaultPayload = {penalty_options: defalt_penalty_options}
+          break;
+        case "stats_rating":
+          settingDefaultPayload = {stats_rating: default_stats_rating}
+          break;
+        case "turnover_options":
+          settingDefaultPayload = {turnover_options: defalt_turnover_options}
+          break
+      }
+    } else {
+      const team = await this.teamModel.findById(teamId).populate("gameRules");
+      settingDefaultPayload = {game_rules_setting: team.gameRules};
+    }
+    // console.log("settingDefaultPayload:::", settingDefaultPayload);
+    return settingDefaultPayload;
+  }
+
+  async resetTeamSetting(settingName: SettingNameEnumType, teamId: MongoIdType) {
+    let settingDefaultPayload = await this.getDefaultSettingData(settingName, teamId);
+    console.log("settingDefaultPayload:::", settingDefaultPayload);
+
+    return await this.teamModel.findByIdAndUpdate(teamId, settingDefaultPayload, {new: true})
+  }
 }
