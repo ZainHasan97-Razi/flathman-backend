@@ -161,16 +161,18 @@ export class TeamService {
           break
       }
     } else {
-      const team = await this.teamModel.findById(teamId).populate("gameRules");
-      settingDefaultPayload = {game_rules_setting: team.gameRules};
+      let {gameRules} = await this.teamModel.findById(teamId).lean().populate("gameRules");
+      delete gameRules["_id"]
+      delete gameRules["createdAt"]
+      delete gameRules["updatedAt"]
+      settingDefaultPayload = {game_rules_setting: gameRules};
     }
-    // console.log("settingDefaultPayload:::", settingDefaultPayload);
     return settingDefaultPayload;
   }
 
   async resetTeamSetting(settingName: SettingNameEnumType, teamId: MongoIdType) {
     let settingDefaultPayload = await this.getDefaultSettingData(settingName, teamId);
-    console.log("settingDefaultPayload:::", settingDefaultPayload);
+    // console.log("settingDefaultPayload:::", settingDefaultPayload);
 
     return await this.teamModel.findByIdAndUpdate(teamId, settingDefaultPayload, {new: true})
   }
