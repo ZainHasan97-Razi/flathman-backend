@@ -124,6 +124,16 @@ export const StatsRatingSubSchema = new mongoose.Schema(
   { timestamps: false, _id: false },
 );
 
+export enum SettingNameEnum {
+  game_rules_setting = "game_rules_setting",
+  penalty_time_options = "penalty_time_options",
+  turnover_options = "turnover_options",
+  penalty_options = "penalty_options",
+  stats_rating = "stats_rating"
+}
+export type SettingNameEnumType = keyof typeof SettingNameEnum;
+
+
 export const TeamSchema = new mongoose.Schema(
   {
     teamName: { type: String, required: true, unique: true },

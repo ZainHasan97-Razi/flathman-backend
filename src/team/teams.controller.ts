@@ -12,6 +12,8 @@ import { TeamService } from './teams.services';
 import { CreateTeamDto } from './dto/create.team.dto';
 import { MongoIdValidationPipe } from 'src/common/pipes/mongoid.validation.pipe';
 import mongoose from 'mongoose';
+import { SettingNameEnum, SettingNameEnumType } from './teams.model';
+import { MongoIdType } from 'src/common/common.types';
 
 @Controller('team')
 export class TeamController {
@@ -42,5 +44,10 @@ export class TeamController {
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.teamService.delete(id);
+  }
+
+  @Patch("reset/setting/:settingName/:teamId")
+  resetTeamSetting(@Param('settingName') settingName: SettingNameEnumType, @Param('teamId') teamId: MongoIdType) {
+    return this.teamService.resetTeamSetting(settingName, teamId)
   }
 }
