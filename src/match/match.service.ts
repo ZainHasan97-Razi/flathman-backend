@@ -208,13 +208,6 @@ export class MatchService {
                 _id: null,
                 won: {
                   $sum: {
-                    // $cond: [
-                    //   {
-                    //     $or: [{ $eq: ["$gameResult", "Won"] }, { $eq: ["$gameResult", "Forfeit"] }],
-                    //   },
-                    //   1,
-                    //   0,
-                    // ],
                     $sum: {
                       $cond: [{ $eq: ["$gameResult", "Won"] }, 1, 0],
                     },
@@ -241,15 +234,6 @@ export class MatchService {
               $group: {
                 _id: null,
                 won: {
-                  // $sum: {
-                  //   $cond: [
-                  //     {
-                  //       $or: [{ $eq: ["$gameResult", "Won"] }, { $eq: ["$gameResult", "Forfeit"] }],
-                  //     },
-                  //     1,
-                  //     0,
-                  //   ],
-                  // },
                   $sum: {
                     $cond: [{ $eq: ["$gameResult", "Won"] }, 1, 0],
                   },
