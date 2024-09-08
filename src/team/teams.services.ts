@@ -105,7 +105,12 @@ export class TeamService {
             { _id: data.teamId }, // filter team with _id
             { ...data, game_rules_setting: newRuleData },
           );
-        } 
+        } else {
+          await this.teamModel.findOneAndUpdate(
+            { _id: data.teamId }, // filter team with _id
+            { ...data },
+          );
+        }
       } else {
         await this.teamModel.findOneAndUpdate(
           { _id: data.teamId }, // filter team with _id
