@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import { default_penalty_options, PenaltyOptionSubSchema } from 'src/team/teams.model';
 
 export const RuleSchema = new mongoose.Schema(
   {
@@ -18,6 +19,10 @@ export const RuleSchema = new mongoose.Schema(
     goalDiffForRunningClock: { type: Number, default: null },
     maxPersonalFouls: { type: Number, required: true },
     maxFOViolationPerHalf: { type: Number, required: true },
+    penalty_options: {
+      type: [PenaltyOptionSubSchema],
+      default: default_penalty_options,
+    },
   },
   { timestamps: true },
 );

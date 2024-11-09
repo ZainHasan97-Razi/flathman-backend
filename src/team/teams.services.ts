@@ -16,7 +16,7 @@ import { PlayerService } from 'src/player/player.service';
 import { CreateRuleDto } from 'src/rules/dto/create.rule.dto';
 import mongoose from 'mongoose';
 import { MongoIdType } from 'src/common/common.types';
-import { defalt_penalty_options, defalt_turnover_options, default_penalty_time_options, default_stats_rating, penaltyOptionSlugsEnumType, SettingNameEnumType } from './teams.model';
+import { default_penalty_options, defalt_turnover_options, default_penalty_time_options, default_stats_rating, penaltyOptionSlugsEnumType, SettingNameEnumType } from './teams.model';
 
 @Injectable()
 export class TeamService {
@@ -154,13 +154,13 @@ export class TeamService {
             let {penalty_options} = await this.teamModel.findById(teamId).lean() as any;
             if(penalty_options) {
               const index = penalty_options.findIndex(opt => opt.name === penaltyOptionName);
-              penalty_options[index] = defalt_penalty_options.find(opt => opt.name === penaltyOptionName);
+              penalty_options[index] = default_penalty_options.find(opt => opt.name === penaltyOptionName);
               settingDefaultPayload = {penalty_options};
             } else {
-              settingDefaultPayload = {penalty_options: defalt_penalty_options}
+              settingDefaultPayload = {penalty_options: default_penalty_options}
             }
           } else {
-            settingDefaultPayload = {penalty_options: defalt_penalty_options}
+            settingDefaultPayload = {penalty_options: default_penalty_options}
           }
           break;
         case "stats_rating":

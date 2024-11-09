@@ -59,7 +59,7 @@ export const PenaltyOptionSubSchema = new mongoose.Schema(
   { timestamps: false, _id: false },
 );
 
-export const defalt_penalty_options = [
+export const default_penalty_options = [
   {
     name: penalty_option_slugs.technical,
     option: [
@@ -162,7 +162,7 @@ export const TeamSchema = new mongoose.Schema(
     },
     penalty_options: {
       type: [PenaltyOptionSubSchema],
-      default: defalt_penalty_options,
+      default: default_penalty_options,
     },
     penalty_time_options: {
       type: Array,
