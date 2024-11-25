@@ -61,6 +61,10 @@ export class OpponentPlayerService {
       if (playerNumberAlreadyExist) {
         throw new BadRequestException(`Player number already exist`);
       }
+      data.playerName =
+        data.firstName.split(' ').join('') +
+        ' ' +
+        data.lastName.split(' ').join('');
       const createdPlayer = await this.oppPlayerModel.create(data);
       return createdPlayer;
     } catch (e) {
@@ -70,23 +74,20 @@ export class OpponentPlayerService {
 
   async updatePlayer(data: UpdateOpponentPlayerDto) {
     try {
-      // const team = await this.teamModel.findById(data.teamId);
-      // if (!team) {
-      //   throw new ConflictException(`Team you have selected doesn't exist`); // Jabhi tw change krega banda jab new teamId exist krti hogi
-      // }
       const player = await this.oppPlayerModel.findOne({
         _id: data.playerId,
       });
       if (!player) {
         throw new NotFoundException(`Player ${data.playerName} doesn't exist`);
       }
-      const updatedPlayer = await this.oppPlayerModel.findByIdAndUpdate(
-        { _id: data.playerId },
-        data,
-      );
-      if (updatedPlayer) {
-        return { message: 'Player has been updated successfully!' };
+      await this.oppPlayerModel.findByIdAndUpdate({ _id: data.playerId }, data);
+      if(data?.firstName && data?.lastName) {
+        data.playerName =
+          data.firstName.split(' ').join('') +
+          ' ' +
+          data.lastName.split(' ').join('');
       }
+      return { message: 'Player has been updated successfully!' };
     } catch (e) {
       throw e;
     }
