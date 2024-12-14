@@ -12,6 +12,7 @@ import { CreateMatchDto } from './dto/create.match.dto';
 import { UpdateMatchDto } from './dto/update.match.dto';
 import { SuspendMatchDto } from './dto/suspend.match.dto';
 import { CompleteSuspendedMatchDto } from './dto/completeSuspendedMatch.match.dto';
+import { MongoIdType } from 'src/common/common.types';
 
 @Controller('match')
 export class MatchController {
@@ -22,9 +23,9 @@ export class MatchController {
     return this.matchService.create(body);
   }
 
-  @Post('update')
-  update(@Body() body: UpdateMatchDto) {
-    return this.matchService.update(body);
+  @Patch(':id')
+  update(@Param('id') id: MongoIdType, @Body() body: UpdateMatchDto) {
+    return this.matchService.update(id, body);
   }
 
   @Post('suspend')
@@ -57,8 +58,8 @@ export class MatchController {
   }
 
   @Get('licensed-team/:id')
-  findByLicensedTeamId(@Param('id') id: string) {
-    return this.matchService.findByLicensedTeamId(id);
+  findByLicensedTeamId(@Param('id') id: MongoIdType) {
+    return this.matchService.gameResultsAndScheduleListByLicensedTeam(id);
   }
   // @Get(':id')
   // findOneSuspended(@Param('id') id: string) {
@@ -68,4 +69,20 @@ export class MatchController {
   findOneAndDelete(@Param('id') id: string) {
     return this.matchService.delete(id);
   }
+
+  @Get('scheduled-games/:id')
+  findScheduledGamesByLicensedTeam(@Param('id') id: MongoIdType) {
+    return this.matchService.gameResultsAndScheduleListByLicensedTeam(id, true);
+  }
+
+  @Get('game-result-count/:id')
+  gameResultCountsByLicensedTeamId(@Param('id') id: MongoIdType) {
+    return this.matchService.gameResultCounts(id);
+  }
+  
+  // @Get("game-result-and-schedule-list/:teamId")
+  // gameResultsAndScheduleList(@Param('teamId') teamId: MongoIdType) {
+  //   return this.matchService.gameResultsAndScheduleListByLicensedTeam(teamId)
+  // }
+
 }

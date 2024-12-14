@@ -1,5 +1,6 @@
 // import { BaseProjectDto } from './base-project.dto';
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNumber, IsEnum } from 'class-validator';
+import { RuleTypeEnum, RuleTypeEnumType } from '../rule.model';
 
 export class CreateRuleDto {
   @IsString()
@@ -13,6 +14,9 @@ export class CreateRuleDto {
 
   @IsString()
   gender: string;
+
+  @IsEnum(RuleTypeEnum)
+  type: RuleTypeEnumType;
 
   // Periods per game
   @IsNumber()

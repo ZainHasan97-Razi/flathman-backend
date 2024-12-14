@@ -1,4 +1,5 @@
-import { IsString, IsNumber, IsMongoId } from 'class-validator';
+import { IsString, IsNumber, IsMongoId, IsEnum, IsOptional } from 'class-validator';
+import { RuleTypeEnum, RuleTypeEnumType } from '../rule.model';
 
 export class UpdateRuleDto {
   @IsMongoId()
@@ -15,6 +16,10 @@ export class UpdateRuleDto {
 
   @IsString()
   gender: string;
+
+  @IsOptional()
+  @IsEnum(RuleTypeEnum)
+  type: RuleTypeEnumType;
 
   // Periods per game
   @IsNumber()

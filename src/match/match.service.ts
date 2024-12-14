@@ -1,17 +1,17 @@
 import {
   Injectable,
   NotFoundException,
-  BadRequestException,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from 'src/user/dto/create.user.dto';
 import { CompleteSuspendedMatchDto } from './dto/completeSuspendedMatch.match.dto';
 import { CreateMatchDto } from './dto/create.match.dto';
 import { SuspendMatchDto } from './dto/suspend.match.dto';
 import { UpdateMatchDto } from './dto/update.match.dto';
+import { GameStatusEnum } from './match.model';
+import { MongoIdType } from 'src/common/common.types';
+const isEmpty = require("is-empty");
 
 @Injectable()
 export class MatchService {
@@ -22,10 +22,7 @@ export class MatchService {
 
   async findAll() {
     try {
-      const response = await this.matchModel
-        .find({ isSuspended: false })
-        .exec();
-      return response;
+      return await this.matchModel.find({deletedAt: null}).lean();
     } catch (e) {
       // throw new NotFoundException(`Couldn't found any match logs`);
       throw e;
@@ -34,7 +31,7 @@ export class MatchService {
 
   async findOne(id: string) {
     try {
-      const response = await this.matchModel.findById(id);
+      const response = await this.matchModel.findById(id).lean();
       if (!response) {
         throw new NotFoundException(`Couldn't found match log`);
       }
@@ -67,27 +64,16 @@ export class MatchService {
     }
   }
 
-  async create(data: CreateMatchDto) {
+  async create(body: CreateMatchDto) {
     try {
       const userExist = this.userModel.findOne({
-        _id: data.userId,
+        _id: body.userId,
         deletedAt: null,
       });
       if (!userExist) {
         throw new NotFoundException(`Couldn't found User`);
       }
-      let payload = data;
-      if (Number(payload.teamA.goals) === Number(payload.teamB.goals)) {
-        payload.teamA.status = 'Tied';
-        payload.teamB.status = 'Tied';
-      } else if (Number(payload.teamA.goals) > Number(payload.teamB.goals)) {
-        payload.teamA.status = 'Won';
-        payload.teamB.status = 'Lost';
-      } else {
-        payload.teamA.status = 'Lost';
-        payload.teamB.status = 'Won';
-      }
-      const savedMatch = await this.matchModel.create(data);
+      const savedMatch = await this.matchModel.create(body);
       if (savedMatch) {
         return {
           message: `Match has been saved successfully!`,
@@ -99,18 +85,11 @@ export class MatchService {
     }
   }
 
-  async update(data: UpdateMatchDto) {
+  async update(id: MongoIdType, body: UpdateMatchDto) {
     try {
-      const userExist = this.userModel.findByIdAndUpdate(data.matchId, data);
-      if (!userExist) {
-        throw new NotFoundException(`Couldn't found User`);
-      }
-      const savedMatch = await this.matchModel.findOne(data);
-      if (savedMatch) {
-        return {
-          message: `Match has been saved successfully!`,
-        };
-      }
+      return await this.matchModel.findByIdAndUpdate(id, body, {
+        new: true,
+      });
     } catch (e) {
       // console.log('Err createTeam => ', e);
       throw e;
@@ -178,5 +157,116 @@ export class MatchService {
     } catch (e) {
       throw e;
     }
+  }
+
+  async gameResultsAndScheduleListByLicensedTeam(teamId: MongoIdType, hasScheduledGames: boolean = false) {
+    const scheduledGameFilters = {
+      "$or": [
+        {gameStatus:  GameStatusEnum.scheduled},
+        {gameStatus:  GameStatusEnum.forfeit},
+      ]
+    }
+    const data = await this.matchModel.aggregate([
+      {$match: {
+        "teamA.teamId": teamId, deletedAt: null,
+        ...(hasScheduledGames ? scheduledGameFilters : {})
+      }},
+      {
+        $addFields: {
+          createdAtUnix: {
+            $divide: [
+              {$toLong: {$toDate: "$createdAt"}},
+              1000
+            ]
+          }
+        }
+      },
+      {
+        $addFields: {
+          effectiveDateTime: {
+            $ifNull: ["$effectiveDateTime", "$createdAtUnix"]
+          }
+        }
+      },
+      {
+        $sort: { effectiveDateTime: 1 }
+      }
+    ])
+    // console.log("dataaaa: ", data);
+    return data;
+  }
+
+  async gameResultCounts(teamId: MongoIdType) {
+    const data = await this.matchModel.aggregate([
+      { $match: { "teamA.teamId": teamId, deletedAt: null } },
+      {
+        $facet: {
+          conference: [
+            { $match: { conference: true } },
+            {
+              $group: {
+                _id: null,
+                won: {
+                  $sum: {
+                    $sum: {
+                      $cond: [{ $eq: ["$gameResult", "Won"] }, 1, 0],
+                    },
+                  },
+                },
+                lost: {
+                  $sum: {
+                    $cond: [{ $eq: ["$gameResult", "Lost"] }, 1, 0],
+                  },
+                },
+                tied: {
+                  $sum: {
+                    $cond: [{ $eq: ["$gameResult", "Tied"] }, 1, 0],
+                  },
+                },
+              },
+            },
+            {
+              $project: { _id: 0, won: 1, lost: 1, tied: 1 },
+            },
+          ],
+          overall: [
+            {
+              $group: {
+                _id: null,
+                won: {
+                  $sum: {
+                    $cond: [{ $eq: ["$gameResult", "Won"] }, 1, 0],
+                  },
+                },
+                lost: {
+                  $sum: {
+                    $cond: [{ $eq: ["$gameResult", "Lost"] }, 1, 0],
+                  },
+                },
+                tied: {
+                  $sum: {
+                    $cond: [{ $eq: ["$gameResult", "Tied"] }, 1, 0],
+                  },
+                },
+              },
+            },
+            {
+              $project: { _id: 0, won: 1, lost: 1, tied: 1 },
+            },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          conference: {
+            $arrayElemAt: ["$conference", 0],
+          },
+          overall: {
+            $arrayElemAt: ["$overall", 0],
+          },
+        },
+      },
+    ]);
+    return data[0];
   }
 }
