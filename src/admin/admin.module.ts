@@ -19,6 +19,8 @@ import { SubscriptionTypeService } from 'src/subscription/subscriptionType/subsc
 import { PlayerModule } from 'src/player/player.module';
 import { EmailModule } from 'src/email/email.module';
 import { OtpModule } from 'src/otp/otp.module';
+import { StatsConfigSchema } from 'src/statsConfig/statsConfig.model';
+import { StatsConfigService } from 'src/statsConfig/statsConfig.service';
 
 @Module({
   imports: [
@@ -31,6 +33,7 @@ import { OtpModule } from 'src/otp/otp.module';
       { name: 'Rule', schema: RuleSchema },
       { name: 'Subscription', schema: SubscriptionSchema },
       { name: 'subscription-type', schema: SubscriptionTypeSchema },
+      { name: 'StatsConfig', schema: StatsConfigSchema },
     ]),
     forwardRef(() => PlayerModule),
   ],
@@ -44,6 +47,7 @@ import { OtpModule } from 'src/otp/otp.module';
     RuleService,
     SubscriptionService,
     SubscriptionTypeService,
+    StatsConfigService
   ],
 })
 export class AdminModule {}

@@ -19,6 +19,10 @@ import { UpdateTeamDto } from 'src/team/dto/update.team.dto';
 import { UpdatePlayerDto } from 'src/player/dto/update.player.dto';
 import { SubscriptionModelDto } from 'src/subscription/dto/subscription.model.dto';
 import mongoose from 'mongoose';
+import { StatsConfigService } from 'src/statsConfig/statsConfig.service';
+import { CreateStatsConfigDto } from 'src/statsConfig/dto/create.statsConfig.dto';
+import { UpdateStatsConfigDto } from 'src/statsConfig/dto/update.statsConfig.dto';
+import { MongoIdType } from 'src/common/common.types';
 
 @Injectable()
 export class AdminService {
@@ -30,6 +34,7 @@ export class AdminService {
     private readonly ruleService: RuleService,
     private readonly subscription: SubscriptionService,
     private readonly subscriptionType: SubscriptionTypeService,
+    private readonly statsConfigService: StatsConfigService,
   ) {}
 
   async CreateUser(body: CreateUserDto) {
@@ -102,5 +107,13 @@ export class AdminService {
       email: 'gene.flathman@laxstat.com',
       webUrl: 'https://flathman-web.web.app/',
     };
+  }
+
+  async createStatsConfig(body: CreateStatsConfigDto) {
+    return await this.statsConfigService.create(body);
+  }
+
+  async updateStatsConfig(id: MongoIdType, body: UpdateStatsConfigDto) {
+    return await this.statsConfigService.update(id, body);
   }
 }
