@@ -96,12 +96,12 @@ export class AdminController {
     return this.adminService.ContactUs();
   }
 
-  @Post("create-stats-config")
+  @Post("stats-config")
   createStatsConfig(@Body() body: CreateStatsConfigDto) {
     return this.adminService.createStatsConfig(body);
   }
 
-  @Patch("create-stats-config/:id")
+  @Patch("stats-config/:id")
   updateStatsConfig(@Param('id', MongoIdValidationPipe) id: MongoIdType, @Body() body: UpdateStatsConfigDto) {
     return this.adminService.updateStatsConfig(id, body);
   }
