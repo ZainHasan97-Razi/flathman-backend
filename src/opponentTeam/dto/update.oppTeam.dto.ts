@@ -1,12 +1,7 @@
 import {
   IsNotEmpty,
-  IsEmail,
   IsString,
   IsMongoId,
-  IsBoolean,
-  MinLength,
-  MaxLength,
-  IsOptional,
 } from 'class-validator';
 
 export class UpdateOppTeamDto {

@@ -1,16 +1,7 @@
 // import { BaseProjectDto } from './base-project.dto';
 import {
-  MaxLength,
-  MinLength,
   IsNotEmpty,
-  IsEmail,
-  IsString,
-  IsNumber,
-  IsArray,
-  IsObject,
   IsMongoId,
-  IsBoolean,
-  IsOptional,
 } from 'class-validator';
 
 export class CreatePlayerDto {

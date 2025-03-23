@@ -3,13 +3,7 @@ import {
   MaxLength,
   IsNotEmpty,
   IsString,
-  IsNumber,
-  IsBoolean,
-  ArrayMaxSize,
-  ArrayMinSize,
-  IsArray,
   IsEmail,
-  length,
 } from 'class-validator';
 
 export class CreateUserDto {
