@@ -105,4 +105,9 @@ export class AdminController {
   updateStatsConfig(@Param('id', MongoIdValidationPipe) id: MongoIdType, @Body() body: UpdateStatsConfigDto) {
     return this.adminService.updateStatsConfig(id, body);
   }
+
+  @Get("stats-config")
+  findAllStatsConfig() {
+    return this.adminService.findAllStatsConfig();
+  }
 }

@@ -27,6 +27,28 @@ export class StatsConfigService {
     }
   }
 
+  buildHierarchy(docs, parentId = null) {
+    return docs
+      .filter(doc => 
+        (parentId === null && doc.parentId === null) || 
+        (doc.parentId && parentId && doc.parentId.toString() === parentId.toString())
+      )
+      .map(doc => ({
+        ...doc,
+        children: this.buildHierarchy(docs, doc._id)
+      }));
+  }
+
+  async findAll() {
+    try {
+      const allConfigs = await this.statsConfigModel.find().lean();
+      const hierarchicalData = this.buildHierarchy(allConfigs);
+      return hierarchicalData;
+    } catch (e) {
+      throw e;
+    }
+  }
+
   // async findAll() {
   //   try {
   //     const response = await this.ruleModel.find().exec();

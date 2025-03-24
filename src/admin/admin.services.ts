@@ -116,4 +116,8 @@ export class AdminService {
   async updateStatsConfig(id: MongoIdType, body: UpdateStatsConfigDto) {
     return await this.statsConfigService.update(id, body);
   }
+
+  async findAllStatsConfig() {
+    return await this.statsConfigService.findAll();
+  }
 }
