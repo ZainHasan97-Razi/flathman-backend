@@ -25,6 +25,7 @@ import { MongoIdValidationPipe } from 'src/common/pipes/mongoid.validation.pipe'
 import { CreateStatsConfigDto } from 'src/statsConfig/dto/create.statsConfig.dto';
 import { UpdateStatsConfigDto } from 'src/statsConfig/dto/update.statsConfig.dto';
 import { MongoIdType } from 'src/common/common.types';
+import { SettingNameEnumType } from 'src/team/teams.model';
 
 @Controller('admin')
 export class AdminController {
@@ -109,5 +110,10 @@ export class AdminController {
   @Get("stats-config")
   findAllStatsConfig() {
     return this.adminService.findAllStatsConfig();
+  }
+
+  @Get("stats-config/:slug")
+  findStatConfigBySlug(@Param('slug') slug: string) {
+    return this.adminService.findStatConfigBySlug(slug);
   }
 }

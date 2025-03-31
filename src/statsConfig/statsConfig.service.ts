@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { CreateStatsConfigDto } from './dto/create.statsConfig.dto';
 import { UpdateStatsConfigDto } from './dto/update.statsConfig.dto';
 import { MongoIdType } from 'src/common/common.types';
+import { ConfigDataDocumentType, ConfigDataHierarchyType } from './statsConfig.model';
 
 @Injectable()
 export class StatsConfigService {
@@ -27,7 +28,7 @@ export class StatsConfigService {
     }
   }
 
-  buildHierarchy(docs, parentId = null) {
+  buildHierarchy(docs: Array<ConfigDataDocumentType>, parentId = null) {
     return docs
       .filter(doc => 
         (parentId === null && doc.parentId === null) || 
@@ -39,11 +40,22 @@ export class StatsConfigService {
       }));
   }
 
-  async findAll() {
+  async findAll(): Promise<ConfigDataHierarchyType[]> {
     try {
-      const allConfigs = await this.statsConfigModel.find().lean();
+      const allConfigs: Array<ConfigDataDocumentType> = await this.statsConfigModel.find().lean();
       const hierarchicalData = this.buildHierarchy(allConfigs);
       return hierarchicalData;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async findBySlug(slug: string): Promise<ConfigDataHierarchyType | null> {
+    try {
+      const allConfigs: Array<ConfigDataDocumentType> = await this.statsConfigModel.find().lean();
+      const hierarchicalData = this.buildHierarchy(allConfigs);
+      const filteredConfig = hierarchicalData.find(config => config.slug === slug);
+      return filteredConfig || null;
     } catch (e) {
       throw e;
     }

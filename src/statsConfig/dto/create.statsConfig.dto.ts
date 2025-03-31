@@ -1,12 +1,16 @@
 import { IsString, IsOptional, IsMongoId, ValidateIf } from 'class-validator';
 import { MongoIdType } from 'src/common/common.types';
+import { IsStringOrNumber } from 'src/decorators/is-string-or-number-validator.decorator';
 
 export class CreateStatsConfigDto {
   @IsString()
-  name: string;
+  displayName: string;
 
   @IsString()
   slug: string;
+
+  @IsStringOrNumber()
+  value: string | number;
 
   @IsString()
   description: string;

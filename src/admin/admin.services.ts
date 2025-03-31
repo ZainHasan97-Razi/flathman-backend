@@ -120,4 +120,8 @@ export class AdminService {
   async findAllStatsConfig() {
     return await this.statsConfigService.findAll();
   }
+
+  async findStatConfigBySlug(slug: string) {
+    return await this.statsConfigService.findBySlug(slug);
+  }
 }
