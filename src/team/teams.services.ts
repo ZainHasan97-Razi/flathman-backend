@@ -176,9 +176,14 @@ export class TeamService {
         if(penaltyOptionName) {
           let {penalty_options} = await this.teamModel.findById(teamId).lean() as any;
           if(penalty_options) {
-            const index = penalty_options.findIndex(opt => opt.displayName === penaltyOptionName);
-            penalty_options[index] = configData.children.find(opt => opt.displayName === penaltyOptionName);
-            settingDefaultPayload = {penalty_options};
+            const isOldConfig = penalty_options.find(opt => isEmpty(opt?.displayName));
+            if(isOldConfig) {
+              settingDefaultPayload = {penalty_options: configData.children}
+            } else {
+              const index = penalty_options.findIndex(opt => opt.displayName === penaltyOptionName);
+              penalty_options[index] = configData.children.find(opt => opt.displayName === penaltyOptionName);
+              settingDefaultPayload = {penalty_options};
+            }
           } else {
             settingDefaultPayload = {penalty_options: configData.children}
           }
