@@ -116,4 +116,9 @@ export class AdminController {
   findStatConfigBySlug(@Param('slug') slug: string) {
     return this.adminService.findStatConfigBySlug(slug);
   }
+
+  @Delete("stats-config/:id")
+  deleteStatsConfig(@Param('id', MongoIdValidationPipe) id: MongoIdType) {
+    return this.adminService.deleteStatsConfig(id);
+  }
 }

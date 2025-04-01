@@ -28,6 +28,17 @@ export class StatsConfigService {
     }
   }
 
+  async delete(id: MongoIdType) {
+    try {
+      const childConfigs = await this.statsConfigModel.find({ parentId: id });
+      const childConfigIds = childConfigs.map(config => config._id);
+      await this.statsConfigModel.deleteMany({ _id: { $in: [...childConfigIds, id] } });
+      return { message: 'Deleted successfully' };
+    } catch (e) {
+      throw e;
+    }
+  }
+
   buildHierarchy(docs: Array<ConfigDataDocumentType>, parentId = null) {
     return docs
       .filter(doc => 

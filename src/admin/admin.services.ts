@@ -124,4 +124,8 @@ export class AdminService {
   async findStatConfigBySlug(slug: string) {
     return await this.statsConfigService.findBySlug(slug);
   }
+
+  async deleteStatsConfig(id: MongoIdType) {
+    return await this.statsConfigService.delete(id);
+  }
 }
