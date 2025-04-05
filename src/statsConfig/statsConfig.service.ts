@@ -1,18 +1,27 @@
-import {Injectable} from '@nestjs/common';
+import {forwardRef, Inject, Injectable} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateStatsConfigDto } from './dto/create.statsConfig.dto';
 import { UpdateStatsConfigDto } from './dto/update.statsConfig.dto';
 import { MongoIdType } from 'src/common/common.types';
 import { ConfigDataDocumentType, ConfigDataHierarchyType } from './statsConfig.model';
+import { RuleService } from 'src/rules/rule.service';
+import { SettingNameEnum } from 'src/team/teams.model';
 
 @Injectable()
 export class StatsConfigService {
-  constructor(@InjectModel('StatsConfig') private statsConfigModel: Model<CreateStatsConfigDto>) {}
+  constructor(
+    @InjectModel('StatsConfig') private statsConfigModel: Model<CreateStatsConfigDto>,
+    @Inject(forwardRef(() => RuleService)) private readonly ruleService: RuleService,
+  ) {}
 
   async create(data: CreateStatsConfigDto) {
     try {
       const response = await this.statsConfigModel.create(data);
+      if(data.slug == SettingNameEnum.penalty_options || data.parentSlug == SettingNameEnum.penalty_options) {
+        const config = await this.findBySlug(SettingNameEnum.penalty_options)
+        await this.ruleService.updateStatsConfigInRules({penalty_options: config.children})
+      }
       return response;
     } catch (e) {
       throw e;
@@ -22,6 +31,11 @@ export class StatsConfigService {
   async update(id: MongoIdType, data: UpdateStatsConfigDto) {
     try {
       const response = await this.statsConfigModel.findByIdAndUpdate(id, data, { new: true });
+      const isPenaltyOptionConfigData = await this.statsConfigModel.findOne({ slug: SettingNameEnum.penalty_options, displayName: data.displayName });
+      if(isPenaltyOptionConfigData || data.parentSlug == SettingNameEnum.penalty_options) {
+        const config = await this.findBySlug(SettingNameEnum.penalty_options)
+        await this.ruleService.updateStatsConfigInRules({penalty_options: config.children})
+      }
       return response;
     } catch (e) {
       throw e;

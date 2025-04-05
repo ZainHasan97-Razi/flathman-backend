@@ -21,6 +21,7 @@ import { EmailModule } from 'src/email/email.module';
 import { OtpModule } from 'src/otp/otp.module';
 import { StatsConfigSchema } from 'src/statsConfig/statsConfig.model';
 import { StatsConfigService } from 'src/statsConfig/statsConfig.service';
+import { RuleModule } from 'src/rules/rule.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { StatsConfigService } from 'src/statsConfig/statsConfig.service';
       { name: 'StatsConfig', schema: StatsConfigSchema },
     ]),
     forwardRef(() => PlayerModule),
+    forwardRef(() => RuleModule),
   ],
   controllers: [AdminController],
   providers: [
