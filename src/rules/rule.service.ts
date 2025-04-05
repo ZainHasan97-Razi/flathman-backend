@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -9,6 +10,11 @@ import { CreateRuleDto } from './dto/create.rule.dto';
 import { UpdateRuleDto } from './dto/update.rule.dto';
 import { ConfigDataHierarchyType } from 'src/statsConfig/statsConfig.model';
 import { StatsConfigService } from 'src/statsConfig/statsConfig.service';
+import { SettingNameEnumType } from 'src/team/teams.model';
+
+type statsConfigsForRuleUpdationType = {
+  penalty_options?: Array<ConfigDataHierarchyType>
+}
 
 @Injectable()
 export class RuleService {
@@ -88,6 +94,22 @@ export class RuleService {
       return { message: `Rule ${data.ruleName} has been updated` };
     } catch (e) {
       // throw new BadRequestException(e?.message | e, 'Failed to update rule');
+      throw e;
+    }
+  }
+
+  async updateStatsConfigInRules(configs: statsConfigsForRuleUpdationType) {
+    try {
+      if(Object.keys(configs).length === 0) {
+        throw new BadRequestException('No config data found');
+      }
+      await this.ruleModel.updateMany(
+        {},
+        configs,
+      );
+
+      return {message: 'Rules updated successfully!'};
+    } catch (e) {
       throw e;
     }
   }

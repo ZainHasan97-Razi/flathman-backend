@@ -5,7 +5,9 @@ import { StatsConfigController } from './statsConfig.controller';
 import { StatsConfigService } from './statsConfig.service';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'StatsConfig', schema: StatsConfigSchema }])],
+  imports: [
+    MongooseModule.forFeature([{ name: 'StatsConfig', schema: StatsConfigSchema }]),
+  ],
   controllers: [StatsConfigController],
   providers: [StatsConfigService],
   exports: [StatsConfigService],
