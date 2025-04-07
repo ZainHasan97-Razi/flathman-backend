@@ -15,13 +15,15 @@ export class StatsConfigService {
     @Inject(forwardRef(() => RuleService)) private readonly ruleService: RuleService,
   ) {}
 
+  async updateConfigInRules() {
+    const config = await this.findHierarchyBySlug(SettingNameEnum.penalty_options)
+    await this.ruleService.updateStatsConfigInRules({penalty_options: config.children})
+  }
+
   async create(data: CreateStatsConfigDto) {
     try {
       const response = await this.statsConfigModel.create(data);
-      if(data.slug == SettingNameEnum.penalty_options || data.parentSlug == SettingNameEnum.penalty_options) {
-        const config = await this.findBySlug(SettingNameEnum.penalty_options)
-        await this.ruleService.updateStatsConfigInRules({penalty_options: config.children})
-      }
+      await this.updateConfigInRules()
       return response;
     } catch (e) {
       throw e;
@@ -31,11 +33,7 @@ export class StatsConfigService {
   async update(id: MongoIdType, data: UpdateStatsConfigDto) {
     try {
       const response = await this.statsConfigModel.findByIdAndUpdate(id, data, { new: true });
-      const isPenaltyOptionConfigData = await this.statsConfigModel.findOne({ slug: SettingNameEnum.penalty_options, displayName: data.displayName });
-      if(isPenaltyOptionConfigData || data.parentSlug == SettingNameEnum.penalty_options) {
-        const config = await this.findBySlug(SettingNameEnum.penalty_options)
-        await this.ruleService.updateStatsConfigInRules({penalty_options: config.children})
-      }
+      await this.updateConfigInRules()
       return response;
     } catch (e) {
       throw e;
@@ -44,9 +42,9 @@ export class StatsConfigService {
 
   async delete(id: MongoIdType) {
     try {
-      const childConfigs = await this.statsConfigModel.find({ parentId: id });
-      const childConfigIds = childConfigs.map(config => config._id);
-      await this.statsConfigModel.deleteMany({ _id: { $in: [...childConfigIds, id] } });
+      const allNestedChildIds = await this.extractAllDeepNestedChildrenIds(id);
+      await this.statsConfigModel.deleteMany({ _id: { $in: [...allNestedChildIds, id] } });
+      await this.updateConfigInRules()
       return { message: 'Deleted successfully' };
     } catch (e) {
       throw e;
@@ -65,6 +63,30 @@ export class StatsConfigService {
       }));
   }
 
+  async extractAllDeepNestedChildrenIds(parentId: MongoIdType): Promise<string[]> {
+    const allConfigs: Array<ConfigDataDocumentType> = await this.statsConfigModel.find().lean();
+    const hierarchicalData = this.buildHierarchy(allConfigs);
+    const filteredConfig = hierarchicalData.find(config => config._id.toString() === parentId.toString());
+    
+    const allNestedChildrenIds = this.nestedIdsExtractor(filteredConfig);
+    return allNestedChildrenIds;
+  }
+
+  nestedIdsExtractor(obj: ConfigDataHierarchyType, ids=[]): string[] {
+    if (obj._id) {
+      ids.push(obj._id);
+    }
+    
+    if (obj.children && Array.isArray(obj.children)) {
+      for (const child of obj.children) {
+        this.nestedIdsExtractor(child, ids);
+      }
+    }
+    
+    return ids;
+  }
+
+
   async findAll(): Promise<ConfigDataHierarchyType[]> {
     try {
       const allConfigs: Array<ConfigDataDocumentType> = await this.statsConfigModel.find().lean();
@@ -75,7 +97,7 @@ export class StatsConfigService {
     }
   }
 
-  async findBySlug(slug: string): Promise<ConfigDataHierarchyType | null> {
+  async findHierarchyBySlug(slug: string): Promise<ConfigDataHierarchyType | null> {
     try {
       const allConfigs: Array<ConfigDataDocumentType> = await this.statsConfigModel.find().lean();
       const hierarchicalData = this.buildHierarchy(allConfigs);
@@ -86,73 +108,14 @@ export class StatsConfigService {
     }
   }
 
-  // async findAll() {
-  //   try {
-  //     const response = await this.ruleModel.find().exec();
-  //     return response;
-  //   } catch (e) {
-  //     // throw new NotFoundException(`Couldn't found any rules`);
-  //     throw e;
-  //   }
-  // }
-
-  // async findOne(id: string) {
-  //   try {
-  //     const response = await this.ruleModel.findById(id);
-  //     if (!response) {
-  //       throw new NotFoundException(`Couldn't found any rule`);
-  //     }
-  //     return response;
-  //   } catch (e) {
-  //     // throw new InternalServerErrorException(e?.message || `Request failed`);
-  //     throw e;
-  //   }
-  // }
-
-  // async createRule(data: CreateRuleDto) {
-  //   try {
-  //     await this.ruleNameIsUnique(data.ruleName);
-  //     await this.ruleNumberIsUnique(data.ruleId);
-  //     const createdRule = await this.ruleModel.create(data);
-  //     if (createdRule) {
-  //       return {
-  //         message: `Rule has been created successfully!`,
-  //       };
-  //     }
-  //   } catch (e) {
-  //     // console.log('Err createTeam => ', e);
-  //     // throw new BadRequestException(e?.message);
-  //     throw e;
-  //   }
-  // }
-
-  // async updateRule(data: UpdateRuleDto) {
-  //   try {
-  //     const rule = await this.ruleModel.findOne({ _id: data.id });
-  //     if (!rule) {
-  //       throw new NotFoundException(`Rule ${data.ruleName} doesn't exist`);
-  //     }
-  //     const updatedRule = await this.ruleModel.findOneAndUpdate(
-  //       { _id: data.id },
-  //       data,
-  //     );
-  //     return { message: `Rule ${data.ruleName} has been updated` };
-  //   } catch (e) {
-  //     // throw new BadRequestException(e?.message | e, 'Failed to update rule');
-  //     throw e;
-  //   }
-  // }
-
-  // ruleNameIsUnique = async (rulename: string) => {
-  //   const result = await this.ruleModel.findOne({ ruleName: rulename });
-  //   if (result) {
-  //     throw new ConflictException('Rule name already exist!');
-  //   }
-  // };
-  // ruleNumberIsUnique = async (ruleId: string) => {
-  //   const result = await this.ruleModel.findOne({ ruleId });
-  //   if (result) {
-  //     throw new ConflictException('Rule name already exist!');
-  //   }
-  // };
+  async findHierarchyById(parentId: MongoIdType): Promise<ConfigDataHierarchyType | null> {
+    try {
+      const allConfigs: Array<ConfigDataDocumentType> = await this.statsConfigModel.find().lean();
+      const hierarchicalData = this.buildHierarchy(allConfigs);
+      const filteredConfig = hierarchicalData.find(config => config._id.toString() === parentId.toString());
+      return filteredConfig || null;
+    } catch (e) {
+      throw e;
+    }
+  }
 }
