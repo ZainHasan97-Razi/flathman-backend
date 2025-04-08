@@ -122,7 +122,7 @@ export class AdminService {
   }
 
   async findStatConfigBySlug(slug: string) {
-    return await this.statsConfigService.findBySlug(slug);
+    return await this.statsConfigService.findHierarchyBySlug(slug);
   }
 
   async deleteStatsConfig(id: MongoIdType) {

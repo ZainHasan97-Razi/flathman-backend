@@ -166,7 +166,7 @@ export class TeamService {
   async getDefaultSettingData(settingName: SettingNameEnumType, teamId: MongoIdType, penaltyOptionName: "technical"|"personal" = null) {
     let settingDefaultPayload;
 
-    const configData: ConfigDataHierarchyType = await this.statsConfigService.findBySlug(settingName);
+    const configData: ConfigDataHierarchyType = await this.statsConfigService.findHierarchyBySlug(settingName);
   
     switch(settingName) {
       case SettingNameEnum.penalty_time_options:
