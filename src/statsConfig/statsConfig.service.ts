@@ -68,16 +68,16 @@ export class StatsConfigService {
     const hierarchicalData = this.buildHierarchy(allConfigs);
     const filteredConfig = hierarchicalData.find(config => config._id.toString() === parentId.toString());
     
-    const allNestedChildrenIds = this.nestedIdsExtractor(filteredConfig);
+    const allNestedChildrenIds = this.nestedIdsExtractor(filteredConfig);    
     return allNestedChildrenIds;
   }
 
   nestedIdsExtractor(obj: ConfigDataHierarchyType, ids=[]): string[] {
-    if (obj._id) {
+    if (obj?._id) {
       ids.push(obj._id);
     }
     
-    if (obj.children && Array.isArray(obj.children)) {
+    if (obj?.children && Array.isArray(obj?.children)) {
       for (const child of obj.children) {
         this.nestedIdsExtractor(child, ids);
       }
