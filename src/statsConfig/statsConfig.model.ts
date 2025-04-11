@@ -30,7 +30,17 @@ export const StatsConfigSchema = new mongoose.Schema<ConfigDataDocumentType>(
   {
     displayName: { type: String, required: true },
     slug: { type: String, required: true },
-    value: { type: mongoose.Schema.Types.Mixed, required: true },
+    // value: { type: mongoose.Schema.Types.Mixed, required: true },
+    value: {
+      type: mongoose.Schema.Types.Mixed,
+      required: true,
+      validate: {
+        validator: function(v: any) {
+          return typeof v === 'string' || typeof v === 'number';
+        },
+        message: 'Value must be either string or number'
+      }
+    },
     description: { type: String, required: true },
     parentId: { type: mongoose.Schema.Types.ObjectId, default: null, ref: 'StatsConfig' },
     parentSlug: { type: String, default: null },
