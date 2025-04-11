@@ -1,13 +1,7 @@
 // import { BaseProjectDto } from './base-project.dto';
 import {
-  MinLength,
-  MaxLength,
   IsNotEmpty,
-  IsEmail,
   IsString,
-  IsNumber,
-  IsArray,
-  IsBoolean,
   IsMongoId,
   IsOptional,
 } from 'class-validator';

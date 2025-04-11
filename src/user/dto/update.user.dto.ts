@@ -3,10 +3,7 @@ import {
   MaxLength,
   IsNotEmpty,
   IsString,
-  IsNumber,
   IsBoolean,
-  ArrayMaxSize,
-  ArrayMinSize,
   IsMongoId,
   IsEmail,
 } from 'class-validator';

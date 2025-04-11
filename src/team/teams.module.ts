@@ -11,6 +11,8 @@ import { PlayerSchema } from 'src/player/player.model';
 import { PlayerService } from 'src/player/player.service';
 import { EmailModule } from 'src/email/email.module';
 import { OtpModule } from 'src/otp/otp.module';
+import { StatsConfigService } from 'src/statsConfig/statsConfig.service';
+import { StatsConfigSchema } from 'src/statsConfig/statsConfig.model';
 // import { PlayerModule } from 'src/player/player.module';
 
 @Module({
@@ -22,11 +24,12 @@ import { OtpModule } from 'src/otp/otp.module';
       { name: 'Rule', schema: RuleSchema },
       { name: 'User', schema: UserSchema },
       { name: 'Player', schema: PlayerSchema },
+      { name: 'StatsConfig', schema: StatsConfigSchema },
     ]),
     // forwardRef(() => PlayerModule),
   ],
   controllers: [TeamController],
-  providers: [TeamService, RuleService, UserService, PlayerService],
+  providers: [TeamService, RuleService, UserService, PlayerService, StatsConfigService],
   exports: [TeamService],
 })
 export class TeamModulebb {}

@@ -1,17 +1,6 @@
 import {
-  MaxLength,
   IsNotEmpty,
-  IsEmail,
-  IsString,
-  IsNumber,
-  IsArray,
-  ArrayMaxSize,
-  ArrayMinSize,
-  IsObject,
   IsMongoId,
-  IsBoolean,
-  MinLength,
-  IsOptional,
 } from 'class-validator';
 
 export class CreateOpponentTeamDto {

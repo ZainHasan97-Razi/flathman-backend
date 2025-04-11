@@ -2,8 +2,6 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
-  BadRequestException,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -16,7 +14,10 @@ import { PlayerService } from 'src/player/player.service';
 import { CreateRuleDto } from 'src/rules/dto/create.rule.dto';
 import mongoose from 'mongoose';
 import { MongoIdType } from 'src/common/common.types';
-import { default_penalty_options, defalt_turnover_options, default_penalty_time_options, default_stats_rating, penaltyOptionSlugsEnumType, SettingNameEnumType } from './teams.model';
+import {  default_stats_rating, SettingNameEnum, SettingNameEnumType } from './teams.model';
+import { StatsConfigService } from 'src/statsConfig/statsConfig.service';
+import { ConfigDataHierarchyType } from 'src/statsConfig/statsConfig.model';
+const isEmpty = require("is-empty");
 
 @Injectable()
 export class TeamService {
@@ -27,6 +28,7 @@ export class TeamService {
     @InjectModel('Rule') private ruleModel: Model<CreateRuleDto>,
     private readonly ruleService: RuleService,
     private readonly playerService: PlayerService,
+    private readonly statsConfigService: StatsConfigService,
   ) {}
 
   async findAll() {
@@ -43,9 +45,6 @@ export class TeamService {
       const team = await this.findOne(id);
       if (team) {
         const deletedTeam = await this.teamModel.findByIdAndDelete(id);
-        if (!deletedTeam) {
-          throw new InternalServerErrorException(`Couldn't delete team`);
-        }
         const teamPlayers = await this.playerModel.find({ teamId: id });
         // const teamPlayers = await this.playerService.findTeamPlayers(id);
         if (teamPlayers) {
@@ -83,11 +82,33 @@ export class TeamService {
     }
   }
 
+  /*
+  * Populate stats config data into team data if
+    teamData has no stats config data(null or empty) like 
+    penalty_options, turnover_options, penalty_time_options
+  */
+  async populateStatsConfigDataIntoTeam(team: object) {
+    const configData: ConfigDataHierarchyType[] = await this.statsConfigService.findAll();
+    let populatedTeamData = team;
+    configData.map(config => {
+      populatedTeamData = {
+        ...populatedTeamData,
+        ...(isEmpty(populatedTeamData?.[config.slug]) ? 
+          {[`${config.slug}`]: config.children}
+          :
+          {}
+        )
+      }
+    })
+    return populatedTeamData;
+  }
+
   async createTeam(data: CreateTeamDto) {
     try {
       await this.teamOwnerExist(data.teamOwner);
       const ruleData = await this.ruleModel.findById(data.gameRules);
-      return await this.teamModel.create({...data, game_rules_setting: ruleData});
+      const teamDataWithConfig = await this.populateStatsConfigDataIntoTeam(data);
+      return await this.teamModel.create({...teamDataWithConfig, game_rules_setting: ruleData});
     } catch (e) {
       throw e;
     }
@@ -142,42 +163,50 @@ export class TeamService {
     }
   };
 
-  async getDefaultSettingData(settingName: SettingNameEnumType, teamId: MongoIdType, penaltyOptionName: penaltyOptionSlugsEnumType = null) {
+  async getDefaultSettingData(settingName: SettingNameEnumType, teamId: MongoIdType, penaltyOptionName: "technical"|"personal" = null) {
     let settingDefaultPayload;
-    
-      switch(settingName) {
-        case "penalty_time_options":
-          settingDefaultPayload = {penalty_time_options: default_penalty_time_options}
-          break;
-        case "penalty_options":
-          if(penaltyOptionName) {
-            let {penalty_options} = await this.teamModel.findById(teamId).lean() as any;
-            if(penalty_options) {
-              const index = penalty_options.findIndex(opt => opt.name === penaltyOptionName);
-              penalty_options[index] = default_penalty_options.find(opt => opt.name === penaltyOptionName);
-              settingDefaultPayload = {penalty_options};
+
+    const configData: ConfigDataHierarchyType = await this.statsConfigService.findHierarchyBySlug(settingName);
+  
+    switch(settingName) {
+      case SettingNameEnum.penalty_time_options:
+        settingDefaultPayload = {penalty_time_options: configData.children}
+        break;
+      case SettingNameEnum.penalty_options:
+        if(penaltyOptionName) {
+          let {penalty_options} = await this.teamModel.findById(teamId).lean() as any;
+          if(penalty_options) {
+            const isOldConfig = penalty_options.find(opt => isEmpty(opt?.displayName));
+            if(isOldConfig) {
+              settingDefaultPayload = {penalty_options: configData.children}
             } else {
-              settingDefaultPayload = {penalty_options: default_penalty_options}
+              const index = penalty_options.findIndex(opt => opt.displayName === penaltyOptionName);
+              penalty_options[index] = configData.children.find(opt => opt.displayName === penaltyOptionName);
+              settingDefaultPayload = {penalty_options};
             }
           } else {
-            settingDefaultPayload = {penalty_options: default_penalty_options}
+            settingDefaultPayload = {penalty_options: configData.children}
           }
-          break;
-        case "stats_rating":
-          settingDefaultPayload = {stats_rating: default_stats_rating}
-          break;
-        case "turnover_options":
-          settingDefaultPayload = {turnover_options: defalt_turnover_options}
-          break;
-        case "game_rules_setting":
-          let {gameRules} = await this.teamModel.findById(teamId).lean().populate("gameRules");
-          settingDefaultPayload = {game_rules_setting: gameRules};
-          break;
-      }
+        } else {
+          settingDefaultPayload = {penalty_options: configData.children}
+        }
+        break;
+      case SettingNameEnum.stats_rating:
+        settingDefaultPayload = {stats_rating: default_stats_rating}
+        break;
+      case SettingNameEnum.turnover_options:
+        settingDefaultPayload = {turnover_options: configData.children}
+        break;
+      case SettingNameEnum.game_rules_setting:
+        let {gameRules} = await this.teamModel.findById(teamId).lean().populate("gameRules");
+        settingDefaultPayload = {game_rules_setting: gameRules};
+        break;
+    }
+
     return settingDefaultPayload;
   }
 
-  async resetTeamSetting(settingName: SettingNameEnumType, teamId: MongoIdType, penaltyOptionName: penaltyOptionSlugsEnumType = null) {
+  async resetTeamSetting(settingName: SettingNameEnumType, teamId: MongoIdType, penaltyOptionName: "technical"|"personal" = null) {
     let settingDefaultPayload = await this.getDefaultSettingData(settingName, teamId, penaltyOptionName);
     return await this.teamModel.findByIdAndUpdate(teamId, settingDefaultPayload, {new: true})
   }

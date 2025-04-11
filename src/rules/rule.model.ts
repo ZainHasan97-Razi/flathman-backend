@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { default_penalty_options, PenaltyOptionSubSchema } from 'src/team/teams.model';
+// import { default_penalty_options, PenaltyOptionSubSchema } from 'src/team/teams.model';
 
 export const RuleTypeEnum = {
   sixes: 'sixes',
@@ -28,8 +28,10 @@ export const RuleSchema = new mongoose.Schema(
     maxPersonalFouls: { type: Number, required: true },
     maxFOViolationPerHalf: { type: Number, required: true },
     penalty_options: {
-      type: [PenaltyOptionSubSchema],
-      default: default_penalty_options,
+      // type: [PenaltyOptionSubSchema],
+      // default: default_penalty_options,
+      type: Array,
+      default: null,
     },
   },
   { timestamps: true },

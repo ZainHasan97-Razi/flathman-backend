@@ -1,12 +1,7 @@
 // import { BaseProjectDto } from './base-project.dto';
 import {
-  IsEmail,
-  IsString,
   IsMongoId,
   IsNotEmpty,
-  MinLength,
-  MaxLength,
-  IsOptional,
 } from 'class-validator';
 
 export class CreateTeamDto {
