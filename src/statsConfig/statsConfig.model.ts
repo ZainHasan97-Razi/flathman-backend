@@ -18,7 +18,7 @@ export interface ConfigDataDocumentType extends mongoose.Document {
   _id: MongoIdType;
   displayName: string;
   slug: string;
-  value: string | number;
+  value: any;
   description: string;
   parentId: MongoIdType | null;
   parentSlug: string | null;
@@ -30,17 +30,7 @@ export const StatsConfigSchema = new mongoose.Schema<ConfigDataDocumentType>(
   {
     displayName: { type: String, required: true },
     slug: { type: String, required: true },
-    // value: { type: mongoose.Schema.Types.Mixed, required: true },
-    value: {
-      type: mongoose.Schema.Types.Mixed,
-      required: true,
-      validate: {
-        validator: function(v: any) {
-          return typeof v === 'string' || typeof v === 'number';
-        },
-        message: 'Value must be either string or number'
-      }
-    },
+    value: { type: mongoose.Schema.Types.Mixed, required: true },
     description: { type: String, required: true },
     parentId: { type: mongoose.Schema.Types.ObjectId, default: null, ref: 'StatsConfig' },
     parentSlug: { type: String, default: null },
