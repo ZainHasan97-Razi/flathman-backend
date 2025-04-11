@@ -18,7 +18,7 @@ export interface ConfigDataDocumentType extends mongoose.Document {
   _id: MongoIdType;
   displayName: string;
   slug: string;
-  value: string | number;
+  value: any;
   description: string;
   parentId: MongoIdType | null;
   parentSlug: string | null;
