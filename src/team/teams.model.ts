@@ -115,6 +115,7 @@ export const default_stats_rating = [
   { name: 'Unforced Error', slug: 'unforcedError', value: -1 },
   { name: 'Shot On Goal', slug: 'shotOG', value: 0 },
   { name: 'Goal Against', slug: 'goalsAgainst', value: -1 },
+  { name: 'Interception', slug: 'interception', value: 1 },
 ];
 export const StatsRatingSubSchema = new mongoose.Schema(
   {
