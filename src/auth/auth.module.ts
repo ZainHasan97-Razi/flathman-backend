@@ -6,14 +6,22 @@ import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { EmailModule } from 'src/email/email.module';
 import { OtpModule } from 'src/otp/otp.module';
+import { SubscriptionService } from 'src/subscription/userSubscription/subscription.service';
+import { SubscriptionTypeService } from 'src/subscription/subscriptionType/subscriptionType.service';
+import { SubscriptionSchema } from 'src/subscription/userSubscription/subscription.model';
+import { SubscriptionTypeSchema } from 'src/subscription/subscriptionType/subscriptionType.model';
 
 @Module({
   imports: [
     EmailModule,
     OtpModule,
-    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: 'User', schema: UserSchema },
+      { name: 'Subscription', schema: SubscriptionSchema },
+      { name: 'subscription-type', schema: SubscriptionTypeSchema },
+    ]),
   ],
   controllers: [AuthController],
-  providers: [UserService, AuthService],
+  providers: [UserService, AuthService, SubscriptionService, SubscriptionTypeService],
 })
 export class AuthModule {}
