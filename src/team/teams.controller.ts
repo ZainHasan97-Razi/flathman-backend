@@ -6,14 +6,13 @@ import {
   Patch,
   Param,
   Delete,
-  Req,
   Query,
 } from '@nestjs/common';
 import { TeamService } from './teams.services';
 import { CreateTeamDto } from './dto/create.team.dto';
 import { MongoIdValidationPipe } from 'src/common/pipes/mongoid.validation.pipe';
 import mongoose from 'mongoose';
-import { penaltyOptionSlugsEnumType, SettingNameEnum, SettingNameEnumType } from './teams.model';
+import { SettingNameEnumType } from './teams.model';
 import { MongoIdType } from 'src/common/common.types';
 
 @Controller('team')
@@ -36,9 +35,7 @@ export class TeamController {
   }
 
   @Get('my/:id')
-  findUserTeams(
-    @Param('id', MongoIdValidationPipe) id: mongoose.Types.ObjectId,
-  ) {
+  findUserTeams(@Param('id', MongoIdValidationPipe) id: mongoose.Types.ObjectId) {
     return this.teamService.findMyTeam(id);
   }
 
@@ -48,7 +45,7 @@ export class TeamController {
   }
 
   @Patch("reset/setting/:settingName/:teamId")
-  resetTeamSetting(@Param('settingName') settingName: SettingNameEnumType, @Param('teamId') teamId: MongoIdType, @Query("penaltyOptionName") penaltyOptionName: penaltyOptionSlugsEnumType) {
+  resetTeamSetting(@Param('settingName') settingName: SettingNameEnumType, @Param('teamId') teamId: MongoIdType, @Query("penaltyOptionName") penaltyOptionName: "technical"|"personal") {
     return this.teamService.resetTeamSetting(settingName, teamId, penaltyOptionName)
   }
 }

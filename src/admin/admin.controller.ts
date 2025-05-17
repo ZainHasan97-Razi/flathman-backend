@@ -22,10 +22,16 @@ import { UpdateTeamDto } from 'src/team/dto/update.team.dto';
 import { SubscriptionModelDto } from 'src/subscription/dto/subscription.model.dto';
 import mongoose from 'mongoose';
 import { MongoIdValidationPipe } from 'src/common/pipes/mongoid.validation.pipe';
+import { CreateStatsConfigDto } from 'src/statsConfig/dto/create.statsConfig.dto';
+import { UpdateStatsConfigDto } from 'src/statsConfig/dto/update.statsConfig.dto';
+import { MongoIdType } from 'src/common/common.types';
+import { SettingNameEnumType } from 'src/team/teams.model';
 
 @Controller('admin')
 export class AdminController {
-  constructor(private readonly adminService: AdminService) {}
+  constructor(
+    private readonly adminService: AdminService,
+  ) {}
 
   @Post('createUser')
   createUser(@Body() body: CreateUserDto) {
@@ -89,5 +95,30 @@ export class AdminController {
   @Get('contact-us')
   contactUs() {
     return this.adminService.ContactUs();
+  }
+
+  @Post("stats-config")
+  createStatsConfig(@Body() body: CreateStatsConfigDto) {
+    return this.adminService.createStatsConfig(body);
+  }
+
+  @Patch("stats-config/:id")
+  updateStatsConfig(@Param('id', MongoIdValidationPipe) id: MongoIdType, @Body() body: UpdateStatsConfigDto) {
+    return this.adminService.updateStatsConfig(id, body);
+  }
+
+  @Get("stats-config")
+  findAllStatsConfig() {
+    return this.adminService.findAllStatsConfig();
+  }
+
+  @Get("stats-config/:slug")
+  findStatConfigBySlug(@Param('slug') slug: string) {
+    return this.adminService.findStatConfigBySlug(slug);
+  }
+
+  @Delete("stats-config/:id")
+  deleteStatsConfig(@Param('id', MongoIdValidationPipe) id: MongoIdType) {
+    return this.adminService.deleteStatsConfig(id);
   }
 }

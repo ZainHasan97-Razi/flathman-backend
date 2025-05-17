@@ -27,6 +27,7 @@ import { AppVersionModule } from './appVersion/appVersion.module';
 import { BundleModule } from './bundle/bundle.module';
 import { UserSubscriptionModule } from './userSubscription/userSubscription.module';
 import { ScheduleGameModule } from './scheduleGame/scheduleGame.module';
+import { StatsConfigModule } from './statsConfig/statsConfig.module';
 config();
 
 @Module({
@@ -50,6 +51,7 @@ config();
     OtpModule,
     AppVersionModule,
     ScheduleGameModule,
+    StatsConfigModule
   ],
   // controllers: [AppController],
   // providers: [AppService],

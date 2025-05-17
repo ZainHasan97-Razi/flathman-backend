@@ -1,12 +1,7 @@
 // import { BaseProjectDto } from './base-project.dto';
 import {
-  IsEmail,
   IsString,
-  IsMongoId,
   IsNotEmpty,
-  MinLength,
-  MaxLength,
-  IsOptional,
   IsEnum,
 } from 'class-validator';
 import { PlatformEnum } from 'src/constants/enums';

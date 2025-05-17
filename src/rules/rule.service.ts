@@ -3,16 +3,41 @@ import {
   NotFoundException,
   ConflictException,
   BadRequestException,
-  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateRuleDto } from './dto/create.rule.dto';
 import { UpdateRuleDto } from './dto/update.rule.dto';
+import { ConfigDataHierarchyType } from 'src/statsConfig/statsConfig.model';
+import { StatsConfigService } from 'src/statsConfig/statsConfig.service';
+import { SettingNameEnumType } from 'src/team/teams.model';
+
+type statsConfigsForRuleUpdationType = {
+  penalty_options?: Array<ConfigDataHierarchyType>
+}
 
 @Injectable()
 export class RuleService {
-  constructor(@InjectModel('Rule') private ruleModel: Model<CreateRuleDto>) {}
+  constructor(
+    @InjectModel('Rule') private ruleModel: Model<CreateRuleDto>,
+    private readonly statsConfigService: StatsConfigService,
+  ) {}
+
+  /*
+  * Populate stats config data into team data if
+    teamData has no stats config data(null or empty) like 
+    penalty_options, turnover_options, penalty_time_options
+  */
+  async populateStatsConfigDataIntoRule(rule: object) {
+    const configData: ConfigDataHierarchyType[] = await this.statsConfigService.findAll();
+    let populatedRuleData = rule;
+    populatedRuleData = {
+      ...populatedRuleData,
+      penalty_options: configData.find(config => config.slug === 'penalty_options')?.children,
+    }
+
+    return populatedRuleData;
+  }
 
   async findAll() {
     try {
@@ -41,7 +66,8 @@ export class RuleService {
     try {
       await this.ruleNameIsUnique(data.ruleName);
       await this.ruleNumberIsUnique(data.ruleId);
-      const createdRule = await this.ruleModel.create(data);
+      const ruleDataWithConfig = await this.populateStatsConfigDataIntoRule(data);
+      const createdRule = await this.ruleModel.create(ruleDataWithConfig);
       if (createdRule) {
         return {
           message: `Rule has been created successfully!`,
@@ -60,13 +86,30 @@ export class RuleService {
       if (!rule) {
         throw new NotFoundException(`Rule ${data.ruleName} doesn't exist`);
       }
+      const ruleDataWithConfig = await this.populateStatsConfigDataIntoRule(data);
       const updatedRule = await this.ruleModel.findOneAndUpdate(
         { _id: data.id },
-        data,
+        ruleDataWithConfig,
       );
       return { message: `Rule ${data.ruleName} has been updated` };
     } catch (e) {
       // throw new BadRequestException(e?.message | e, 'Failed to update rule');
+      throw e;
+    }
+  }
+
+  async updateStatsConfigInRules(configs: statsConfigsForRuleUpdationType) {
+    try {
+      if(Object.keys(configs).length === 0) {
+        throw new BadRequestException('No config data found');
+      }
+      await this.ruleModel.updateMany(
+        {},
+        configs,
+      );
+
+      return {message: 'Rules updated successfully!'};
+    } catch (e) {
       throw e;
     }
   }

@@ -12,6 +12,8 @@ import { TeamService } from 'src/team/teams.services';
 import { TeamSchema } from 'src/team/teams.model';
 import { PlayerSchema } from 'src/player/player.model';
 import { PlayerService } from 'src/player/player.service';
+import { StatsConfigSchema } from 'src/statsConfig/statsConfig.model';
+import { StatsConfigService } from 'src/statsConfig/statsConfig.service';
 // import { TeamModulebb } from 'src/team/teams.module';
 
 @Module({
@@ -23,6 +25,7 @@ import { PlayerService } from 'src/player/player.service';
       { name: 'User', schema: UserSchema },
       { name: 'Team', schema: TeamSchema },
       { name: 'Player', schema: PlayerSchema },
+      { name: 'StatsConfig', schema: StatsConfigSchema },
     ]),
   ],
   controllers: [OpponentPlayerController],
@@ -32,6 +35,7 @@ import { PlayerService } from 'src/player/player.service';
     RuleService,
     TeamService,
     PlayerService,
+    StatsConfigService,
   ],
 })
 export class OpponentPlayerModule {}
