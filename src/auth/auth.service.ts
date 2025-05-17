@@ -112,7 +112,12 @@ export class AuthService {
           endTime: moment().endOf('year').unix(),
           timesAllowed: 0,
         }
-        await this.subscriptionService.create(defaultUserSubscription)
+        // Create an array of 5 promises and execute them in parallel
+        await Promise.allSettled(
+          Array(5).fill(null).map(() => 
+            this.subscriptionService.create(defaultUserSubscription)
+          )
+        );
       }
       return { message: `User has been created successfully` };
     } catch (error) {
