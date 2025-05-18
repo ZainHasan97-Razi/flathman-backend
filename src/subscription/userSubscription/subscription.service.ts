@@ -296,12 +296,15 @@ export class SubscriptionService {
         }
       } else {
         let newData = data;
-        const endTime =
-          await this.subscriptionTypeService.provideEndTimeOfSubscription(
-            data.subscriptionType,
-            data.startTime,
-          );
-        newData.endTime = endTime;
+        if(data?.endTime) {
+          newData.endTime = data.endTime;
+        } else {
+          const endTime = await this.subscriptionTypeService.provideEndTimeOfSubscription(
+              data.subscriptionType,
+              data.startTime,
+            );
+          newData.endTime = endTime;
+        }
         const subscription = await this.subscriptionModel.create(newData);
         return {
           message: `Subscription has been added successfully!`,
