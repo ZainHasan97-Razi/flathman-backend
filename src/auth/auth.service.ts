@@ -108,8 +108,8 @@ export class AuthService {
         const defaultUserSubscription = {
           userId: user._id,
           subscriptionType: subscriptionType._id,
-          startTime: moment().unix(),
-          endTime: moment().endOf('year').unix(),
+          startTime: moment().unix()*1000,
+          endTime: moment().endOf('year').unix()*1000,
           timesAllowed: 0,
         }
         // Create an array of 5 promises and execute them in parallel
