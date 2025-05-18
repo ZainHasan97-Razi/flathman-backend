@@ -13,6 +13,9 @@ import jwt = require('jsonwebtoken');
 import { UserService } from 'src/user/user.service';
 import { UpdateUserDto } from 'src/user/dto/update.user.dto';
 import { UpdateUserDeviceTokenDto } from 'src/user/dto/update.devicetoken.user.dto';
+import { SubscriptionService } from 'src/subscription/userSubscription/subscription.service';
+import * as moment from 'moment';
+import { SubscriptionTypeService } from 'src/subscription/subscriptionType/subscriptionType.service';
 const bcrypt = require('bcryptjs');
 
 @Injectable()
@@ -21,6 +24,8 @@ export class AuthService {
     @InjectModel('User') private readonly userModel: Model<CreateUserDto>,
     // private readonly HelperService: HelperService,
     private readonly userService: UserService,
+    private readonly subscriptionService: SubscriptionService,
+    private readonly subscriptionTypeService: SubscriptionTypeService,
   ) {}
 
   async Signin(body: UserLoginDto) {
@@ -99,6 +104,20 @@ export class AuthService {
         if (!user) {
           throw new BadRequestException('Registeration failed');
         }
+        const subscriptionType = await this.subscriptionTypeService.findOneByName("BETA");
+        const defaultUserSubscription = {
+          userId: user._id,
+          subscriptionType: subscriptionType._id,
+          startTime: moment().unix()*1000,
+          endTime: moment().endOf('year').unix()*1000,
+          timesAllowed: 0,
+        }
+        // Create an array of 5 promises and execute them in parallel
+        await Promise.allSettled(
+          Array(5).fill(null).map(() => 
+            this.subscriptionService.create(defaultUserSubscription)
+          )
+        );
       }
       return { message: `User has been created successfully` };
     } catch (error) {
