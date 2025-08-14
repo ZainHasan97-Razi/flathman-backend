@@ -44,9 +44,19 @@ export class SubscriptionTypeService {
     }
   }
 
-  async delete(id: string) {
-    console.log('iddd', id);
+  async findOneByName(name: string) {
+    try {
+      const response = await this.subscriptionTypeModel.findOne({subscriptionName: name});
+      if (!response) {
+        throw new NotFoundException(`Couldn't found any subscription-type`);
+      }
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
 
+  async delete(id: string) {
     try {
       const allUserSubscriptions = await this.subscriptionModel.find({
         subscriptionType: id,
