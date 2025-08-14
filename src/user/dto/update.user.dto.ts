@@ -6,6 +6,7 @@ import {
   IsBoolean,
   IsMongoId,
   IsEmail,
+  IsOptional,
 } from 'class-validator';
 
 export class UpdateUserDto {
@@ -33,6 +34,10 @@ export class UpdateUserDto {
   @IsNotEmpty({ message: 'Password is required!' })
   @IsString({ message: 'Invalid password!' })
   password: string;
+
+  @IsOptional()
+  @IsString({ message: 'Invalid organization name!' })
+  organizationName: string | null;
 
   // @IsArray() // hoga ye array ma hi store mgr value string ma lenga
   // @ArrayMaxSize(3)
