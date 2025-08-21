@@ -26,6 +26,7 @@ import { config } from 'dotenv';
 import { AppVersionModule } from './appVersion/appVersion.module';
 import { ScheduleGameModule } from './scheduleGame/scheduleGame.module';
 import { StatsConfigModule } from './statsConfig/statsConfig.module';
+import { ShareAccountModule } from './shareAccount/share-account.module';
 config();
 
 @Module({
@@ -47,7 +48,8 @@ config();
     OtpModule,
     AppVersionModule,
     ScheduleGameModule,
-    StatsConfigModule
+    StatsConfigModule,
+    ShareAccountModule
   ],
   // controllers: [AppController],
   // providers: [AppService],
