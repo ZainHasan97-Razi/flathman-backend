@@ -23,4 +23,9 @@ export class ShareAccountController {
     return this.shareAccountService.sharedAccountsList(email)
   }
 
+  @Get("status/:guestEmail/:hostEmail")
+  getInvitationStatus(@Param('guestEmail') guestEmail: string, @Param('hostEmail') hostEmail: string) {
+    return this.shareAccountService.getInvitationStatus(guestEmail, hostEmail)
+  }
+
 }

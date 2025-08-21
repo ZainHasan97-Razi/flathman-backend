@@ -2,17 +2,21 @@ import {Injectable, BadRequestException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { ShareAccount, ShareAccountStatusEnum } from './share-account.model';
+import { ShareAccount, ShareAccountStatusEnum, ShareAccountStatusEnumType } from './share-account.model';
 import { RequestUserType } from 'src/common/common.types';
 import { UpdateShareAccountStatusDto } from './dto/update.status.dto';
 import { EmailService } from 'src/email/email.service';
 import { SendAccountShareInviteTemplate } from 'src/common/templates/send-account-share-invite.template';
+import { CreateUserDto } from 'src/user/dto/create.user.dto';
+const isEmpty = require("is-empty");
 
 @Injectable()
 export class ShareAccountService {
   constructor(
     @InjectModel('ShareAccount') private shareAccountModel: Model<ShareAccount>,
+    @InjectModel('ShareAccount') private userModel: Model<CreateUserDto>,
     private emailService: EmailService,
+    // private userService: UserService,
   ) {}
 
   async sendInvite(guestEmail: string, ownerData: RequestUserType) {
@@ -49,6 +53,24 @@ export class ShareAccountService {
 
   sharedAccountsList(guestEmail: string) {
     return this.shareAccountModel.find({guestEmail, status: ShareAccountStatusEnum.accepted})
+  }
+
+  findByGuestAndHostEmails(guestEmail: string, ownerEmail: string) {
+    return this.shareAccountModel.findOne({guestEmail, ownerEmail})
+  }
+
+  async getInvitationStatus(
+    guestEmail: string, 
+    hostEmail: string
+  ): Promise<{invitationStatus: ShareAccountStatusEnumType|"not_found", guestIsRegistered: boolean}> {
+
+    const guestData = await this.userModel.findOne({email: guestEmail});
+    const invitation = await this.findByGuestAndHostEmails(guestEmail, hostEmail);
+    
+    return {
+      invitationStatus: invitation?.status || "not_found",
+      guestIsRegistered: !isEmpty(guestData)
+    }
   }
 
 }
