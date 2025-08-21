@@ -1,5 +1,5 @@
 
-export const SendAccountShareInviteTemplate = (accountHolderName: string) => {
+export const SendAccountShareInviteTemplate = (accountHolderName: string, guestEmail: string, ownerEmail: string) => {
   return (
     `
       <!DOCTYPE html>
@@ -79,7 +79,7 @@ export const SendAccountShareInviteTemplate = (accountHolderName: string) => {
                     <p>Follow these simple steps to activate your access:</p>
                     <ol class="steps">
                         <li><strong>Click the button below to get started:</strong><br>
-                            <a href="[ACTIVATION_LINK]" class="button">ACTIVATE MY ACCESS</a>
+                            <a href="${process.env.WEBSITE_URL}/invitation?guestEmail=${guestEmail}&ownerEmail=${ownerEmail}" class="button">ACTIVATE MY ACCESS</a>
                         </li>
                         <li><strong>Sign in</strong> or <strong>create an account</strong> using the same email address that received this email.</li>
                         <li><strong>Download the LaxStatClock app</strong> from the [App Store/Google Play].</li>
