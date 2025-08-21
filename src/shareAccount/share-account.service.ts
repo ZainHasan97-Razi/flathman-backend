@@ -28,7 +28,7 @@ export class ShareAccountService {
       });
       if(inviteExist) throw new BadRequestException("Invite already sent to this user!")
   
-      const response = await this.shareAccountModel.create({
+      const createdInvite = await this.shareAccountModel.create({
         ownerId: ownerData._id, 
         ownerEmail: ownerData.email, 
         guestEmail, 
@@ -38,10 +38,10 @@ export class ShareAccountService {
         guestEmail.toLowerCase(),
         "Invitation for account sharing",
         "This is an invitation for account sharing",
-        {html: SendAccountShareInviteTemplate(ownerData.email, guestEmail, ownerData.email)}
+        {html: SendAccountShareInviteTemplate(ownerData.email, guestEmail, ownerData.email, createdInvite._id.toString())}
       )
 
-      return response;
+      return createdInvite;
     } catch (e) {
       throw e
     }
