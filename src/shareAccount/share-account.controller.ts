@@ -15,7 +15,7 @@ export class ShareAccountController {
 
   @Patch('status')
   acceptInvite(@Body() body: UpdateShareAccountStatusDto, @Request() req: Request&{user: RequestUserType}) {
-    return this.shareAccountService.updateStatus(body)
+    return this.shareAccountService.updateStatus(body, req.user)
   }
 
   @Get("list/:email")

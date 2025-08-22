@@ -8,6 +8,7 @@ import { UpdateShareAccountStatusDto } from './dto/update.status.dto';
 import { EmailService } from 'src/email/email.service';
 import { SendAccountShareInviteTemplate } from 'src/common/templates/send-account-share-invite.template';
 import { CreateUserDto } from 'src/user/dto/create.user.dto';
+import { ThanksForInvitationAcceptanceTemplate } from 'src/common/templates/thanks-for-invitation-acceptence.template';
 const isEmpty = require("is-empty");
 
 @Injectable()
@@ -47,8 +48,17 @@ export class ShareAccountService {
     }
   }
 
-  updateStatus(data: UpdateShareAccountStatusDto) {
-    return this.shareAccountModel.findByIdAndUpdate(data.inviteId, {status: data.status})
+  async updateStatus(data: UpdateShareAccountStatusDto, guestData: RequestUserType) {
+    if(data.status === ShareAccountStatusEnum.accepted) {
+      const invitationInfo = await this.shareAccountModel.findById(data.inviteId);
+      await this.emailService.sendEmail(
+        guestData.email.toLowerCase(),
+        "Thanks for accepting invitation",
+        "This is an confirmation of invitation acceptance",
+        {html: ThanksForInvitationAcceptanceTemplate(guestData.email, invitationInfo.ownerEmail)}
+      )
+    }
+    return await this.shareAccountModel.findByIdAndUpdate(data.inviteId, {status: data.status}, {new: true});
   }
 
   sharedAccountsList(guestEmail: string) {
