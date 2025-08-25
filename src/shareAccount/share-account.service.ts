@@ -15,7 +15,7 @@ const isEmpty = require("is-empty");
 export class ShareAccountService {
   constructor(
     @InjectModel('ShareAccount') private shareAccountModel: Model<ShareAccount>,
-    @InjectModel('ShareAccount') private userModel: Model<CreateUserDto>,
+    @InjectModel('User') private userModel: Model<CreateUserDto>,
     private emailService: EmailService,
     // private userService: UserService,
   ) {}
