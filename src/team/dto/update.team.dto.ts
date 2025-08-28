@@ -1,6 +1,8 @@
 import {
   IsNotEmpty,
   IsMongoId,
+  IsOptional,
+  IsString,
 } from 'class-validator';
 
 export class UpdateTeamDto {
@@ -36,4 +38,12 @@ export class UpdateTeamDto {
   // @IsMongoId({ message: 'Invalid team owner!' })
   // @IsNotEmpty({ message: 'Team owner is required!' })
   // teamOwner;
+
+  @IsOptional()
+  @IsString()
+  league: string;
+
+  @IsOptional()
+  @IsString()
+  state: string; 
 }
