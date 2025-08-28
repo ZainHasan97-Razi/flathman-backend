@@ -9,6 +9,7 @@ import { EmailService } from 'src/email/email.service';
 import { SendAccountShareInviteTemplate } from 'src/common/templates/send-account-share-invite.template';
 import { CreateUserDto } from 'src/user/dto/create.user.dto';
 import { ThanksForInvitationAcceptanceTemplate } from 'src/common/templates/thanks-for-invitation-acceptence.template';
+import { SendDto } from './dto/send.dto';
 const isEmpty = require("is-empty");
 
 @Injectable()
@@ -20,26 +21,27 @@ export class ShareAccountService {
     // private userService: UserService,
   ) {}
 
-  async sendInvite(guestEmail: string, ownerData: RequestUserType) {
+  async sendInvite(data: SendDto, ownerData: RequestUserType) {
     // If invite is already sent then dont create another entry maybe just email should be resent
     // Incase an old invite is accepted or revoke a new invite could be sent
     try {
       const inviteExist = await this.shareAccountModel.findOne({
-        ownerId: ownerData._id, guestEmail, status: {$in: [ShareAccountStatusEnum.pending]}
+        ownerId: ownerData._id, guestEmail: data.guestEmail, status: {$in: [ShareAccountStatusEnum.pending]}
       });
       if(inviteExist) throw new BadRequestException("Invite already sent to this user!")
   
       const createdInvite = await this.shareAccountModel.create({
         ownerId: ownerData._id, 
         ownerEmail: ownerData.email, 
-        guestEmail, 
-        status: ShareAccountStatusEnum.pending
+        guestEmail: data.guestEmail, 
+        status: ShareAccountStatusEnum.pending,
+        role: data.role
       })
       await this.emailService.sendEmail(
-        guestEmail.toLowerCase(),
+        data.guestEmail.toLowerCase(),
         "Invitation for account sharing",
         "This is an invitation for account sharing",
-        {html: SendAccountShareInviteTemplate(ownerData.email, guestEmail, ownerData.email, createdInvite._id.toString())}
+        {html: SendAccountShareInviteTemplate(ownerData.email, data.guestEmail, ownerData.email, createdInvite._id.toString())}
       )
 
       return createdInvite;
@@ -63,6 +65,10 @@ export class ShareAccountService {
 
   sharedAccountsList(guestEmail: string) {
     return this.shareAccountModel.find({guestEmail, status: ShareAccountStatusEnum.accepted})
+  }
+
+  invitationList(hostEmail: string) {
+    return this.shareAccountModel.find({hostEmail})
   }
 
   findByGuestAndHostEmails(guestEmail: string, ownerEmail: string) {

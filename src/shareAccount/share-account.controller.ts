@@ -10,7 +10,7 @@ export class ShareAccountController {
 
   @Post('send')
   sendInvite(@Body() body: SendDto, @Request() req: Request&{user: RequestUserType}) {
-    return this.shareAccountService.sendInvite(body.guestEmail, req.user);
+    return this.shareAccountService.sendInvite(body, req.user);
   }
 
   @Patch('status')
@@ -21,6 +21,11 @@ export class ShareAccountController {
   @Get("list/:email")
   sharedAccountsList(@Param('email') email: string) {
     return this.shareAccountService.sharedAccountsList(email)
+  }
+
+  @Get("invitation-list/:hostEmail")
+  invitationList(@Param('hostEmail') hostEmail: string) {
+    return this.shareAccountService.invitationList(hostEmail)
   }
 
   @Get("status/:guestEmail/:hostEmail")

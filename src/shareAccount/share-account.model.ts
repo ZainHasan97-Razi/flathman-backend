@@ -24,6 +24,8 @@ export class ShareAccount {
   @Prop({type: String, enum: ShareAccountStatusEnum, default: ShareAccountStatusEnum.pending})
   status: ShareAccountStatusEnumType;
 
+  @Prop({type: String, required: true})
+  role: string;
 }
 
 export type ShareAccountDocument = ShareAccount & Document;
