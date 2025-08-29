@@ -10,3 +10,8 @@ export class UpdateShareAccountStatusDto {
   @IsEnum(ShareAccountStatusEnum)
   status: ShareAccountStatusEnumType;
 }
+
+export class AcceptInviteDto {
+  @IsMongoId()
+  inviteId: MongoIdType;
+}

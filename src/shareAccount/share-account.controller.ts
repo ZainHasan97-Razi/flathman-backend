@@ -1,20 +1,26 @@
 import { Body, Controller, Get, Param, Patch, Post, Request } from '@nestjs/common';
 import { ShareAccountService } from './share-account.service';
-import { SendDto } from './dto/send.dto';
+import { SendInviteDto } from './dto/send.invite.dto';
 import { RequestUserType } from 'src/common/common.types';
-import { UpdateShareAccountStatusDto } from './dto/update.status.dto';
+import { AcceptInviteDto, UpdateShareAccountStatusDto } from './dto/update.status.dto';
+import { ShareAccountStatusEnum } from './share-account.model';
 
 @Controller('share-account')
 export class ShareAccountController {
   constructor(private readonly shareAccountService: ShareAccountService) {}
 
   @Post('send')
-  sendInvite(@Body() body: SendDto, @Request() req: Request&{user: RequestUserType}) {
+  sendInvite(@Body() body: SendInviteDto, @Request() req: Request&{user: RequestUserType}) {
     return this.shareAccountService.sendInvite(body, req.user);
   }
 
+  @Patch('accept')
+  acceptInvite(@Body() body: AcceptInviteDto, @Request() req: Request&{user: RequestUserType}) {
+    return this.shareAccountService.updateStatus({inviteId: body.inviteId, status: ShareAccountStatusEnum.accepted}, req.user)
+  }
+
   @Patch('status')
-  acceptInvite(@Body() body: UpdateShareAccountStatusDto, @Request() req: Request&{user: RequestUserType}) {
+  updateStatus(@Body() body: UpdateShareAccountStatusDto, @Request() req: Request&{user: RequestUserType}) {
     return this.shareAccountService.updateStatus(body, req.user)
   }
 

@@ -9,7 +9,7 @@ import { EmailService } from 'src/email/email.service';
 import { SendAccountShareInviteTemplate } from 'src/common/templates/send-account-share-invite.template';
 import { CreateUserDto } from 'src/user/dto/create.user.dto';
 import { ThanksForInvitationAcceptanceTemplate } from 'src/common/templates/thanks-for-invitation-acceptence.template';
-import { SendDto } from './dto/send.dto';
+import { SendInviteDto } from './dto/send.invite.dto';
 const isEmpty = require("is-empty");
 
 @Injectable()
@@ -21,7 +21,7 @@ export class ShareAccountService {
     // private userService: UserService,
   ) {}
 
-  async sendInvite(data: SendDto, ownerData: RequestUserType) {
+  async sendInvite(data: SendInviteDto, ownerData: RequestUserType) {
     // If invite is already sent then dont create another entry maybe just email should be resent
     // Incase an old invite is accepted or revoke a new invite could be sent
     try {
