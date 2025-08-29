@@ -55,7 +55,7 @@ export class ShareAccountService {
     if(isEmpty(invitationInfo)) throw new BadRequestException("Invalid invite id!")
       
     await this.emailService.sendEmail(
-      invitationInfo.ownerEmail.toLowerCase(),
+      invitationInfo.guestEmail.toLowerCase(),
       "Thanks for accepting invitation",
       "This is an confirmation of invitation acceptance",
       {html: ThanksForInvitationAcceptanceTemplate(invitationInfo.guestEmail, invitationInfo.ownerEmail, invitationInfo.role)}
