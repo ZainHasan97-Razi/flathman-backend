@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 
 import { ShareAccount, ShareAccountStatusEnum, ShareAccountStatusEnumType } from './share-account.model';
 import { RequestUserType } from 'src/common/common.types';
-import { UpdateShareAccountStatusDto } from './dto/update.status.dto';
+import { AcceptInviteDto, UpdateShareAccountStatusDto } from './dto/update.status.dto';
 import { EmailService } from 'src/email/email.service';
 import { SendAccountShareInviteTemplate } from 'src/common/templates/send-account-share-invite.template';
 import { CreateUserDto } from 'src/user/dto/create.user.dto';
@@ -50,16 +50,20 @@ export class ShareAccountService {
     }
   }
 
+  async acceptInvite(body: AcceptInviteDto&{status: ShareAccountStatusEnumType}) {
+    const invitationInfo = await this.shareAccountModel.findById(body.inviteId);    
+    if(isEmpty(invitationInfo)) throw new BadRequestException("Invalid invite id!")
+      
+    await this.emailService.sendEmail(
+      invitationInfo.ownerEmail.toLowerCase(),
+      "Thanks for accepting invitation",
+      "This is an confirmation of invitation acceptance",
+      {html: ThanksForInvitationAcceptanceTemplate(invitationInfo.guestEmail, invitationInfo.ownerEmail)}
+    )
+    return await this.shareAccountModel.findByIdAndUpdate(body.inviteId, {status: body.status}, {new: true});
+  }
+
   async updateStatus(data: UpdateShareAccountStatusDto, guestData: RequestUserType) {
-    if(data.status === ShareAccountStatusEnum.accepted) {
-      const invitationInfo = await this.shareAccountModel.findById(data.inviteId);
-      await this.emailService.sendEmail(
-        guestData.email.toLowerCase(),
-        "Thanks for accepting invitation",
-        "This is an confirmation of invitation acceptance",
-        {html: ThanksForInvitationAcceptanceTemplate(guestData.email, invitationInfo.ownerEmail)}
-      )
-    }
     return await this.shareAccountModel.findByIdAndUpdate(data.inviteId, {status: data.status}, {new: true});
   }
 

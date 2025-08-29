@@ -15,8 +15,8 @@ export class ShareAccountController {
   }
 
   @Patch('accept')
-  acceptInvite(@Body() body: AcceptInviteDto, @Request() req: Request&{user: RequestUserType}) {
-    return this.shareAccountService.updateStatus({inviteId: body.inviteId, status: ShareAccountStatusEnum.accepted}, req.user)
+  acceptInvite(@Body() body: AcceptInviteDto) {
+    return this.shareAccountService.acceptInvite({inviteId: body.inviteId, status: ShareAccountStatusEnum.accepted})
   }
 
   @Patch('status')
