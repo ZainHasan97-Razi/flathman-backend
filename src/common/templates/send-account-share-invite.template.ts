@@ -1,5 +1,5 @@
 
-export const SendAccountShareInviteTemplate = (accountHolderName: string, guestEmail: string, ownerEmail: string, inviteId: string) => {
+export const SendAccountShareInviteTemplate = (accountHolderName: string, guestEmail: string, ownerEmail: string, inviteId: string, role: string) => {
   return (
     `
       <!DOCTYPE html>
@@ -74,7 +74,7 @@ export const SendAccountShareInviteTemplate = (accountHolderName: string, guestE
                 </div>
                 <div class="content">
                     <h2>You're Invited to Share Access to <em>LaxStatClock</em></h2>
-                    <p>We're excited to let you know that <strong>${accountHolderName}</strong> has invited you to share access to <em>LaxStatClock</em> as a <strong>[ROLE]</strong>.</p>
+                    <p>We're excited to let you know that <strong>${accountHolderName}</strong> has invited you to share access to <em>LaxStatClock</em> as a <strong>${role}</strong>.</p>
                     
                     <p>Follow these simple steps to activate your access:</p>
                     <ol class="steps">

@@ -41,7 +41,7 @@ export class ShareAccountService {
         data.guestEmail.toLowerCase(),
         "Invitation for account sharing",
         "This is an invitation for account sharing",
-        {html: SendAccountShareInviteTemplate(ownerData.email, data.guestEmail, ownerData.email, createdInvite._id.toString())}
+        {html: SendAccountShareInviteTemplate(ownerData.email, data.guestEmail, ownerData.email, createdInvite._id.toString(), data.role)}
       )
 
       return createdInvite;
@@ -58,7 +58,7 @@ export class ShareAccountService {
       invitationInfo.ownerEmail.toLowerCase(),
       "Thanks for accepting invitation",
       "This is an confirmation of invitation acceptance",
-      {html: ThanksForInvitationAcceptanceTemplate(invitationInfo.guestEmail, invitationInfo.ownerEmail)}
+      {html: ThanksForInvitationAcceptanceTemplate(invitationInfo.guestEmail, invitationInfo.ownerEmail, invitationInfo.role)}
     )
     return await this.shareAccountModel.findByIdAndUpdate(body.inviteId, {status: body.status}, {new: true});
   }
