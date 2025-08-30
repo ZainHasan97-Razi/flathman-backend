@@ -11,6 +11,7 @@ export class ShareAccountController {
 
   @Post('send')
   sendInvite(@Body() body: SendInviteDto, @Request() req: Request&{user: RequestUserType}) {
+    console.log("body::: ", body);
     return this.shareAccountService.sendInvite(body, req.user);
   }
 

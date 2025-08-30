@@ -1,7 +1,4 @@
-import { IsEmail, IsEnum, IsString } from "class-validator";
-// import { ShareAccountStatusEnum, ShareAccountStatusEnumType } from "../share-account.model";
-
-
+import { IsArray, IsEmail, IsMongoId, IsString } from "class-validator";
 export class SendInviteDto {
   @IsEmail()
   guestEmail: string;
@@ -9,6 +6,7 @@ export class SendInviteDto {
   @IsString()
   role: string;
 
-  // @IsEnum(ShareAccountStatusEnum)
-  // status: ShareAccountStatusEnumType;
+  @IsArray()
+  @IsMongoId({ each: true })
+  teams: string[];
 }

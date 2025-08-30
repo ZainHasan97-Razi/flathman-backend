@@ -26,6 +26,9 @@ export class ShareAccount {
 
   @Prop({type: String, required: true})
   role: string;
+
+  @Prop({type: [mongoose.Types.ObjectId], required: true, ref: "User"})
+  teams: MongoIdType[]
 }
 
 export type ShareAccountDocument = ShareAccount & Document;
