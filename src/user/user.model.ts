@@ -22,6 +22,10 @@ export const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    organizationName: {
+      type: String,
+      default: null,
+    },
     deviceTokens: {
       type: Array,
       default: [],

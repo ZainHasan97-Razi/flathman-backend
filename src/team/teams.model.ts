@@ -143,6 +143,8 @@ export const TeamSchema = new mongoose.Schema(
     coachName: { type: String, default: null },
     coachCell: { type: String, default: null },
     coachEmail: { type: String, default: null },
+    league: { type: String, default: null },
+    state: { type: String, default: null },
     teamOwner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

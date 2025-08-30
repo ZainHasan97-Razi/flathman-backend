@@ -26,6 +26,7 @@ import { config } from 'dotenv';
 import { AppVersionModule } from './appVersion/appVersion.module';
 import { ScheduleGameModule } from './scheduleGame/scheduleGame.module';
 import { StatsConfigModule } from './statsConfig/statsConfig.module';
+import { ShareAccountModule } from './shareAccount/share-account.module';
 config();
 
 @Module({
@@ -47,7 +48,8 @@ config();
     OtpModule,
     AppVersionModule,
     ScheduleGameModule,
-    StatsConfigModule
+    StatsConfigModule,
+    ShareAccountModule
   ],
   // controllers: [AppController],
   // providers: [AppService],
@@ -61,6 +63,8 @@ export class AppModule implements NestModule {
         { path: 'auth/signup', method: RequestMethod.ALL },
         { path: 'user/send-reset-otp', method: RequestMethod.ALL },
         { path: 'user/confirm-reset-otp', method: RequestMethod.ALL },
+        { path: 'share-account/accept', method: RequestMethod.ALL },
+        { path: 'share-account/status/:guestEmail/:hostEmail', method: RequestMethod.ALL },
         // { path: 'user/delete-account/:id', method: RequestMethod.DELETE },
         // { path: 'admin/createUser', method: RequestMethod.ALL },
         // { path: 'admin/createRule', method: RequestMethod.ALL },
