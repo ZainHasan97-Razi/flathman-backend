@@ -89,8 +89,8 @@ export class ShareAccountService {
     return this.shareAccountModel.find({guestEmail, status: ShareAccountStatusEnum.accepted})
   }
 
-  invitationList(hostEmail: string, filters: InviteListFilters) {
-    return this.shareAccountModel.find({hostEmail, ...filters})
+  invitationList(ownerEmail: string, filters: InviteListFilters) {
+    return this.shareAccountModel.find({ownerEmail, ...filters})
   }
 
   findByGuestAndHostEmails(guestEmail: string, ownerEmail: string) {
