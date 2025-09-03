@@ -14,6 +14,11 @@ import { CreateTeamDto } from 'src/team/dto/create.team.dto';
 import mongoose from 'mongoose';
 const isEmpty = require("is-empty");
 
+type InviteListFilters = {
+  status?: ShareAccountStatusEnumType,
+  role?: string,
+}
+
 @Injectable()
 export class ShareAccountService {
   constructor(
@@ -84,8 +89,8 @@ export class ShareAccountService {
     return this.shareAccountModel.find({guestEmail, status: ShareAccountStatusEnum.accepted})
   }
 
-  invitationList(hostEmail: string) {
-    return this.shareAccountModel.find({hostEmail})
+  invitationList(hostEmail: string, filters: InviteListFilters) {
+    return this.shareAccountModel.find({hostEmail, ...filters})
   }
 
   findByGuestAndHostEmails(guestEmail: string, ownerEmail: string) {

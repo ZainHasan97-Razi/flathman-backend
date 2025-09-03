@@ -1,9 +1,9 @@
-import { Body, Controller, Get, Param, Patch, Post, Request } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, Request } from '@nestjs/common';
 import { ShareAccountService } from './share-account.service';
 import { SendInviteDto } from './dto/send.invite.dto';
 import { RequestUserType } from 'src/common/common.types';
 import { AcceptInviteDto, UpdateShareAccountStatusDto } from './dto/update.status.dto';
-import { ShareAccountStatusEnum } from './share-account.model';
+import { ShareAccountStatusEnum, ShareAccountStatusEnumType } from './share-account.model';
 
 @Controller('share-account')
 export class ShareAccountController {
@@ -11,7 +11,6 @@ export class ShareAccountController {
 
   @Post('send')
   sendInvite(@Body() body: SendInviteDto, @Request() req: Request&{user: RequestUserType}) {
-    console.log("body::: ", body);
     return this.shareAccountService.sendInvite(body, req.user);
   }
 
@@ -31,8 +30,8 @@ export class ShareAccountController {
   }
 
   @Get("invitation-list/:hostEmail")
-  invitationList(@Param('hostEmail') hostEmail: string) {
-    return this.shareAccountService.invitationList(hostEmail)
+  invitationList(@Param('hostEmail') hostEmail: string, @Query("status") status?: ShareAccountStatusEnumType,) {
+    return this.shareAccountService.invitationList(hostEmail, {...(status ? {status} : {})})
   }
 
   @Get("status/:guestEmail/:hostEmail")
