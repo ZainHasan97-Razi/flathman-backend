@@ -3,22 +3,29 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { ShareAccount, ShareAccountStatusEnum, ShareAccountStatusEnumType } from './share-account.model';
-import { RequestUserType } from 'src/common/common.types';
+import { MongoIdType, RequestUserType } from 'src/common/common.types';
 import { AcceptInviteDto, UpdateShareAccountStatusDto } from './dto/update.status.dto';
 import { EmailService } from 'src/email/email.service';
 import { SendAccountShareInviteTemplate } from 'src/common/templates/send-account-share-invite.template';
 import { CreateUserDto } from 'src/user/dto/create.user.dto';
 import { ThanksForInvitationAcceptanceTemplate } from 'src/common/templates/thanks-for-invitation-acceptence.template';
 import { SendInviteDto } from './dto/send.invite.dto';
+import { CreateTeamDto } from 'src/team/dto/create.team.dto';
+import mongoose from 'mongoose';
 const isEmpty = require("is-empty");
+
+type InviteListFilters = {
+  status?: ShareAccountStatusEnumType,
+  role?: string,
+}
 
 @Injectable()
 export class ShareAccountService {
   constructor(
     @InjectModel('ShareAccount') private shareAccountModel: Model<ShareAccount>,
     @InjectModel('User') private userModel: Model<CreateUserDto>,
+    @InjectModel('Team') private teamModel: Model<CreateTeamDto>,
     private emailService: EmailService,
-    // private userService: UserService,
   ) {}
 
   async sendInvite(data: SendInviteDto, ownerData: RequestUserType) {
@@ -29,13 +36,24 @@ export class ShareAccountService {
         ownerId: ownerData._id, guestEmail: data.guestEmail, status: {$in: [ShareAccountStatusEnum.pending]}
       });
       if(inviteExist) throw new BadRequestException("Invite already sent to this user!")
+
+      let teams: MongoIdType[] = [];
+      console.log("data.teams::: ", data.teams);
+      let validTeams = await this.teamModel.find({_id: {$in: data.teams}});
+      if(validTeams.length === data.teams.length) {
+        teams = data.teams.map(id => new mongoose.Types.ObjectId(id));
+      } else {
+        teams = validTeams?.map(t => t._id) || [];
+      }
+      if(teams.length === 0) throw new BadRequestException("No valid team found!")
   
       const createdInvite = await this.shareAccountModel.create({
         ownerId: ownerData._id, 
         ownerEmail: ownerData.email, 
         guestEmail: data.guestEmail, 
         status: ShareAccountStatusEnum.pending,
-        role: data.role
+        role: data.role,
+        teams,
       })
       await this.emailService.sendEmail(
         data.guestEmail.toLowerCase(),
@@ -71,8 +89,8 @@ export class ShareAccountService {
     return this.shareAccountModel.find({guestEmail, status: ShareAccountStatusEnum.accepted})
   }
 
-  invitationList(hostEmail: string) {
-    return this.shareAccountModel.find({hostEmail})
+  invitationList(ownerEmail: string, filters: InviteListFilters) {
+    return this.shareAccountModel.find({ownerEmail, ...filters})
   }
 
   findByGuestAndHostEmails(guestEmail: string, ownerEmail: string) {
