@@ -29,9 +29,14 @@ export class ShareAccountController {
     return this.shareAccountService.sharedAccountsList(email)
   }
 
-  @Get("invitation-list/:hostEmail")
-  invitationList(@Param('hostEmail') hostEmail: string, @Query("status") status?: ShareAccountStatusEnumType,) {
-    return this.shareAccountService.invitationList(hostEmail, {...(status ? {status} : {})})
+  @Get("invited-users/:hostEmail")
+  getInvitedUsers(@Param('hostEmail') hostEmail: string, @Query("status") status?: ShareAccountStatusEnumType,) {
+    return this.shareAccountService.getInvitedUsers(hostEmail, {...(status ? {status} : {})})
+  }
+
+  @Get("invitations/:guestEmail")
+  getInvitations(@Param('guestEmail') guestEmail: string, @Query("status") status?: ShareAccountStatusEnumType,) {
+    return this.shareAccountService.getInvitations(guestEmail, {...(status ? {status} : {})})
   }
 
   @Get("status/:guestEmail/:hostEmail")
