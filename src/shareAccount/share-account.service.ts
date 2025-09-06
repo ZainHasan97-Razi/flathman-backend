@@ -51,6 +51,7 @@ export class ShareAccountService {
         ownerId: ownerData._id, 
         ownerEmail: ownerData.email, 
         guestEmail: data.guestEmail, 
+        guestName: data.guestName,
         status: ShareAccountStatusEnum.pending,
         role: data.role,
         teams,
@@ -59,7 +60,7 @@ export class ShareAccountService {
         data.guestEmail.toLowerCase(),
         "Invitation for account sharing",
         "This is an invitation for account sharing",
-        {html: SendAccountShareInviteTemplate(ownerData.email, data.guestEmail, ownerData.email, createdInvite._id.toString(), data.role)}
+        {html: SendAccountShareInviteTemplate(ownerData.userName, data.guestEmail, ownerData.email, createdInvite._id.toString(), data.role)}
       )
 
       return createdInvite;
@@ -69,14 +70,18 @@ export class ShareAccountService {
   }
 
   async acceptInvite(body: AcceptInviteDto&{status: ShareAccountStatusEnumType}) {
-    const invitationInfo = await this.shareAccountModel.findById(body.inviteId);    
+    const invitationInfo: ShareAccountDocument&{ownerId: CreateUserDto} = await this.shareAccountModel.findById(body.inviteId).populate("ownerId");    
     if(isEmpty(invitationInfo)) throw new BadRequestException("Invalid invite id!")
       
     await this.emailService.sendEmail(
       invitationInfo.guestEmail.toLowerCase(),
       "Thanks for accepting invitation",
       "This is an confirmation of invitation acceptance",
-      {html: ThanksForInvitationAcceptanceTemplate(invitationInfo.guestEmail, invitationInfo.ownerEmail, invitationInfo.role)}
+      {html: ThanksForInvitationAcceptanceTemplate(
+        invitationInfo.guestName, 
+        invitationInfo.ownerId?.userName || invitationInfo.ownerEmail, 
+        invitationInfo.role
+      )}
     )
     return await this.shareAccountModel.findByIdAndUpdate(body.inviteId, {status: body.status}, {new: true});
   }

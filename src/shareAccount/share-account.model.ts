@@ -18,8 +18,11 @@ export class ShareAccount {
   @Prop({type: String, required: true})
   ownerEmail: string;
 
-  @Prop({type: String, required: true, unique: true})
+  @Prop({type: String, required: true})
   guestEmail: string;
+
+  @Prop({type: String, required: true})
+  guestName: string;
 
   @Prop({type: String, enum: ShareAccountStatusEnum, default: ShareAccountStatusEnum.pending})
   status: ShareAccountStatusEnumType;
