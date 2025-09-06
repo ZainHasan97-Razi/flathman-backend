@@ -40,6 +40,19 @@ export class TeamService {
     }
   }
 
+  async findManyByIds(teamIds: string[]) {
+    try {
+      const ids = [];
+      teamIds.map(_id => {
+        if(mongoose.Types.ObjectId.isValid(_id)) ids.push(new mongoose.Types.ObjectId(_id));
+      })
+      const response = await this.teamModel.find({_id: {$in: ids}}).lean();
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
   async delete(id: string) {
     try {
       const team = await this.findOne(id);
