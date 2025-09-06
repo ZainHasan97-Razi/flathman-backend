@@ -2,7 +2,7 @@ import {Injectable, BadRequestException} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { ShareAccount, ShareAccountStatusEnum, ShareAccountStatusEnumType } from './share-account.model';
+import { ShareAccount, ShareAccountDocument, ShareAccountStatusEnum, ShareAccountStatusEnumType } from './share-account.model';
 import { MongoIdType, RequestUserType } from 'src/common/common.types';
 import { AcceptInviteDto, UpdateShareAccountStatusDto } from './dto/update.status.dto';
 import { EmailService } from 'src/email/email.service';
@@ -90,11 +90,15 @@ export class ShareAccountService {
   }
 
   getInvitedUsers(ownerEmail: string, filters: InviteListFilters) {
-    return this.shareAccountModel.find({ownerEmail, ...filters})
+    return this.shareAccountModel.find({ownerEmail, ...filters}).lean();
   }
 
-  getInvitations(guestEmail: string, filters: InviteListFilters) {
-    return this.shareAccountModel.find({guestEmail, ...filters})
+  async getInvitations(guestEmail: string, filters: InviteListFilters) {
+    // const invitations = await this.shareAccountModel.find({guestEmail, ...filters}).populate("ownerId").lean();
+    // const ownerEmails = invitations.filter(d => d.guestEmail === guestEmail)
+    // const guestUsers = await this.userModel.findOne({email: invite.guestEmail})
+    // return invitations;
+    return this.shareAccountModel.find({guestEmail, ...filters}).populate("ownerId").lean();
   }
 
   findByGuestAndHostEmails(guestEmail: string, ownerEmail: string) {
