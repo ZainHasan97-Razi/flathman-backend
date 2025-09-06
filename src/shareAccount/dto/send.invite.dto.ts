@@ -4,6 +4,9 @@ export class SendInviteDto {
   guestEmail: string;
 
   @IsString()
+  guestName: string;
+
+  @IsString()
   role: string;
 
   @IsArray()
