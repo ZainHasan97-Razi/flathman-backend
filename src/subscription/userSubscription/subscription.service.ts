@@ -15,21 +15,30 @@ import {
 } from '../dto/update.subscription.dto';
 import { SubscriptionTypeService } from '../subscriptionType/subscriptionType.service';
 import mongoose from 'mongoose';
+import { ShareAccount, ShareAccountStatusEnum } from 'src/shareAccount/share-account.model';
 
 @Injectable()
 export class SubscriptionService {
   constructor(
-    @InjectModel('Subscription')
-    private subscriptionModel: Model<SubscriptionModelDto>,
+    @InjectModel('Subscription') private subscriptionModel: Model<SubscriptionModelDto>,
+    @InjectModel('ShareAccount') private shareAccountModel: Model<ShareAccount>,
     // private subscriptionTypeModel: Model<CreateSubscriptionTypeDto>,
     private readonly subscriptionTypeService: SubscriptionTypeService,
   ) {}
 
-  async getMyAllSubscription(body: { userId: string }) {
+  async getMyAllSubscription(body: { userId: string, guestEmail: string, hostEmail: string | null }) {
     try {
+      // const sharedTeams = [];
+      let invite = null;
+      if(body.hostEmail) {
+        invite = await this.shareAccountModel.findOne({guestEmail: body.guestEmail, hostEmail: body.hostEmail, status: ShareAccountStatusEnum.accepted})
+      }
       const response = await this.subscriptionModel
-        .find({ userId: body.userId })
-        .populate('subscriptionType');
+        .find({ 
+          userId: body.userId, 
+          ...(invite ? {teamId: {$in: invite.teams}} : {}) 
+        })
+        .populate('subscriptionType');        
 
       response.map(async (v, i) => {
         // CONDITION FOR NON-FREE TRIAL & TIMES ALLOWED SUBSCRIPTION
@@ -74,7 +83,10 @@ export class SubscriptionService {
       });
 
       const data = await this.subscriptionModel
-        .find({ userId: body.userId })
+        .find({ 
+          userId: body.userId,
+          ...(invite ? {teamId: {$in: invite.teams}} : {}),
+        })
         .populate('subscriptionType')
         .populate({
           path: 'teamId',

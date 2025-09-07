@@ -10,6 +10,7 @@ import { SubscriptionService } from 'src/subscription/userSubscription/subscript
 import { SubscriptionTypeService } from 'src/subscription/subscriptionType/subscriptionType.service';
 import { SubscriptionSchema } from 'src/subscription/userSubscription/subscription.model';
 import { SubscriptionTypeSchema } from 'src/subscription/subscriptionType/subscriptionType.model';
+import { ShareAccountSchema } from 'src/shareAccount/share-account.model';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { SubscriptionTypeSchema } from 'src/subscription/subscriptionType/subscr
       { name: 'User', schema: UserSchema },
       { name: 'Subscription', schema: SubscriptionSchema },
       { name: 'subscription-type', schema: SubscriptionTypeSchema },
+      { name: 'ShareAccount', schema: ShareAccountSchema },
     ]),
   ],
   controllers: [AuthController],
