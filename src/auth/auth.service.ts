@@ -65,6 +65,7 @@ export class AuthService {
           isAdmin: user.isAdmin,
           email: user.email.toLowerCase(),
           contactNumber: user.contactNumber,
+          organizationName: user?.organizationName || null,
         };
       } else {
         newUser = {
@@ -72,6 +73,7 @@ export class AuthService {
           userName: user.userName,
           email: user.email.toLowerCase(),
           contactNumber: user.contactNumber,
+          organizationName: user?.organizationName || null,
         };
       }
 
