@@ -104,7 +104,7 @@ export class ShareAccountService {
     // const guestUsers = await this.userModel.findOne({email: invite.guestEmail})
     // return invitations;
     const query = {guestEmail, ...filters, ...(filters?.status ? {} : {status: {$in: [ShareAccountStatusEnum.accepted, ShareAccountStatusEnum.pending]}})}    
-    return this.shareAccountModel.find(query).populate("ownerId").lean();
+    return await this.shareAccountModel.find(query).populate("ownerId").lean();
   }
 
   findByGuestAndHostEmails(guestEmail: string, ownerEmail: string) {
