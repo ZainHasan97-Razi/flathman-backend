@@ -22,6 +22,7 @@ import { OtpModule } from 'src/otp/otp.module';
 import { StatsConfigSchema } from 'src/statsConfig/statsConfig.model';
 import { StatsConfigService } from 'src/statsConfig/statsConfig.service';
 import { RuleModule } from 'src/rules/rule.module';
+import { ShareAccountSchema } from 'src/shareAccount/share-account.model';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { RuleModule } from 'src/rules/rule.module';
       { name: 'Subscription', schema: SubscriptionSchema },
       { name: 'subscription-type', schema: SubscriptionTypeSchema },
       { name: 'StatsConfig', schema: StatsConfigSchema },
+      { name: 'ShareAccount', schema: ShareAccountSchema },
     ]),
     forwardRef(() => PlayerModule),
     forwardRef(() => RuleModule),

@@ -95,7 +95,9 @@ export class ShareAccountService {
   }
 
   getInvitedUsers(ownerEmail: string, filters: InviteListFilters) {
-    return this.shareAccountModel.find({ownerEmail, ...filters}).lean();
+    const query = {ownerEmail, ...filters, ...(filters?.status ? {} : {status: {$in: [ShareAccountStatusEnum.accepted, ShareAccountStatusEnum.pending]}})}
+    // console.log("query getInvitedUsers::: ", query);
+    return this.shareAccountModel.find(query).lean();
   }
 
   async getInvitations(guestEmail: string, filters: InviteListFilters) {
@@ -103,7 +105,9 @@ export class ShareAccountService {
     // const ownerEmails = invitations.filter(d => d.guestEmail === guestEmail)
     // const guestUsers = await this.userModel.findOne({email: invite.guestEmail})
     // return invitations;
-    return this.shareAccountModel.find({guestEmail, ...filters}).populate("ownerId").lean();
+    const query = {guestEmail, ...filters, ...(filters?.status ? {} : {status: {$in: [ShareAccountStatusEnum.accepted, ShareAccountStatusEnum.pending]}})}
+    // console.log("query getInvitations::: ", query);
+    return await this.shareAccountModel.find(query).populate("ownerId").lean();
   }
 
   findByGuestAndHostEmails(guestEmail: string, ownerEmail: string) {

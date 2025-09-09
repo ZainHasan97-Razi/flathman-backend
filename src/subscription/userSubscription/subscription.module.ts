@@ -5,12 +5,14 @@ import { SubscriptionSchema } from './subscription.model';
 import { SubscriptionService } from './subscription.service';
 import { SubscriptionTypeService } from '../subscriptionType/subscriptionType.service';
 import { SubscriptionTypeSchema } from '../subscriptionType/subscriptionType.model';
+import { ShareAccountSchema } from 'src/shareAccount/share-account.model';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: 'Subscription', schema: SubscriptionSchema },
       { name: 'subscription-type', schema: SubscriptionTypeSchema },
+      { name: 'ShareAccount', schema: ShareAccountSchema },
     ]),
   ],
   controllers: [SubscriptionController],
