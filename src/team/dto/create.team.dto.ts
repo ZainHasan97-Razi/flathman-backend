@@ -2,6 +2,8 @@
 import {
   IsMongoId,
   IsNotEmpty,
+  IsOptional,
+  IsString,
 } from 'class-validator';
 
 export class CreateTeamDto {
@@ -30,6 +32,14 @@ export class CreateTeamDto {
   // @MaxLength(10, { message: 'Coach phone should be of 10 digits' })
   // @MinLength(10, { message: 'Coach phone should be of 10 digits' })
   coachCell?: string;
+
+  @IsOptional()
+  @IsString()
+  league: string;
+
+  @IsOptional()
+  @IsString()
+  state: string; 
 
   @IsMongoId({ message: 'Invalid team owner!' })
   // @IsNotEmpty({ message: 'Team owner is required!' })

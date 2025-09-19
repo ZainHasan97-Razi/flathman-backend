@@ -47,7 +47,7 @@ export class AuthService {
       }
       // const token = jwt.sign({ email: body.email }, process.env.SECRET_KEY, {
       const token = jwt.sign(
-        { email: body.email.toLowerCase() },
+        { _id: user._id, email: body.email.toLowerCase(), userName: user.userName },
         process.env.SECRET_KEY,
         {
           expiresIn: '100d',
@@ -65,6 +65,7 @@ export class AuthService {
           isAdmin: user.isAdmin,
           email: user.email.toLowerCase(),
           contactNumber: user.contactNumber,
+          organizationName: user?.organizationName || null,
         };
       } else {
         newUser = {
@@ -72,6 +73,7 @@ export class AuthService {
           userName: user.userName,
           email: user.email.toLowerCase(),
           contactNumber: user.contactNumber,
+          organizationName: user?.organizationName || null,
         };
       }
 

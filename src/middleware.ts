@@ -2,6 +2,8 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response } from 'express';
 import jwt = require('jsonwebtoken');
+import { RequestUserType } from './common/common.types';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class AuthorizationMiddleware implements NestMiddleware {
@@ -13,8 +15,9 @@ export class AuthorizationMiddleware implements NestMiddleware {
         const bearer = header.split(' ');
         const token = bearer[1];
         const decode = jwt.verify(token, process.env.SECRET_KEY);
-        req.body.decodeToken = decode;
-        // console.log('Success D');
+        req["user"] = decode;
+        req["user"]._id = new mongoose.Types.ObjectId(req["user"]._id);
+        // console.log("user info:::: ", (req as Request&{user: RequestUserType}).user);
       }
       next();
     } catch (e) {

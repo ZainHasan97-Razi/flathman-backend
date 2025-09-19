@@ -31,14 +31,31 @@ export class EmailService {
     });
   }
 
-  async sendEmail(to: string, subject: string, content: string): Promise<void> {
+  async sendEmail(
+    to: string, 
+    subject: string, 
+    content: string,
+    options?: {
+      html?: string;
+      attachments?: nodemailer.Attachment[];
+      cc?: string | string[];
+      bcc?: string | string[];
+    }
+  ): Promise<void> {
     const mailOptions: nodemailer.SendMailOptions = {
       from: process.env.SMTP_USERNAME,
       to,
       subject,
       text: content,
+      ...options
     };
 
     await this.transporter.sendMail(mailOptions);
   }
+  /* await sendEmail('user@example.com', 'Hello', 'This is a plain text email'); */
+  /*
+    await sendEmail('user@example.com', 'Hello', 'Fallback plain text content', {
+      html: '<h1>Hello</h1><p>This is HTML content</p>'
+    });
+  */
 }
