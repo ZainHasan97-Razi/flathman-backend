@@ -22,7 +22,7 @@ export class EmailService {
       // Set your email sending configuration here
       // For example, you can use SMTP or a third-party email service
       host: 'smtp.gmail.com',
-      port: 587,
+      port: process.env.SMTP_PORT,
       secure: false,
       auth: {
         user: process.env.SMTP_USERNAME,
