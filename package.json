@@ -1,6 +1,9 @@
 {
   "name": "flethman-server",
   "version": "0.0.1",
+  "engines": {
+    "node": "20.18.0"
+  },
   "description": "",
   "author": "",
   "private": true,
