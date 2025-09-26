@@ -12,6 +12,14 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Username is required!' })
   userName: string;
 
+  @IsString({ message: 'Invalid Firstname!' })
+  @IsNotEmpty({ message: 'Firstname is required!' })
+  firstName: string;
+
+  @IsString({ message: 'Invalid Lastname!' })
+  @IsNotEmpty({ message: 'Lastname is required!' })
+  lastName: string;
+
   // @IsBoolean()
   isAdmin: boolean;
 
