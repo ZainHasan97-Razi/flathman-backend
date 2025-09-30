@@ -90,7 +90,8 @@ export class EmailService {
   ): Promise<void> {
     const msg: sgMail.MailDataRequired = {
       to,
-      from: `Preprod Laxstat <${process.env.SENDGRID_FROM}>`,
+      // from: `Preprod Laxstat <${process.env.SENDGRID_FROM}>`,
+      from: process.env.SENDGRID_FROM,
       subject,
       text: content,
       html: options?.html,
