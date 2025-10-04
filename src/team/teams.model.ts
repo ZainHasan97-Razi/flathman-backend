@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import { default_timeout_configs, TimeoutsSubSchema } from 'src/rules/rule.model';
 
 // Game rule setting
 export const GameRuleSettingSubSchema = new mongoose.Schema(
@@ -12,7 +13,7 @@ export const GameRuleSettingSubSchema = new mongoose.Schema(
     gapBetweenPeriods: { type: Number, required: true },
     gapBetweenHalves: { type: Number, required: true },
     timeoutDuration: { type: Number, required: true, default: 0 },
-    timeoutsPerHalf: { type: Number, required: true },
+    timeout: { type: TimeoutsSubSchema, default: default_timeout_configs[0] },
     timeoutsInOvertimePeriod: { type: Number, required: true },
     maxOvertimePeriods: { type: Number, required: true },
     overtimePeriodDuration: { type: Number, required: true },
