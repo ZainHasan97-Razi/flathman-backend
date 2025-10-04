@@ -62,6 +62,8 @@ export class AuthService {
         newUser = {
           _id: user._id,
           userName: user.userName,
+          firstName: user?.firstName || "",
+          lastName: user?.lastName || "",
           isAdmin: user.isAdmin,
           email: user.email.toLowerCase(),
           contactNumber: user.contactNumber,
