@@ -131,7 +131,6 @@ export class AuthService {
 
   async Update(body: UpdateUserDto) {
     try {
-      body.email = body.email.toLowerCase();
       if (body.isAdmin) {
         throw new BadRequestException('Inappropriate updation request');
       }
@@ -145,18 +144,20 @@ export class AuthService {
             ...body,
             password: hashedpassword,
           },
+          {new: true}
         );
       } else {
         user = await this.userModel.findByIdAndUpdate(
           { _id: body.userId },
           body,
+          {new: true}
         );
       }
       if (!user) {
         throw new BadRequestException('Updation failed');
       }
 
-      return { message: `User has been updated successfully` };
+      return user;
     } catch (error) {
       throw error;
     }
