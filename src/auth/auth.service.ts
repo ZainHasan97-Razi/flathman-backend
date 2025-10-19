@@ -62,6 +62,8 @@ export class AuthService {
         newUser = {
           _id: user._id,
           userName: user.userName,
+          firstName: user?.firstName || "",
+          lastName: user?.lastName || "",
           isAdmin: user.isAdmin,
           email: user.email.toLowerCase(),
           contactNumber: user.contactNumber,
@@ -129,7 +131,6 @@ export class AuthService {
 
   async Update(body: UpdateUserDto) {
     try {
-      body.email = body.email.toLowerCase();
       if (body.isAdmin) {
         throw new BadRequestException('Inappropriate updation request');
       }
@@ -143,18 +144,20 @@ export class AuthService {
             ...body,
             password: hashedpassword,
           },
+          {new: true}
         );
       } else {
         user = await this.userModel.findByIdAndUpdate(
           { _id: body.userId },
           body,
+          {new: true}
         );
       }
       if (!user) {
         throw new BadRequestException('Updation failed');
       }
 
-      return { message: `User has been updated successfully` };
+      return user;
     } catch (error) {
       throw error;
     }

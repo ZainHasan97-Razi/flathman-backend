@@ -1,6 +1,15 @@
 // import { BaseProjectDto } from './base-project.dto';
-import { IsString, IsNumber, IsEnum } from 'class-validator';
-import { RuleTypeEnum, RuleTypeEnumType } from '../rule.model';
+import { IsString, IsNumber, IsEnum, IsArray, ValidateNested, IsOptional } from 'class-validator';
+import { RuleTypeEnum, RuleTypeEnumType, TimeoutsUnitEnum, TimeoutsUnitEnumType } from '../rule.model';
+import { Type } from 'class-transformer';
+
+export class TimeoutConfigDto {
+  @IsEnum(TimeoutsUnitEnum)
+  unit: TimeoutsUnitEnumType;
+
+  @IsNumber()
+  value: number;
+}
 
 export class CreateRuleDto {
   @IsString()
@@ -34,9 +43,11 @@ export class CreateRuleDto {
   @IsNumber()
   gapBetweenHalves: number;
 
-  // Number of timeouts a team gets per half
-  @IsNumber()
-  timeoutsPerHalf: number;
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({each: true})
+  @Type(() => TimeoutConfigDto)
+  timeoutConfig: TimeoutConfigDto[]
 
   // Number of timeouts a team gets per overtime period
   @IsNumber()

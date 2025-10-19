@@ -18,12 +18,21 @@ export class UpdateUserDto {
   @IsNotEmpty({ message: 'Username is required!' })
   userName: string;
 
+  @IsString({ message: 'Invalid Firstname!' })
+  @IsNotEmpty({ message: 'Firstname is required!' })
+  firstName: string;
+
+  @IsString({ message: 'Invalid Lastname!' })
+  @IsNotEmpty({ message: 'Lastname is required!' })
+  lastName: string;
+
+  @IsOptional()
   @IsBoolean()
   isAdmin: boolean;
 
-  @IsNotEmpty({ message: 'Email is required!' })
-  @IsEmail({ message: 'Invalid email!' })
-  email: string;
+  // @IsNotEmpty({ message: 'Email is required!' })
+  // @IsEmail({ message: 'Invalid email!' })
+  // email: string;
 
   @IsNotEmpty({ message: 'Contact number is required!' })
   @IsString({ message: 'Invalid contact number!' })
@@ -31,6 +40,7 @@ export class UpdateUserDto {
   @MinLength(10, { message: 'Contact number should be of 10 digits' })
   contactNumber: string;
 
+  @IsOptional()
   @IsNotEmpty({ message: 'Password is required!' })
   @IsString({ message: 'Invalid password!' })
   password: string;

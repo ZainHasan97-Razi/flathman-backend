@@ -7,6 +7,16 @@ export const UserSchema = new mongoose.Schema(
       required: true,
       // unique: true,
     },
+    firstName: {
+      type: String,
+      required: true,
+      default: ""
+    },
+    lastName: {
+      type: String,
+      required: true,
+      default: ""
+    },
     isAdmin: {
       type: Boolean,
     },

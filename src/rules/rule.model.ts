@@ -7,6 +7,27 @@ export const RuleTypeEnum = {
 };
 export type RuleTypeEnumType = keyof typeof RuleTypeEnum;
 
+export enum TimeoutsUnitEnum {
+  per_game = "per_game",
+  per_half = "per_half",
+  per_period = "per_period",
+}
+export type TimeoutsUnitEnumType = keyof typeof TimeoutsUnitEnum;
+
+export const default_timeout_configs = [
+  { unit: TimeoutsUnitEnum.per_game, value: 1 },
+  { unit: TimeoutsUnitEnum.per_half, value: 1 },
+  { unit: TimeoutsUnitEnum.per_period, value: 1 },
+]
+
+export const TimeoutsSubSchema = new mongoose.Schema(
+  {
+    unit: { type: String, required: true, enum: Object.values(TimeoutsUnitEnum) },
+    value: { type: Number, required: true },
+  },
+  { timestamps: false, _id: false },
+);
+
 
 export const RuleSchema = new mongoose.Schema(
   {
@@ -20,7 +41,7 @@ export const RuleSchema = new mongoose.Schema(
     gapBetweenPeriods: { type: Number, required: true },
     gapBetweenHalves: { type: Number, required: true },
     timeoutDuration: {type: Number, required: true, default: 0},
-    timeoutsPerHalf: { type: Number, required: true },
+    timeoutConfig: {type: [TimeoutsSubSchema], default: default_timeout_configs},
     timeoutsInOvertimePeriod: { type: Number, required: true },
     maxOvertimePeriods: { type: Number, required: true },
     overtimePeriodDuration: { type: Number, required: true },

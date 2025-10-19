@@ -1,5 +1,7 @@
-import { IsString, IsNumber, IsMongoId, IsEnum, IsOptional } from 'class-validator';
+import { IsString, IsNumber, IsMongoId, IsEnum, IsOptional, IsArray, ValidateNested } from 'class-validator';
 import { RuleTypeEnum, RuleTypeEnumType } from '../rule.model';
+import { Type } from 'class-transformer';
+import { TimeoutConfigDto } from './create.rule.dto';
 
 export class UpdateRuleDto {
   @IsMongoId()
@@ -37,9 +39,11 @@ export class UpdateRuleDto {
   @IsNumber()
   gapBetweenHalves: number;
 
-  // Number of timeouts a team gets per half
-  @IsNumber()
-  timeoutsPerHalf: number;
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({each: true})
+  @Type(() => TimeoutConfigDto)
+  timeoutConfig: TimeoutConfigDto[]
 
   // Number of timeouts a team gets per overtime period
   @IsNumber()
