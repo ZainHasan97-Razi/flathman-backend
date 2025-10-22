@@ -30,8 +30,8 @@ export class Plan {
   @Prop({type: Number, required: true})
   costUsd: number;
 
-  @Prop({type: [Number]}) // ONly for monthly packages where there can be no overlapping month
-  months: number;
+  @Prop({type: [Number], default: null}) // ONly for monthly packages where there can be no overlapping month
+  months: number[];
 }
 
 export type PlanDocument = Plan & Document;

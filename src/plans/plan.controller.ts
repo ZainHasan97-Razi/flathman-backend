@@ -1,32 +1,30 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   Patch,
   Param,
-  Delete,
-  Req,
 } from '@nestjs/common';
-// import { PlayerService } from './player.service';
-// import { CreatePlayerDto } from './dto/create.player.dto';
-// import { UpdatePlayerDto } from './dto/update.player.dto';
+import { PlanService } from './plan.service';
+import { CreatePlanDto } from './dto/create.plan.dto';
+import { UpdatePlanDto } from './dto/update.plan.dto';
+import { MongoIdType } from 'src/common/common.types';
+import { MongoIdValidationPipe } from 'src/common/pipes/mongoid.validation.pipe';
 
 @Controller('plan')
 export class PlanController {
-//   constructor(private readonly playerService: PlayerService) {}
+  constructor(private readonly planService: PlanService) {}
 
-//   @Post('create')
-//   async create(@Body() body: CreatePlayerDto) {
-//     const response = await this.playerService.createPlayer(body);
-//     return response;
-//   }
+  @Post('create')
+  async create(@Body() body: CreatePlanDto) {
+    return await this.planService.create(body);
+  }
 
-//   @Patch('update')
-//   async update(@Body() body: UpdatePlayerDto) {
-//     const player = await this.playerService.updatePlayer(body);
-//     return player;
-//   }
+  @Patch('update')
+  async findByIdAndupdate(@Param('id', MongoIdValidationPipe) id: MongoIdType, @Body() body: UpdatePlanDto) {
+    const player = await this.planService.findByIdAndupdate(id, body);
+    return player;
+  }
 
 //   @Get()
 //   findAll() {
