@@ -15,16 +15,16 @@ import { MongoIdValidationPipe } from 'src/common/pipes/mongoid.validation.pipe'
 export class PlanController {
   constructor(private readonly planService: PlanService) {}
 
-  @Post('create')
-  async create(@Body() body: CreatePlanDto) {
-    return await this.planService.create(body);
-  }
+  // @Post('create')
+  // async create(@Body() body: CreatePlanDto) {
+  //   return await this.planService.create(body);
+  // }
 
-  @Patch('update')
-  async findByIdAndupdate(@Param('id', MongoIdValidationPipe) id: MongoIdType, @Body() body: UpdatePlanDto) {
-    const player = await this.planService.findByIdAndupdate(id, body);
-    return player;
-  }
+  // @Patch('update/:id')
+  // async findByIdAndupdate(@Param('id', MongoIdValidationPipe) id: MongoIdType, @Body() body: UpdatePlanDto) {
+  //   const player = await this.planService.findByIdAndupdate(id, body);
+  //   return player;
+  // }
 
 //   @Get()
 //   findAll() {

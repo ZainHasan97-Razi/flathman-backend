@@ -8,6 +8,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { PlanTypeEnum, PlanTypeEnumType } from '../plan.model';
+import { IsStringArray } from 'src/common/validator/validate.common';
 
 export class CreatePlanDto {
   @IsString({ message: 'Display name is required!' })
@@ -22,10 +23,7 @@ export class CreatePlanDto {
   @IsNumber()
   costUsd: number;
 
-  @IsOptional()
   @ValidateIf((d) => d.type === PlanTypeEnum.monthly)
-  @IsArray({ message: 'Months should be an array of numbers!' })
-  @ValidateNested({ each: true })
-  @IsNumber({}, { each: true })
-  months: number[];
+  @IsStringArray()
+  months: string[];
 }

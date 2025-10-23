@@ -35,5 +35,5 @@ export class UpdatePlanDto {
   @IsArray({ message: 'Months should be an array of numbers!' })
   @ValidateNested({ each: true })
   @IsNumber({}, { each: true })
-  months: number[];
+  months: string[];
 }

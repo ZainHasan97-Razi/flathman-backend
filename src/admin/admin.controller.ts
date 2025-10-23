@@ -26,6 +26,8 @@ import { CreateStatsConfigDto } from 'src/statsConfig/dto/create.statsConfig.dto
 import { UpdateStatsConfigDto } from 'src/statsConfig/dto/update.statsConfig.dto';
 import { MongoIdType } from 'src/common/common.types';
 import { SettingNameEnumType } from 'src/team/teams.model';
+import { CreatePlanDto } from 'src/plans/dto/create.plan.dto';
+import { UpdatePlanDto } from 'src/plans/dto/update.plan.dto';
 
 @Controller('admin')
 export class AdminController {
@@ -120,5 +122,16 @@ export class AdminController {
   @Delete("stats-config/:id")
   deleteStatsConfig(@Param('id', MongoIdValidationPipe) id: MongoIdType) {
     return this.adminService.deleteStatsConfig(id);
+  }
+
+  @Post('plan/create')
+  async create(@Body() body: CreatePlanDto) {
+    return await this.adminService.createPlan(body);
+  }
+
+  @Patch('plan/update/:id')
+  async findByIdAndupdate(@Param('id', MongoIdValidationPipe) id: MongoIdType, @Body() body: UpdatePlanDto) {
+    const player = await this.adminService.updatePlan(id, body);
+    return player;
   }
 }
