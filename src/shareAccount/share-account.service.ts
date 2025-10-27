@@ -38,7 +38,6 @@ export class ShareAccountService {
       if(inviteExist) throw new BadRequestException("Invite already sent to this user!")
 
       let teams: MongoIdType[] = [];
-      console.log("data.teams::: ", data.teams);
       let validTeams = await this.teamModel.find({_id: {$in: data.teams}});
       if(validTeams.length === data.teams.length) {
         teams = data.teams.map(id => new mongoose.Types.ObjectId(id));

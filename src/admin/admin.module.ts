@@ -23,6 +23,8 @@ import { StatsConfigSchema } from 'src/statsConfig/statsConfig.model';
 import { StatsConfigService } from 'src/statsConfig/statsConfig.service';
 import { RuleModule } from 'src/rules/rule.module';
 import { ShareAccountSchema } from 'src/shareAccount/share-account.model';
+import { PlanSchema } from 'src/plans/plan.model';
+import { PlanService } from 'src/plans/plan.service';
 
 @Module({
   imports: [
@@ -37,6 +39,7 @@ import { ShareAccountSchema } from 'src/shareAccount/share-account.model';
       { name: 'subscription-type', schema: SubscriptionTypeSchema },
       { name: 'StatsConfig', schema: StatsConfigSchema },
       { name: 'ShareAccount', schema: ShareAccountSchema },
+      { name: 'Plan', schema: PlanSchema },
     ]),
     forwardRef(() => PlayerModule),
     forwardRef(() => RuleModule),
@@ -51,7 +54,8 @@ import { ShareAccountSchema } from 'src/shareAccount/share-account.model';
     RuleService,
     SubscriptionService,
     SubscriptionTypeService,
-    StatsConfigService
+    StatsConfigService,
+    PlanService,
   ],
 })
 export class AdminModule {}

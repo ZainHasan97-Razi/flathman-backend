@@ -27,6 +27,7 @@ import { AppVersionModule } from './appVersion/appVersion.module';
 import { ScheduleGameModule } from './scheduleGame/scheduleGame.module';
 import { StatsConfigModule } from './statsConfig/statsConfig.module';
 import { ShareAccountModule } from './shareAccount/share-account.module';
+import { PlanModule } from './plans/plan.module';
 config();
 
 @Module({
@@ -49,7 +50,8 @@ config();
     AppVersionModule,
     ScheduleGameModule,
     StatsConfigModule,
-    ShareAccountModule
+    ShareAccountModule,
+    PlanModule
   ],
   // controllers: [AppController],
   // providers: [AppService],
