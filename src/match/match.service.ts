@@ -12,6 +12,7 @@ import { UpdateMatchDto } from './dto/update.match.dto';
 import { GameStatusEnum } from './match.model';
 import { MongoIdType } from 'src/common/common.types';
 import mongoose from 'mongoose';
+import { CreatePlayerDto } from 'src/player/dto/create.player.dto';
 const isEmpty = require("is-empty");
 
 @Injectable()
@@ -19,6 +20,7 @@ export class MatchService {
   constructor(
     @InjectModel('Match') private matchModel: Model<CreateMatchDto>,
     @InjectModel('User') private userModel: Model<CreateUserDto>,
+    @InjectModel('Player') private playerModel: Model<CreatePlayerDto>,
   ) {}
 
   async findAll() {
@@ -272,13 +274,46 @@ export class MatchService {
   }
 
   async playersUpdateCheck(matchId: MongoIdType) {
+    // const match = await this.matchModel.findById(matchId);
+    // if (isEmpty(match)) {
+    //   throw new NotFoundException(`Couldn't found match`);
+    // }
+    // const teamA = match.teamA;
+    // const teamAId = new mongoose.Types.ObjectId(match.teamA.teamId);
+    // const noNamePlayers = teamA.players.filter(p => p.playerName && p.playerName.includes("New Player"));
+    // const jerseyKey = teamA.isHomeTeam ? "homeJersey" : "awayJersey";
+    // const noNamePlayersJerseys = noNamePlayers.map(p => teamA.isHomeTeam ? p.homeJersey : p.awayJersey);
+    // // Query for players: {teamId: ObjectId('68ed1073a9f82e0fd794ff6e'), ...(teamA.isHomeTeam ? {homeJersey: "44"} : {awayJersey: "44"})}
+    // if (noNamePlayersJerseys.length == 0) return [];
+
+    // const teamAPlayers = await this.playerModel.find({
+    //   teamId: teamAId,
+    //   ...(teamA.isHomeTeam ? { homeJersey: { $in: noNamePlayersJerseys } } : { awayJersey: { $in: noNamePlayersJerseys } }),
+    //   playerName: { $not: { $regex: "New Player", $options: "i" } } // case-insensitive match
+    // });
+
+    // if (teamAPlayers.length == 0) return [];
+
+    // const matchingPlayers = teamAPlayers.filter(p => noNamePlayersJerseys.includes(p[jerseyKey]));
+    // return matchingPlayers;
+
     const match = await this.matchModel.findById(matchId);
-    if (isEmpty(match)) {
-      throw new NotFoundException(`Couldn't found match`);
-    }
-    const teamA = match.teamA;
-    const teamAId = new mongoose.Types.ObjectId(match.teamA.teamId);
-    // Query for players: {teamId: ObjectId('68ed1073a9f82e0fd794ff6e'), ...(teamA.isHomeTeam ? {homeJersey: "44"} : {awayJersey: "44"})}
-    // const teamAPlayers = await this.userModel.find({teamId: teamAId, ...(teamA.isHomeTeam ? {homeJersey: teamA.jerseyNumber} : {awayJersey: teamA.jerseyNumber})});
+    if (!match) throw new NotFoundException(`Couldn't find match`);
+
+    const { teamA } = match;
+    const teamAId = new mongoose.Types.ObjectId(teamA.teamId);
+    const jerseyKey = teamA.isHomeTeam ? "homeJersey" : "awayJersey";
+
+    const noNamePlayersJerseys = teamA.players
+      .filter(p => p.playerName?.includes("New Player"))
+      .map(p => String(p[jerseyKey]));
+
+    if (noNamePlayersJerseys.length === 0) return [];
+
+    return this.playerModel.find({
+      teamId: teamAId,
+      [jerseyKey]: { $in: noNamePlayersJerseys },
+      playerName: { $not: { $regex: "New Player", $options: "i" } },
+    });
   }
 }
