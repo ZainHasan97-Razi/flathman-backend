@@ -274,46 +274,28 @@ export class MatchService {
   }
 
   async playersUpdateCheck(matchId: MongoIdType) {
-    // const match = await this.matchModel.findById(matchId);
-    // if (isEmpty(match)) {
-    //   throw new NotFoundException(`Couldn't found match`);
-    // }
-    // const teamA = match.teamA;
-    // const teamAId = new mongoose.Types.ObjectId(match.teamA.teamId);
-    // const noNamePlayers = teamA.players.filter(p => p.playerName && p.playerName.includes("New Player"));
-    // const jerseyKey = teamA.isHomeTeam ? "homeJersey" : "awayJersey";
-    // const noNamePlayersJerseys = noNamePlayers.map(p => teamA.isHomeTeam ? p.homeJersey : p.awayJersey);
-    // // Query for players: {teamId: ObjectId('68ed1073a9f82e0fd794ff6e'), ...(teamA.isHomeTeam ? {homeJersey: "44"} : {awayJersey: "44"})}
-    // if (noNamePlayersJerseys.length == 0) return [];
-
-    // const teamAPlayers = await this.playerModel.find({
-    //   teamId: teamAId,
-    //   ...(teamA.isHomeTeam ? { homeJersey: { $in: noNamePlayersJerseys } } : { awayJersey: { $in: noNamePlayersJerseys } }),
-    //   playerName: { $not: { $regex: "New Player", $options: "i" } } // case-insensitive match
-    // });
-
-    // if (teamAPlayers.length == 0) return [];
-
-    // const matchingPlayers = teamAPlayers.filter(p => noNamePlayersJerseys.includes(p[jerseyKey]));
-    // return matchingPlayers;
-
     const match = await this.matchModel.findById(matchId);
     if (!match) throw new NotFoundException(`Couldn't find match`);
 
     const { teamA } = match;
     const teamAId = new mongoose.Types.ObjectId(teamA.teamId);
     const jerseyKey = teamA.isHomeTeam ? "homeJersey" : "awayJersey";
+    console.log("jerseyKey:::: ", jerseyKey);
 
     const noNamePlayersJerseys = teamA.players
       .filter(p => p.playerName?.includes("New Player"))
       .map(p => String(p[jerseyKey]));
+    console.log("noNamePlayersJerseys:::: ", noNamePlayersJerseys);
 
     if (noNamePlayersJerseys.length === 0) return [];
 
-    return this.playerModel.find({
+    const query = {
       teamId: teamAId,
       [jerseyKey]: { $in: noNamePlayersJerseys },
       playerName: { $not: { $regex: "New Player", $options: "i" } },
-    });
+    };
+    console.log("query:::: ", JSON.stringify(query));
+
+    return this.playerModel.find(query);
   }
 }

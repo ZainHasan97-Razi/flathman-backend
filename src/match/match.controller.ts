@@ -85,7 +85,7 @@ export class MatchController {
   // gameResultsAndScheduleList(@Param('teamId') teamId: MongoIdType) {
   //   return this.matchService.gameResultsAndScheduleListByLicensedTeam(teamId)
   // }
-  @Get("players-update-check/:matchId")
+  @Get(":matchId/players/update-check")
   playersUpdateCheck(@Param('matchId', MongoIdValidationPipe) matchId: MongoIdType) {
     return this.matchService.playersUpdateCheck(matchId);
   }
