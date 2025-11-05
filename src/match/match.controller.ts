@@ -13,6 +13,7 @@ import { UpdateMatchDto } from './dto/update.match.dto';
 import { SuspendMatchDto } from './dto/suspend.match.dto';
 import { CompleteSuspendedMatchDto } from './dto/completeSuspendedMatch.match.dto';
 import { MongoIdType } from 'src/common/common.types';
+import { MongoIdValidationPipe } from 'src/common/pipes/mongoid.validation.pipe';
 
 @Controller('match')
 export class MatchController {
@@ -84,5 +85,9 @@ export class MatchController {
   // gameResultsAndScheduleList(@Param('teamId') teamId: MongoIdType) {
   //   return this.matchService.gameResultsAndScheduleListByLicensedTeam(teamId)
   // }
+  @Get("players-update-check/:matchId")
+  playersUpdateCheck(@Param('matchId', MongoIdValidationPipe) matchId: MongoIdType) {
+    return this.matchService.playersUpdateCheck(matchId);
+  }
 
 }

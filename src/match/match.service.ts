@@ -11,6 +11,7 @@ import { SuspendMatchDto } from './dto/suspend.match.dto';
 import { UpdateMatchDto } from './dto/update.match.dto';
 import { GameStatusEnum } from './match.model';
 import { MongoIdType } from 'src/common/common.types';
+import mongoose from 'mongoose';
 const isEmpty = require("is-empty");
 
 @Injectable()
@@ -268,5 +269,16 @@ export class MatchService {
       },
     ]);
     return data[0];
+  }
+
+  async playersUpdateCheck(matchId: MongoIdType) {
+    const match = await this.matchModel.findById(matchId);
+    if (isEmpty(match)) {
+      throw new NotFoundException(`Couldn't found match`);
+    }
+    const teamA = match.teamA;
+    const teamAId = new mongoose.Types.ObjectId(match.teamA.teamId);
+    // Query for players: {teamId: ObjectId('68ed1073a9f82e0fd794ff6e'), ...(teamA.isHomeTeam ? {homeJersey: "44"} : {awayJersey: "44"})}
+    // const teamAPlayers = await this.userModel.find({teamId: teamAId, ...(teamA.isHomeTeam ? {homeJersey: teamA.jerseyNumber} : {awayJersey: teamA.jerseyNumber})});
   }
 }
