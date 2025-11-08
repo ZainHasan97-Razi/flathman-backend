@@ -338,5 +338,13 @@ export class MatchService {
       return log;
     })
 
+    const updatedMatch = await this.matchModel.findByIdAndUpdate(
+      matchId,
+      { $set: { 'teamA.players': playersListForUpdation, 'activityLog': activityLogsForUpdation } },
+      { new: true }
+    );
+
+    return updatedMatch;
+
   }
 }
