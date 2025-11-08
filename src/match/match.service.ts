@@ -306,7 +306,8 @@ export class MatchService {
     const jerseyKey = match.teamA.isHomeTeam ? "homeJersey" : "awayJersey";
 
     let playersListForUpdation = match.teamA?.players || [];
-    
+    let activityLogsForUpdation = match.activityLog || [];
+
     playersListForUpdation.map(p => {
       const hasNewPlayer = p.player.includes("New Player")
       const hasQuickPlayer = p.player.includes("QuickAdd Player")
@@ -320,6 +321,21 @@ export class MatchService {
         }
       }
       return p;
+    })
+
+    activityLogsForUpdation.map((log: any) => {
+      const hasNewPlayer = log?.player.includes("New Player")
+      const hasQuickPlayer = log.player.includes("QuickAdd Player")
+      const hasUpdatedDetails = players.find(player => player[jerseyKey] === log[jerseyKey])
+      if ((hasNewPlayer || hasQuickPlayer) && hasUpdatedDetails) {
+        return {
+          ...log,
+          player: hasUpdatedDetails.playerName,
+          firstName: hasUpdatedDetails.firstName,
+          lastName: hasUpdatedDetails.lastName,
+        }
+      }
+      return log;
     })
 
   }
