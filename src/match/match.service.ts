@@ -280,12 +280,12 @@ export class MatchService {
     const { teamA } = match;
     const teamAId = new mongoose.Types.ObjectId(teamA.teamId);
     const jerseyKey = teamA.isHomeTeam ? "homeJersey" : "awayJersey";
-    console.log("jerseyKey:::: ", jerseyKey);
+    // console.log("jerseyKey:::: ", jerseyKey);
 
     const noNamePlayersJerseys = teamA.players
       .filter(p => p.playerName?.includes("New Player"))
       .map(p => String(p[jerseyKey]));
-    console.log("noNamePlayersJerseys:::: ", noNamePlayersJerseys);
+    // console.log("noNamePlayersJerseys:::: ", noNamePlayersJerseys);
 
     if (noNamePlayersJerseys.length === 0) return [];
 
@@ -294,8 +294,33 @@ export class MatchService {
       [jerseyKey]: { $in: noNamePlayersJerseys },
       playerName: { $not: { $regex: "New Player", $options: "i" } },
     };
-    console.log("query:::: ", JSON.stringify(query));
+    // console.log("query:::: ", JSON.stringify(query));
 
     return this.playerModel.find(query);
+  }
+
+  async updatePlayersDataInMatch(matchId: MongoIdType, players: CreatePlayerDto[]) {
+    const match = await this.matchModel.findById(matchId);
+    if (!match) throw new NotFoundException(`Couldn't find match`);
+
+    const jerseyKey = match.teamA.isHomeTeam ? "homeJersey" : "awayJersey";
+
+    let playersListForUpdation = match.teamA?.players || [];
+    
+    playersListForUpdation.map(p => {
+      const hasNewPlayer = p.player.includes("New Player")
+      const hasQuickPlayer = p.player.includes("QuickAdd Player")
+      const hasUpdatedDetails = players.find(player => player[jerseyKey] === p[jerseyKey])
+      if ((hasNewPlayer || hasQuickPlayer) && hasUpdatedDetails) {
+        return {
+          ...p,
+          player: hasUpdatedDetails.playerName,
+          firstName: hasUpdatedDetails.firstName,
+          lastName: hasUpdatedDetails.lastName,
+        }
+      }
+      return p;
+    })
+
   }
 }
