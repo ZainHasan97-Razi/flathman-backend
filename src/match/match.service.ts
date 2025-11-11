@@ -299,7 +299,7 @@ export class MatchService {
     return this.playerModel.find(query);
   }
 
-  async updatePlayersDataInMatch(matchId: MongoIdType, players: CreatePlayerDto[]) {
+  async updatePlayersDataInMatch(matchId: MongoIdType, players: CreatePlayerDto[]) { // these players in parameter are basically the ones which are extracted from above api and passed through into this api for updation
     const match = await this.matchModel.findById(matchId);
     if (!match) throw new NotFoundException(`Couldn't find match`);
 
@@ -309,13 +309,15 @@ export class MatchService {
     let activityLogsForUpdation = match.activityLog || [];
 
     playersListForUpdation.map(p => {
-      const hasNewPlayer = p.player.includes("New Player")
-      const hasQuickPlayer = p.player.includes("QuickAdd Player")
+      const hasNewPlayer = p.playerName.includes("New Player")
+      const hasQuickPlayer = p.playerName.includes("QuickAdd Player")
       const hasUpdatedDetails = players.find(player => player[jerseyKey] === p[jerseyKey])
+      
+      console.log("Player list hasNewPlayer::: ", hasNewPlayer, hasQuickPlayer, hasUpdatedDetails, p);
       if ((hasNewPlayer || hasQuickPlayer) && hasUpdatedDetails) {
         return {
           ...p,
-          player: hasUpdatedDetails.playerName,
+          playerName: hasUpdatedDetails.playerName,
           firstName: hasUpdatedDetails.firstName,
           lastName: hasUpdatedDetails.lastName,
         }
@@ -324,8 +326,8 @@ export class MatchService {
     })
 
     activityLogsForUpdation.map((log: any) => {
-      const hasNewPlayer = log?.player.includes("New Player")
-      const hasQuickPlayer = log.player.includes("QuickAdd Player")
+      const hasNewPlayer = log?.player?.includes("New Player")
+      const hasQuickPlayer = log.player?.includes("QuickAdd Player")
       const hasUpdatedDetails = players.find(player => player[jerseyKey] === log[jerseyKey])
       if ((hasNewPlayer || hasQuickPlayer) && hasUpdatedDetails) {
         return {
@@ -337,6 +339,11 @@ export class MatchService {
       }
       return log;
     })
+
+    console.log("playersListForUpdation::::: ", JSON.stringify(playersListForUpdation));
+    console.log("activityLogsForUpdation::::: ", JSON.stringify(activityLogsForUpdation));
+
+    return;
 
     const updatedMatch = await this.matchModel.findByIdAndUpdate(
       matchId,
