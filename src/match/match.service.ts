@@ -299,59 +299,109 @@ export class MatchService {
     return this.playerModel.find(query);
   }
 
-  async updatePlayersDataInMatch(matchId: MongoIdType, players: CreatePlayerDto[]) { // these players in parameter are basically the ones which are extracted from above api and passed through into this api for updation
+  // async updatePlayersDataInMatch(matchId: MongoIdType, players: CreatePlayerDto[]) { // these players in parameter are basically the ones which are extracted from above api and passed through into this api for updation
+  //   const match = await this.matchModel.findById(matchId);
+  //   if (!match) throw new NotFoundException(`Couldn't find match`);
+
+  //   const jerseyKey = match.teamA.isHomeTeam ? "homeJersey" : "awayJersey";
+
+  //   let playersListForUpdation = [];
+  //   let activityLogsForUpdation = [];
+
+  //   (match.teamA?.players || [])?.map(p => {
+  //     const hasNewPlayer = p.playerName.includes("New Player")
+  //     const hasQuickPlayer = p.playerName.includes("QuickAdd Player")
+  //     const hasUpdatedDetails = players.find(player => player[jerseyKey] === p[jerseyKey])
+      
+  //     if ((hasNewPlayer || hasQuickPlayer) && hasUpdatedDetails) {
+  //       playersListForUpdation.push({
+  //         ...p,
+  //         playerName: hasUpdatedDetails.playerName,
+  //         firstName: hasUpdatedDetails.firstName,
+  //         lastName: hasUpdatedDetails.lastName,
+  //       })
+  //     } else {
+  //       playersListForUpdation.push(p);
+  //     }
+  //   })
+    
+  //   (match?.activityLog || [])?.map((log: any) => {
+  //     const hasNewPlayer = log?.player?.includes("New Player")
+  //     const hasQuickPlayer = log?.player?.includes("QuickAdd Player")
+  //     const hasUpdatedDetails = players.find(player => player[jerseyKey] === log?.jersey)
+  //     if ((hasNewPlayer || hasQuickPlayer) && hasUpdatedDetails) {
+  //       activityLogsForUpdation.push({
+  //         ...log,
+  //         player: hasUpdatedDetails.playerName,
+  //       })
+  //     }  else {
+  //       activityLogsForUpdation.push(log);
+  //     }
+  //   })
+
+  //   // console.log("match.teamA?.players::::: ", JSON.stringify(match.teamA?.players));
+  //   // console.log("playersListForUpdation::::: ", JSON.stringify(playersListForUpdation));
+  //   // console.log("match?.activityLog::::: ", JSON.stringify(match?.activityLog));
+  //   // console.log("activityLogsForUpdation::::: ", JSON.stringify(activityLogsForUpdation));
+
+  //   // return;
+
+  //   const updatedMatch = await this.matchModel.findByIdAndUpdate(
+  //     matchId,
+  //     { $set: { 'teamA.players': playersListForUpdation, 'activityLog': activityLogsForUpdation } },
+  //     { new: true }
+  //   );
+
+  //   return updatedMatch;
+
+  // }
+
+  async updatePlayersDataInMatch(matchId: MongoIdType, players: CreatePlayerDto[]) {
     const match = await this.matchModel.findById(matchId);
     if (!match) throw new NotFoundException(`Couldn't find match`);
 
     const jerseyKey = match.teamA.isHomeTeam ? "homeJersey" : "awayJersey";
 
-    let playersListForUpdation = match.teamA?.players || [];
-    let activityLogsForUpdation = match.activityLog || [];
+    // Create a quick lookup map for players by jersey
+    const playerMap = new Map(players.map(p => [p[jerseyKey], p]));
 
-    playersListForUpdation.map(p => {
-      const hasNewPlayer = p.playerName.includes("New Player")
-      const hasQuickPlayer = p.playerName.includes("QuickAdd Player")
-      const hasUpdatedDetails = players.find(player => player[jerseyKey] === p[jerseyKey])
-      
-      console.log("Player list hasNewPlayer::: ", hasNewPlayer, hasQuickPlayer, hasUpdatedDetails, p);
-      if ((hasNewPlayer || hasQuickPlayer) && hasUpdatedDetails) {
+    // Helper to determine if a name is a placeholder
+    const isPlaceholderPlayer = (name: string) =>
+      name?.includes("New Player") || name?.includes("QuickAdd Player");
+
+    // Update players list
+    const playersListForUpdation = (match.teamA?.players || []).map(p => {
+      const updated = playerMap.get(p[jerseyKey]);
+      if (isPlaceholderPlayer(p.playerName) && updated) {
         return {
           ...p,
-          playerName: hasUpdatedDetails.playerName,
-          firstName: hasUpdatedDetails.firstName,
-          lastName: hasUpdatedDetails.lastName,
-        }
+          playerName: updated.playerName,
+          firstName: updated.firstName,
+          lastName: updated.lastName,
+        };
       }
       return p;
-    })
+    });
 
-    activityLogsForUpdation.map((log: any) => {
-      const hasNewPlayer = log?.player?.includes("New Player")
-      const hasQuickPlayer = log.player?.includes("QuickAdd Player")
-      const hasUpdatedDetails = players.find(player => player[jerseyKey] === log[jerseyKey])
-      if ((hasNewPlayer || hasQuickPlayer) && hasUpdatedDetails) {
-        return {
-          ...log,
-          player: hasUpdatedDetails.playerName,
-          firstName: hasUpdatedDetails.firstName,
-          lastName: hasUpdatedDetails.lastName,
-        }
+    // Update activity logs
+    const activityLogsForUpdation = (match.activityLog || []).map((log: any) => {
+      const updated = playerMap.get(log?.jersey);
+      if (isPlaceholderPlayer(log?.player) && updated) {
+        return { ...log, player: updated.playerName };
       }
       return log;
-    })
+    });
 
-    console.log("playersListForUpdation::::: ", JSON.stringify(playersListForUpdation));
-    console.log("activityLogsForUpdation::::: ", JSON.stringify(activityLogsForUpdation));
-
-    return;
-
-    const updatedMatch = await this.matchModel.findByIdAndUpdate(
+    // Update DB in one go
+    return this.matchModel.findByIdAndUpdate(
       matchId,
-      { $set: { 'teamA.players': playersListForUpdation, 'activityLog': activityLogsForUpdation } },
+      { 
+        $set: { 
+          'teamA.players': playersListForUpdation, 
+          activityLog: activityLogsForUpdation 
+        } 
+      },
       { new: true }
     );
-
-    return updatedMatch;
-
   }
 }
