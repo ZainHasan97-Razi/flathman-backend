@@ -277,26 +277,30 @@ export class MatchService {
     const match = await this.matchModel.findById(matchId);
     if (!match) throw new NotFoundException(`Couldn't find match`);
 
-    const { teamA } = match;
-    const teamAId = new mongoose.Types.ObjectId(teamA.teamId);
+    const teamA = match.teamA;
     const jerseyKey = teamA.isHomeTeam ? "homeJersey" : "awayJersey";
-    // console.log("jerseyKey:::: ", jerseyKey);
 
-    const noNamePlayersJerseys = teamA.players
-      .filter(p => p.playerName?.includes("New Player"))
-      .map(p => String(p[jerseyKey]));
-    // console.log("noNamePlayersJerseys:::: ", noNamePlayersJerseys);
+    // Reuse the same placeholder detector from second function
+    const isPlaceholderPlayer = (name: string) =>
+      name?.includes("New Player") ||
+      name?.includes("QuickAdd Player") ||
+      name?.includes("Quick Player");
 
-    if (noNamePlayersJerseys.length === 0) return [];
+    // Extract jerseys of placeholder players
+    const placeholderJerseys = teamA.players
+      .filter(p => isPlaceholderPlayer(p.playerName))
+      .map(p => p[jerseyKey])
+      .filter(Boolean)  // defensive check
+      .map(String);
 
-    const query = {
-      teamId: teamAId,
-      [jerseyKey]: { $in: noNamePlayersJerseys },
-      playerName: { $not: { $regex: "New Player", $options: "i" } },
-    };
-    // console.log("query:::: ", JSON.stringify(query));
+    if (placeholderJerseys.length === 0) return [];
 
-    return this.playerModel.find(query);
+    // Clean and optimized query
+    return this.playerModel.find({
+      teamId: new mongoose.Types.ObjectId(teamA.teamId),
+      [jerseyKey]: { $in: placeholderJerseys },
+      playerName: { $not: /New Player|QuickAdd Player|Quick Player/i }
+    });
   }
 
   async updatePlayersDataInMatch(matchId: MongoIdType, players: CreatePlayerDto[]) {
