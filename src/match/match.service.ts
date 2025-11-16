@@ -333,7 +333,8 @@ export class MatchService {
     // Update activity logs
     const activityLogsForUpdation = (match.activityLog || []).map((log: any) => {
       const updated = playerMap.get(log?.jersey);
-      if (isPlaceholderPlayer(log?.player) && updated) {
+      const isTeamALog = log?.team === match.teamA?.teamName;
+      if (isPlaceholderPlayer(log?.player) && updated && isTeamALog) {
         return { ...log, player: updated.playerName };
       }
       return log;
