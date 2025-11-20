@@ -9,7 +9,7 @@ import { EmailService } from 'src/email/email.service';
 import { SendAccountShareInviteTemplate } from 'src/common/templates/send-account-share-invite.template';
 import { CreateUserDto } from 'src/user/dto/create.user.dto';
 import { ThanksForInvitationAcceptanceTemplate } from 'src/common/templates/thanks-for-invitation-acceptence.template';
-import { SendInviteDto } from './dto/send.invite.dto';
+import { InvitedTeamsDto, SendInviteDto } from './dto/send.invite.dto';
 import { CreateTeamDto } from 'src/team/dto/create.team.dto';
 import mongoose from 'mongoose';
 const isEmpty = require("is-empty");
@@ -33,16 +33,23 @@ export class ShareAccountService {
     // Incase an old invite is accepted or revoke a new invite could be sent
     try {
       const inviteExist = await this.shareAccountModel.findOne({
-        ownerId: ownerData._id, guestEmail: data.guestEmail, status: {$in: [ShareAccountStatusEnum.pending]}
+        ownerId: ownerData._id, guestEmail: data.guestEmail, status: {$in: [ShareAccountStatusEnum.pending, ShareAccountStatusEnum.accepted]}
       });
       if(inviteExist) throw new BadRequestException("Invite already sent to this user!")
 
-      let teams: MongoIdType[] = [];
-      let validTeams = await this.teamModel.find({_id: {$in: data.teams}});
+      // let teams: MongoIdType[] = [];
+      let teams: InvitedTeamsDto[] = [];
+      let teamIds: MongoIdType[] = data.teams.map(t => new mongoose.Types.ObjectId(t.teamId));
+      let validTeams = await this.teamModel.find({_id: {$in: teamIds}});
       if(validTeams.length === data.teams.length) {
-        teams = data.teams.map(id => new mongoose.Types.ObjectId(id));
+        // teams = data.teams.map(id => new mongoose.Types.ObjectId(id));
+        teams = data.teams;
       } else {
-        teams = validTeams?.map(t => t._id) || [];
+        // teams = validTeams?.map(t => t._id) || [];
+        teams = validTeams?.map(t => {
+          const role = data.teams.find(team => team.teamId.toString() === t._id.toString())?.role
+          return {teamId: t._id, role: role} as InvitedTeamsDto
+        })
       }
       if(teams.length === 0) throw new BadRequestException("No valid team found!")
   
@@ -52,14 +59,14 @@ export class ShareAccountService {
         guestEmail: data.guestEmail, 
         guestName: data.guestName,
         status: ShareAccountStatusEnum.pending,
-        role: data.role,
+        // role: data.role,
         teams,
       })
       await this.emailService.sendEmail(
         data.guestEmail.toLowerCase(),
         "Invitation for account sharing",
         "This is an invitation for account sharing",
-        {html: SendAccountShareInviteTemplate(ownerData.userName, data.guestEmail, ownerData.email, createdInvite._id.toString(), data.role)}
+        {html: SendAccountShareInviteTemplate(ownerData.userName, data.guestEmail, ownerData.email, createdInvite._id.toString())}
       )
 
       return createdInvite;
@@ -79,7 +86,6 @@ export class ShareAccountService {
       {html: ThanksForInvitationAcceptanceTemplate(
         invitationInfo.guestName, 
         invitationInfo.ownerId?.userName || invitationInfo.ownerEmail, 
-        invitationInfo.role
       )}
     )
     return await this.shareAccountModel.findByIdAndUpdate(body.inviteId, {status: body.status}, {new: true});
