@@ -36,6 +36,10 @@ export const UserSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    league: {
+      type: String,
+      default: null,
+    },
     state: {
       type: String,
       default: null,

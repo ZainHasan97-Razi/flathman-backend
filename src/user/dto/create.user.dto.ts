@@ -42,6 +42,10 @@ export class CreateUserDto {
   organizationName: string | null;
 
   @IsOptional()
+  @IsString({ message: 'Invalid league name!' })
+  league: string | null;
+
+  @IsOptional()
   @IsString({ message: 'Invalid state name!' })
   state: string | null;
 
