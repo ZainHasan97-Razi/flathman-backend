@@ -12,6 +12,7 @@ import { ThanksForInvitationAcceptanceTemplate } from 'src/common/templates/than
 import { InvitedTeamsDto, SendInviteDto } from './dto/send.invite.dto';
 import { CreateTeamDto } from 'src/team/dto/create.team.dto';
 import mongoose from 'mongoose';
+import { UpdateInviteDto } from './dto/update.invite.dto';
 const isEmpty = require("is-empty");
 
 type InviteListFilters = {
@@ -73,6 +74,10 @@ export class ShareAccountService {
     } catch (e) {
       throw e
     }
+  }
+
+  async updateInvite(inviteId: MongoIdType, body: UpdateInviteDto) {
+    return await this.shareAccountModel.findByIdAndUpdate(inviteId, body, {new: true});
   }
 
   async acceptInvite(body: AcceptInviteDto&{status: ShareAccountStatusEnumType}) {
