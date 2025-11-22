@@ -49,6 +49,10 @@ export class UpdateUserDto {
   @IsString({ message: 'Invalid organization name!' })
   organizationName: string | null;
 
+  @IsOptional()
+  @IsString({ message: 'Invalid state name!' })
+  state: string | null;
+
   // @IsArray() // hoga ye array ma hi store mgr value string ma lenga
   // @ArrayMaxSize(3)
   // @ArrayMinSize(1)
