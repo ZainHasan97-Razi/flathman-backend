@@ -12,7 +12,7 @@ export type ShareAccountStatusEnumType = keyof typeof ShareAccountStatusEnum;
 
 @Schema({ timestamps: false, _id: false })
 export class InvitedTeam {
-  @Prop({ type: mongoose.Types.ObjectId, required: true})
+  @Prop({ type: mongoose.Types.ObjectId, required: true, ref: "Team"})
   teamId: MongoIdType
 
   @Prop({type: String, required: true})

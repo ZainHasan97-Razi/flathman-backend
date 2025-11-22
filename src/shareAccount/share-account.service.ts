@@ -77,7 +77,23 @@ export class ShareAccountService {
   }
 
   async updateInvite(inviteId: MongoIdType, body: UpdateInviteDto) {
-    return await this.shareAccountModel.findByIdAndUpdate(inviteId, body, {new: true});
+    let payload = {...body};
+    payload.teams = payload.teams.map(t => ({teamId: new mongoose.Types.ObjectId(t.teamId), role: t.role}))
+
+    let teams: InvitedTeamsDto[] = [];
+    let teamIds: MongoIdType[] = payload.teams.map(t => new mongoose.Types.ObjectId(t.teamId));
+    let validTeams = await this.teamModel.find({_id: {$in: teamIds}});
+    if(validTeams.length === payload.teams.length) {
+      teams = payload.teams;
+    } else {
+      teams = validTeams?.map(t => {
+        const role = payload.teams.find(team => team.teamId.toString() === t._id.toString())?.role
+        return {teamId: t._id, role: role} as InvitedTeamsDto
+      })
+    }
+    if(teams.length === 0) throw new BadRequestException("No valid team found!")
+
+    return await this.shareAccountModel.findByIdAndUpdate(inviteId, payload, {new: true});
   }
 
   async acceptInvite(body: AcceptInviteDto&{status: ShareAccountStatusEnumType}) {
