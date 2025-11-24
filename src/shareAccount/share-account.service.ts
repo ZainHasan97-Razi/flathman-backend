@@ -120,10 +120,20 @@ export class ShareAccountService {
     return this.shareAccountModel.find({guestEmail, status: ShareAccountStatusEnum.accepted})
   }
 
-  getInvitedUsers(ownerEmail: string, filters: InviteListFilters) {
+  async getInvitedUsers(ownerEmail: string, filters: InviteListFilters) {
     const query = {ownerEmail, ...filters, ...(filters?.status ? {} : {status: {$in: [ShareAccountStatusEnum.accepted, ShareAccountStatusEnum.pending]}})}
     // console.log("query getInvitedUsers::: ", query);
-    return this.shareAccountModel.find(query).lean();
+    let response = await this.shareAccountModel.find(query).lean() as any[];
+    // Extract all unique team IDs
+    const teamIds = [...new Set(response.flatMap(inv => inv.teams.map(t => t.teamId)))];
+    const teams = await this.teamModel.find({_id: {$in: teamIds}}).lean();
+    response.forEach(inv => {
+      inv.teams = inv.teams.map(t => {
+        const team = teams.find(team => team._id.toString() === t.teamId.toString());
+        return {...t, teamName: team?.teamName}
+      })
+    })
+    return response
   }
 
   async getInvitations(guestEmail: string, filters: InviteListFilters) {
