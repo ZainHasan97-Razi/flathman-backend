@@ -118,7 +118,7 @@ export class ShareAccountService {
     hostEmail: string
   ): Promise<{invitationStatus: ShareAccountStatusEnumType|"not_found", guestIsRegistered: boolean}> {
 
-    const guestData = await this.userModel.findOne({email: guestEmail});
+    const guestData = await this.userModel.findOne({email: guestEmail, deletedAt: null});
     const invitation = await this.findByGuestAndHostEmails(guestEmail, hostEmail);
     
     return {

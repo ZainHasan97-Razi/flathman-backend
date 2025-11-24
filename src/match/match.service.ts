@@ -11,6 +11,8 @@ import { SuspendMatchDto } from './dto/suspend.match.dto';
 import { UpdateMatchDto } from './dto/update.match.dto';
 import { GameStatusEnum } from './match.model';
 import { MongoIdType } from 'src/common/common.types';
+import mongoose from 'mongoose';
+import { CreatePlayerDto } from 'src/player/dto/create.player.dto';
 const isEmpty = require("is-empty");
 
 @Injectable()
@@ -18,6 +20,7 @@ export class MatchService {
   constructor(
     @InjectModel('Match') private matchModel: Model<CreateMatchDto>,
     @InjectModel('User') private userModel: Model<CreateUserDto>,
+    @InjectModel('Player') private playerModel: Model<CreatePlayerDto>,
   ) {}
 
   async findAll() {
@@ -268,5 +271,85 @@ export class MatchService {
       },
     ]);
     return data[0];
+  }
+
+  async playersUpdateCheck(matchId: MongoIdType) {
+    const match = await this.matchModel.findById(matchId);
+    if (!match) throw new NotFoundException(`Couldn't find match`);
+
+    const teamA = match.teamA;
+    const jerseyKey = teamA.isHomeTeam ? "homeJersey" : "awayJersey";
+
+    // Reuse the same placeholder detector from second function
+    const isPlaceholderPlayer = (name: string) =>
+      name?.includes("New Player") ||
+      name?.includes("QuickAdd Player") ||
+      name?.includes("Quick Player");
+
+    // Extract jerseys of placeholder players
+    const placeholderJerseys = teamA.players
+      .filter(p => isPlaceholderPlayer(p.playerName))
+      .map(p => p[jerseyKey])
+      .filter(Boolean)  // defensive check
+      .map(String);
+
+    if (placeholderJerseys.length === 0) return [];
+
+    // Clean and optimized query
+    return this.playerModel.find({
+      teamId: new mongoose.Types.ObjectId(teamA.teamId),
+      [jerseyKey]: { $in: placeholderJerseys },
+      playerName: { $not: /New Player|QuickAdd Player|Quick Player/i }
+    });
+  }
+
+  async updatePlayersDataInMatch(matchId: MongoIdType, players: CreatePlayerDto[]) {
+    const match = await this.matchModel.findById(matchId);
+    if (!match) throw new NotFoundException(`Couldn't find match`);
+
+    const jerseyKey = match.teamA.isHomeTeam ? "homeJersey" : "awayJersey";
+
+    // Create a quick lookup map for players by jersey
+    const playerMap = new Map(players.map(p => [p[jerseyKey], p]));
+
+    // Helper to determine if a name is a placeholder
+    const isPlaceholderPlayer = (name: string) =>
+      name?.includes("New Player") || name?.includes("QuickAdd Player") || name?.includes("Quick Player");
+
+    // Update players list
+    const playersListForUpdation = (match.teamA?.players || []).map(p => {
+      const updated = playerMap.get(p[jerseyKey]);
+      if (isPlaceholderPlayer(p.playerName) && updated) {
+        return {
+          ...p,
+          playerName: updated.playerName,
+          firstName: updated.firstName,
+          lastName: updated.lastName,
+        };
+      }
+      return p;
+    });
+
+    // Update activity logs
+    const activityLogsForUpdation = (match.activityLog || []).map((log: any) => {
+      const updated = playerMap.get(log?.jersey);
+      const isTeamALog = log?.team === match.teamA?.teamName;
+      if (isPlaceholderPlayer(log?.player) && updated && isTeamALog) {
+        return { ...log, player: updated.playerName };
+      }
+      return log;
+    });
+
+    // Update DB in one go
+    return this.matchModel.findByIdAndUpdate(
+      matchId,
+      { 
+        $set: { 
+          'teamA.players': playersListForUpdation, 
+          activityLog: activityLogsForUpdation 
+        } 
+      },
+      { new: true }
+    );
   }
 }
