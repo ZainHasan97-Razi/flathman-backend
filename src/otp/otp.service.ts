@@ -35,8 +35,8 @@ export class OtpService {
       // Send the OTP via email
       this.emailService.sendEmail(
         email.toLowerCase(),
-        'OTP Verification',
-        `Your OTP is: ${otp}`,
+        'Verification',
+        `Your reset password code is: ${otp}`,
       );
       return otp;
     } catch (e) {
