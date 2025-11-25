@@ -59,6 +59,8 @@ export class ShareAccountService {
         ownerEmail: ownerData.email, 
         guestEmail: data.guestEmail, 
         guestName: data.guestName,
+        guestFirstName: data.guestFirstName,
+        guestLastName: data.guestLastName,
         status: ShareAccountStatusEnum.pending,
         // role: data.role,
         teams,

@@ -16,6 +16,12 @@ export class SendInviteDto {
   @IsString()
   guestName: string;
 
+  @IsString()
+  guestFirstName: string;
+
+  @IsString()
+  guestLastName: string;
+
   @IsArray()
   @ValidateNested({each: true})
   @Type(() => InvitedTeamsDto)

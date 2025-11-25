@@ -8,6 +8,14 @@ export class UpdateInviteDto {
   guestName: string;
 
   @IsOptional()
+  @IsString()
+  guestFirstName: string;
+
+  @IsOptional()
+  @IsString()
+  guestLastName: string;
+
+  @IsOptional()
   @IsArray()
   @ValidateNested({each: true})
   @Type(() => InvitedTeamsDto)

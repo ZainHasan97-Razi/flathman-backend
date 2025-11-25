@@ -34,6 +34,12 @@ export class ShareAccount {
   @Prop({type: String, required: true})
   guestName: string;
 
+  @Prop({type: String, required: true})
+  guestFirstName: string;
+
+  @Prop({type: String, required: true})
+  guestLastName: string;
+
   @Prop({type: String, enum: ShareAccountStatusEnum, default: ShareAccountStatusEnum.pending})
   status: ShareAccountStatusEnumType;
 
