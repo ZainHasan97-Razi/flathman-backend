@@ -30,13 +30,15 @@ export class SubscriptionService {
     try {
       // const sharedTeams = [];
       let invite = null;
+      let inviteTeams = [];
       if(body.hostEmail) {
         invite = await this.shareAccountModel.findOne({guestEmail: body.guestEmail, hostEmail: body.hostEmail, status: ShareAccountStatusEnum.accepted})
+        inviteTeams = invite.teams.map(t => t.teamId)
       }
       const response = await this.subscriptionModel
         .find({ 
           userId: body.userId, 
-          ...(invite ? {teamId: {$in: invite.teams}} : {}) 
+          ...(invite ? {teamId: {$in: inviteTeams}} : {}) 
         })
         .populate('subscriptionType');        
 
@@ -85,7 +87,7 @@ export class SubscriptionService {
       const data = await this.subscriptionModel
         .find({ 
           userId: body.userId,
-          ...(invite ? {teamId: {$in: invite.teams}} : {}),
+          ...(invite ? {teamId: {$in: inviteTeams}} : {}),
         })
         .populate('subscriptionType')
         .populate({
