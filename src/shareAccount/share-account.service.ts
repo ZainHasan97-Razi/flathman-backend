@@ -151,14 +151,15 @@ export class ShareAccountService {
   async getInvitationStatus(
     guestEmail: string, 
     hostEmail: string
-  ): Promise<{invitationStatus: ShareAccountStatusEnumType|"not_found", guestIsRegistered: boolean}> {
+  ): Promise<{invitationStatus: ShareAccountStatusEnumType|"not_found", guestIsRegistered: boolean, invitation: ShareAccount}> {
 
     const guestData = await this.userModel.findOne({email: guestEmail, deletedAt: null});
     const invitation = await this.findByGuestAndHostEmails(guestEmail, hostEmail);
     
     return {
       invitationStatus: invitation?.status || "not_found",
-      guestIsRegistered: !isEmpty(guestData)
+      guestIsRegistered: !isEmpty(guestData),
+      invitation: invitation
     }
   }
 
