@@ -41,6 +41,14 @@ export class CreateUserDto {
   @IsString({ message: 'Invalid organization name!' })
   organizationName: string | null;
 
+  @IsOptional()
+  @IsString({ message: 'Invalid league name!' })
+  league: string | null;
+
+  @IsOptional()
+  @IsString({ message: 'Invalid state name!' })
+  state: string | null;
+
   // @IsArray() // hoga ye array ma hi store mgr value string ma lenga
   // @IsNotEmpty()
   // @ArrayMaxSize(3)

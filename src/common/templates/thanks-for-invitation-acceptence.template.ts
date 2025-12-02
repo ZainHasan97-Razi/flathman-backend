@@ -1,5 +1,5 @@
 
-export const ThanksForInvitationAcceptanceTemplate = (guestName: string, ownerName: string, role: string) => {
+export const ThanksForInvitationAcceptanceTemplate = (guestName: string, ownerName: string) => {
   return (
     `
       <!DOCTYPE html>
@@ -84,7 +84,6 @@ export const ThanksForInvitationAcceptanceTemplate = (guestName: string, ownerNa
               </div>
               <div class="content">
                   <h2>Thank You, ${guestName}, for Accepting My Invitation!</h2>
-                  <p>You now have access to <strong>Laxstatclock</strong> as a <strong>${role}</strong> and can view all teams on my account.</p>
                   
                   <p><strong>All you need to do now is install the app:</strong></p>
                   <div class="app-badges">
