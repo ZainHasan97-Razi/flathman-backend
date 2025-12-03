@@ -46,8 +46,9 @@ export class EmailService {
   ): Promise<void> {
     if (process.env.EMAIL_SERVICE_NAME === 'sendgrid') {
       // return this.sendWithSendGrid(to, subject, content, options); // tem commenting this due to service free trial end
+    } else {
+      return this.sendWithSMTP(to, subject, content, options);
     }
-    return this.sendWithSMTP(to, subject, content, options);
   }
   /* await sendEmail('user@example.com', 'Hello', 'This is a plain text email'); */
   /*
