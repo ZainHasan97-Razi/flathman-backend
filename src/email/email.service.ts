@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import * as sgMail from '@sendgrid/mail';
+const isEmpty = require("is-empty");
+
 @Injectable()
 export class EmailService {
   private smtpTransporter: nodemailer.Transporter;
@@ -44,11 +46,13 @@ export class EmailService {
       bcc?: string | string[];
     }
   ): Promise<void> {
-    if (process.env.EMAIL_SERVICE_NAME === 'sendgrid') {
-      // return this.sendWithSendGrid(to, subject, content, options); // tem commenting this due to service free trial end
-    } else {
+    // if (process.env.EMAIL_SERVICE_NAME === 'sendgrid') {
+    //   return this.sendWithSendGrid(to, subject, content, options); // tem commenting this due to service free trial end
+    // }
+    if(isEmpty(options?.html)) {
       return this.sendWithSMTP(to, subject, content, options);
     }
+    return null;
   }
   /* await sendEmail('user@example.com', 'Hello', 'This is a plain text email'); */
   /*
