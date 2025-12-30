@@ -118,7 +118,7 @@ export class AuthService {
         }
         // Create an array of 5 promises and execute them in parallel
         await Promise.allSettled(
-          Array(5).fill(null).map(() => 
+          Array(20).fill(null).map(() => 
             this.subscriptionService.create(defaultUserSubscription)
           )
         );
