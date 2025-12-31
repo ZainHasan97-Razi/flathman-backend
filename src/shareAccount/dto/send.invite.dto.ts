@@ -1,4 +1,14 @@
-import { IsArray, IsEmail, IsMongoId, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsArray, IsEmail, IsMongoId, IsString, ValidateNested } from "class-validator";
+import { MongoIdType } from "src/common/common.types";
+
+export class InvitedTeamsDto {
+  @IsMongoId()
+  teamId: MongoIdType
+
+  @IsString()
+  role: string;
+}
 export class SendInviteDto {
   @IsEmail()
   guestEmail: string;
@@ -7,9 +17,13 @@ export class SendInviteDto {
   guestName: string;
 
   @IsString()
-  role: string;
+  guestFirstName: string;
+
+  @IsString()
+  guestLastName: string;
 
   @IsArray()
-  @IsMongoId({ each: true })
-  teams: string[];
+  @ValidateNested({each: true})
+  @Type(() => InvitedTeamsDto)
+  teams: InvitedTeamsDto[];
 }

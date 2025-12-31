@@ -10,6 +10,16 @@ export const ShareAccountStatusEnum = {
 } as const;
 export type ShareAccountStatusEnumType = keyof typeof ShareAccountStatusEnum;
 
+@Schema({ timestamps: false, _id: false })
+export class InvitedTeam {
+  @Prop({ type: mongoose.Types.ObjectId, required: true, ref: "Team"})
+  teamId: MongoIdType
+
+  @Prop({type: String, required: true})
+  role: string;
+}
+export const InvitedTeamSchema = SchemaFactory.createForClass(InvitedTeam);
+
 @Schema({timestamps: true})
 export class ShareAccount {
   @Prop({type: mongoose.Types.ObjectId, required: true, ref: "User"})
@@ -24,14 +34,17 @@ export class ShareAccount {
   @Prop({type: String, required: true})
   guestName: string;
 
+  @Prop({type: String, required: true})
+  guestFirstName: string;
+
+  @Prop({type: String, required: true})
+  guestLastName: string;
+
   @Prop({type: String, enum: ShareAccountStatusEnum, default: ShareAccountStatusEnum.pending})
   status: ShareAccountStatusEnumType;
 
-  @Prop({type: String, required: true})
-  role: string;
-
-  @Prop({type: [mongoose.Types.ObjectId], required: true, ref: "User"})
-  teams: MongoIdType[]
+  @Prop({type: [InvitedTeamSchema], required: true})
+  teams: [InvitedTeam]
 }
 
 export type ShareAccountDocument = ShareAccount & Document;

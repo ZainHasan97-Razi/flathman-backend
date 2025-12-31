@@ -1,9 +1,11 @@
 import { Body, Controller, Get, Param, Patch, Post, Query, Request } from '@nestjs/common';
 import { ShareAccountService } from './share-account.service';
 import { SendInviteDto } from './dto/send.invite.dto';
-import { RequestUserType } from 'src/common/common.types';
+import { MongoIdType, RequestUserType } from 'src/common/common.types';
 import { AcceptInviteDto, UpdateShareAccountStatusDto } from './dto/update.status.dto';
 import { ShareAccountStatusEnum, ShareAccountStatusEnumType } from './share-account.model';
+import { UpdateInviteDto } from './dto/update.invite.dto';
+import { MongoIdValidationPipe } from 'src/common/pipes/mongoid.validation.pipe';
 
 @Controller('share-account')
 export class ShareAccountController {
@@ -17,6 +19,11 @@ export class ShareAccountController {
   @Patch('accept')
   acceptInvite(@Body() body: AcceptInviteDto) {
     return this.shareAccountService.acceptInvite({inviteId: body.inviteId, status: ShareAccountStatusEnum.accepted})
+  }
+
+  @Patch('update/:id')
+  updateInvite(@Param('id', MongoIdValidationPipe) inviteId: MongoIdType, @Body() body: UpdateInviteDto) {
+    return this.shareAccountService.updateInvite(inviteId, body)
   }
 
   @Patch('status')

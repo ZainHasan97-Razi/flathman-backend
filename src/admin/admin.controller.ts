@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CreatePlayerDto } from 'src/player/dto/create.player.dto';
 import { UpdatePlayerDto } from 'src/player/dto/update.player.dto';
@@ -26,6 +27,10 @@ import { CreateStatsConfigDto } from 'src/statsConfig/dto/create.statsConfig.dto
 import { UpdateStatsConfigDto } from 'src/statsConfig/dto/update.statsConfig.dto';
 import { MongoIdType } from 'src/common/common.types';
 import { SettingNameEnumType } from 'src/team/teams.model';
+import { CreatePlanDto } from 'src/plans/dto/create.plan.dto';
+import { UpdatePlanDto } from 'src/plans/dto/update.plan.dto';
+import { PlanStatusEnumType, PlanTypeEnumType } from 'src/plans/plan.model';
+import { PlanListFilters } from 'src/plans/plan.service';
 
 @Controller('admin')
 export class AdminController {
@@ -120,5 +125,26 @@ export class AdminController {
   @Delete("stats-config/:id")
   deleteStatsConfig(@Param('id', MongoIdValidationPipe) id: MongoIdType) {
     return this.adminService.deleteStatsConfig(id);
+  }
+
+  @Post('plan/create')
+  async create(@Body() body: CreatePlanDto) {
+    return await this.adminService.createPlan(body);
+  }
+
+  @Patch('plan/update/:id')
+  async findByIdAndupdate(@Param('id', MongoIdValidationPipe) id: MongoIdType, @Body() body: UpdatePlanDto) {
+    const player = await this.adminService.updatePlan(id, body);
+    return player;
+  }
+
+  // @Get('plan/list')
+  // async planListDashboard(@Query("status") status?: PlanStatusEnumType, @Query("type") type?: PlanTypeEnumType) {
+  //   const player = await this.adminService.planListDashboard({...(status ? {status} : {}), ...(type ? {type} : {})});
+  //   return player;
+  // }
+  @Get('plan/list')
+  async planListDashboard(@Query() query: PlanListFilters) {
+    return await this.adminService.planListDashboard(query);
   }
 }

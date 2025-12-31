@@ -23,6 +23,9 @@ import { StatsConfigService } from 'src/statsConfig/statsConfig.service';
 import { CreateStatsConfigDto } from 'src/statsConfig/dto/create.statsConfig.dto';
 import { UpdateStatsConfigDto } from 'src/statsConfig/dto/update.statsConfig.dto';
 import { MongoIdType } from 'src/common/common.types';
+import { PlanListFilters, PlanService } from 'src/plans/plan.service';
+import { CreatePlanDto } from 'src/plans/dto/create.plan.dto';
+import { UpdatePlanDto } from 'src/plans/dto/update.plan.dto';
 
 @Injectable()
 export class AdminService {
@@ -35,6 +38,7 @@ export class AdminService {
     private readonly subscription: SubscriptionService,
     private readonly subscriptionType: SubscriptionTypeService,
     private readonly statsConfigService: StatsConfigService,
+    private readonly planService: PlanService,
   ) {}
 
   async CreateUser(body: CreateUserDto) {
@@ -127,5 +131,24 @@ export class AdminService {
 
   async deleteStatsConfig(id: MongoIdType) {
     return await this.statsConfigService.delete(id);
+  }
+
+  async createPlan(body: CreatePlanDto) {
+    return await this.planService.create(body);
+  }
+
+  async updatePlan(id: MongoIdType, body: UpdatePlanDto) {
+    return await this.planService.findByIdAndupdate(id, body);
+  }
+
+  async planListDashboard(filters: PlanListFilters) {
+    // ✅ This automatically strips out any undefined values from filters.
+    // ✅ Works even if more filters are added later.
+    const query = Object.fromEntries(
+      Object.entries(filters).filter(([_, v]) => v)
+    );
+    // console.log("query::::: ", JSON.stringify(filters), JSON.stringify(query));
+    
+    return await this.planService.planListDashboard(query);
   }
 }
