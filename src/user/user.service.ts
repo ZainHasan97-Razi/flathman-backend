@@ -114,4 +114,31 @@ export class UserService {
       throw e;
     }
   }
+
+  async changePassword(
+    userId: mongoose.Types.ObjectId,
+    currentPassword: string,
+    newPassword: string,
+  ) {
+    try {
+      const user = await this.userModel.findOne({
+        _id: userId,
+        deletedAt: null,
+      });
+      if (!user) {
+        throw new NotFoundException('User not found!');
+      }
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        throw new BadRequestException('Current password is incorrect!');
+      }
+      const hashedPassword = await bcrypt.hash(newPassword, 12);
+      await this.userModel.findByIdAndUpdate(userId, {
+        password: hashedPassword,
+      });
+      return { message: 'Password changed successfully!' };
+    } catch (e) {
+      throw e;
+    }
+  }
 }
