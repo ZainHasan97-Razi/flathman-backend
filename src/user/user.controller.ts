@@ -1,8 +1,9 @@
-import { Controller, Body, Post, Get, Param, Delete } from '@nestjs/common';
+import { Controller, Body, Post, Get, Param, Delete, Patch, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { OtpService } from 'src/otp/otp.service';
 import { OtpTypeEnum } from 'src/constants/enums';
 import { ConfirmResetPasswordDto } from './dto/confirm.reset.pass.dto';
+import { ChangePasswordDto } from './dto/change.password.dto';
 import { MongoIdValidationPipe } from 'src/common/pipes/mongoid.validation.pipe';
 import mongoose from 'mongoose';
 
@@ -43,6 +44,15 @@ export class UserController {
       body.code,
       body.password,
       OtpTypeEnum.reset_password_otp,
+    );
+  }
+
+  @Patch('change-password')
+  changePassword(@Req() req: any, @Body() body: ChangePasswordDto) {
+    return this.userService.changePassword(
+      req.user._id,
+      body.currentPassword,
+      body.newPassword,
     );
   }
 
