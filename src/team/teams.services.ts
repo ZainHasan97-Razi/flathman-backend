@@ -14,7 +14,7 @@ import { PlayerService } from 'src/player/player.service';
 import { CreateRuleDto } from 'src/rules/dto/create.rule.dto';
 import mongoose from 'mongoose';
 import { MongoIdType } from 'src/common/common.types';
-import {  default_stats_rating, SettingNameEnum, SettingNameEnumType } from './teams.model';
+import {  default_stats_rating, default_clock_setting, SettingNameEnum, SettingNameEnumType } from './teams.model';
 import { StatsConfigService } from 'src/statsConfig/statsConfig.service';
 import { ConfigDataHierarchyType } from 'src/statsConfig/statsConfig.model';
 const isEmpty = require("is-empty");
@@ -213,6 +213,9 @@ export class TeamService {
       case SettingNameEnum.game_rules_setting:
         let {gameRules} = await this.teamModel.findById(teamId).lean().populate("gameRules");
         settingDefaultPayload = {game_rules_setting: gameRules};
+        break;
+      case SettingNameEnum.clock_setting:
+        settingDefaultPayload = {clock_setting: default_clock_setting};
         break;
     }
 
