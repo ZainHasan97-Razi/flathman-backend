@@ -10,7 +10,6 @@ import { CreateRuleDto } from './dto/create.rule.dto';
 import { UpdateRuleDto } from './dto/update.rule.dto';
 import { ConfigDataHierarchyType } from 'src/statsConfig/statsConfig.model';
 import { StatsConfigService } from 'src/statsConfig/statsConfig.service';
-import { SettingNameEnumType } from 'src/team/teams.model';
 
 type statsConfigsForRuleUpdationType = {
   penalty_options?: Array<ConfigDataHierarchyType>
