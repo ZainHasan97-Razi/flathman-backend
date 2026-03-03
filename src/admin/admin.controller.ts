@@ -26,7 +26,6 @@ import { MongoIdValidationPipe } from 'src/common/pipes/mongoid.validation.pipe'
 import { CreateStatsConfigDto } from 'src/statsConfig/dto/create.statsConfig.dto';
 import { UpdateStatsConfigDto } from 'src/statsConfig/dto/update.statsConfig.dto';
 import { MongoIdType } from 'src/common/common.types';
-import { SettingNameEnumType } from 'src/team/teams.model';
 import { CreatePlanDto } from 'src/plans/dto/create.plan.dto';
 import { UpdatePlanDto } from 'src/plans/dto/update.plan.dto';
 import { PlanStatusEnumType, PlanTypeEnumType } from 'src/plans/plan.model';

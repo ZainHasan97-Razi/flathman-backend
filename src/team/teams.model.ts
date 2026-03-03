@@ -127,12 +127,27 @@ export const StatsRatingSubSchema = new mongoose.Schema(
   { timestamps: false, _id: false },
 );
 
+// Clock setting
+export const default_clock_setting = {
+  runningClock: false,
+  fullyServedPenalties: false,
+};
+
+export const ClockSettingSubSchema = new mongoose.Schema(
+  {
+    runningClock: { type: Boolean, required: true, default: false },
+    fullyServedPenalties: { type: Boolean, required: true, default: false },
+  },
+  { timestamps: false, _id: false },
+);
+
 export enum SettingNameEnum {
   game_rules_setting = "game_rules_setting",
   penalty_time_options = "penalty_time_options",
   turnover_options = "turnover_options",
   penalty_options = "penalty_options",
-  stats_rating = "stats_rating"
+  stats_rating = "stats_rating",
+  clock_setting = "clock_setting"
 }
 export type SettingNameEnumType = keyof typeof SettingNameEnum;
 
@@ -145,6 +160,7 @@ export const TeamSchema = new mongoose.Schema(
     coachCell: { type: String, default: null },
     coachEmail: { type: String, default: null },
     league: { type: String, default: null },
+    organization: { type: String, default: null },
     state: { type: String, default: null },
     teamOwner: {
       type: mongoose.Schema.Types.ObjectId,
@@ -157,6 +173,7 @@ export const TeamSchema = new mongoose.Schema(
       required: true,
     },
     game_rules_setting: { type: GameRuleSettingSubSchema, default: null },
+    clock_setting: { type: ClockSettingSubSchema, default: default_clock_setting },
     game_clock_setting: { type: Object, default: null },
     shot_clock_setting: { type: Object, default: null },
     penalty_clock_setting: { type: Object, default: null },
